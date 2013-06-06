@@ -595,7 +595,12 @@ namespace ToolKit.DirectoryServices
             for (var i = startPosition; i < distinguishedName.Length; i++)
             {
                 var current = distinguishedName[i];
-                var previous = distinguishedName[i - 1];
+                var previous = new char();
+
+                if (i > 0)
+                {
+                    previous = distinguishedName[i - 1];
+                }
 
                 if (lookForSeparator)
                 {
