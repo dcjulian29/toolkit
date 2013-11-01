@@ -50,6 +50,7 @@
     <Compile Include="Base64Encoding.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
     <Compile Include="DirectoryServices\InvalidDistinguishedNameException.cs" />
+    <Compile Include="DisposableComObject.cs" />
     <Compile Include="DisposableObject.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
