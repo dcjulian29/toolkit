@@ -49,6 +49,7 @@
     <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="GlobalSupressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SuspendableObjectTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ToolKit\ToolKit.csproj">
