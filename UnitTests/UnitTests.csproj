@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
+    <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="GlobalSupressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
