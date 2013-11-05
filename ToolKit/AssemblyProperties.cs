@@ -12,7 +12,7 @@ namespace ToolKit
     /// </summary>
     public class AssemblyProperties
     {
-        private log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Return the build number of the first Assembly loaded in this AppDomain.
