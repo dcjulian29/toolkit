@@ -42,6 +42,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base64EncodingTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
     <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="GlobalSupressions.cs" />
