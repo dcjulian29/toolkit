@@ -43,6 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyPropertiesTests.cs" />
     <Compile Include="Base64EncodingTests.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
