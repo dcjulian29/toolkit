@@ -149,6 +149,51 @@ namespace UnitTests.Data
         }
 
         [Fact]
+        public void EqualOperand_Should_BeFalse_When_EntityIdIsDifferent()
+        {
+            // Arrange
+            var entity1 = new Patient();
+            var entity2 = new Patient();
+
+            // Act
+            entity1.Id = "patient/-1";
+            entity2.Id = "patient/-2";
+
+            // Assert
+            Assert.True(entity1 != entity2);
+        }
+
+        [Fact]
+        public void EqualOperand_Should_BeTrue_When_EntityIdIsSame()
+        {
+            // Arrange
+            var entity1 = new Patient();
+            var entity2 = new Patient();
+
+            // Act
+            entity1.Id = "patient/-1";
+            entity2.Id = "patient/-1";
+
+            // Assert
+            Assert.True(entity1 == entity2);
+        }
+
+        [Fact]
+        public void EqualOperand_Should_BeTrue_When_EntityIsSameInstance()
+        {
+            // Arrange
+            var entity1 = new Patient();
+            Patient entity2 = null;
+
+            // Act
+            entity1.Id = "patient/-1";
+            entity2 = entity1;
+
+            // Assert
+            Assert.True(entity1 == entity2);
+        }
+
+        [Fact]
         public void Equals_Should_BeFalse_When_EntityIdIsDifferent()
         {
             // Arrange

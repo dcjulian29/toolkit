@@ -27,6 +27,45 @@ namespace ToolKit.Data
         }
 
         /// <summary>
+        /// Indicates whether the current object is equal to another
+        /// object of the same type.
+        /// </summary>
+        /// <param name="a">The first object of this type to compare.</param>
+        /// <param name="b">The second object of this type to compare.</param>
+        /// <returns>
+        ///   <c>true</c> if the two objects are equal; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator ==(EntityWithTypedId<TId> a, EntityWithTypedId<TId> b)
+        {
+            if (Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another
+        /// object of the same type.
+        /// </summary>
+        /// <param name="a">The first object of this type to compare.</param>
+        /// <param name="b">The second object of this type to compare.</param>
+        /// <returns>
+        ///   <c>true</c> if the two objects are equal; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator !=(EntityWithTypedId<TId> a, EntityWithTypedId<TId> b)
+        {
+            return !(a == b);
+        }
+
+        /// <summary>
         /// Compares the current object with another object of the same type.
         /// </summary>
         /// <param name="other">An object to compare with this object.</param>
