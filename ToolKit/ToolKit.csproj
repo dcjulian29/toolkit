@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,6 +49,10 @@
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="AssemblyProperties.cs" />
     <Compile Include="Base64Encoding.cs" />
+    <Compile Include="Data\Entity.cs" />
+    <Compile Include="Data\EntityWithTypedId.cs" />
+    <Compile Include="Data\IEntity.cs" />
+    <Compile Include="Data\IEntityWithTypedId.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
     <Compile Include="DirectoryServices\InvalidDistinguishedNameException.cs" />
     <Compile Include="GlobalSuppressions.cs" />

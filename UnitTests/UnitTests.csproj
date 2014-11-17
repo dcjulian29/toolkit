@@ -43,6 +43,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\EntityTests.cs" />
+    <Compile Include="Data\EntityWithTypedIdTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
     <Compile Include="GlobalSupressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
