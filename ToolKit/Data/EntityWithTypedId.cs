@@ -128,7 +128,7 @@ namespace ToolKit.Data
         {
             if (IsTransient())
             {
-                return base.GetHashCode();
+                return 0;
             }
             else
             {

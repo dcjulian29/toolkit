@@ -179,6 +179,65 @@ namespace UnitTests.Data
         }
 
         [Fact]
+        public void GetHashCode_Should_GenerateSameHashCode_When_EntitiesAreTransient()
+        {
+            // Arrange
+            var entity1 = new Patient();
+            var entity2 = new Patient();
+
+            // Act
+
+            // Assert
+            Assert.Equal(entity1.GetHashCode(), entity2.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCode_Should_GenerateDifferentHashCodes_When_EntitiesIdIsDifferent()
+        {
+            // Arrange
+            var entity1 = new Patient();
+            var entity2 = new Patient();
+
+            // Act
+            entity1.Id = "patient/-1";
+            entity2.Id = "patient/-2";
+
+            // Assert
+            Assert.NotEqual(entity1.GetHashCode(), entity2.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCode_Should_GenerateSameHashCode_When_EntitiesIdIsTheSame()
+        {
+            // Arrange
+            var entity1 = new Patient();
+            var entity2 = new Patient();
+
+            // Act
+            entity1.Id = "patient/-1";
+            entity2.Id = "patient/-1";
+
+            // Assert
+            Assert.Equal(entity1.GetHashCode(), entity2.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCode_Should_GenerateSameHashCode_When_EntityIsCopied()
+        {
+            // Arrange
+            var entity1 = new Patient();
+            var entity2 = entity1;
+
+            // Act
+            var hash1 = entity1.GetHashCode();
+            var hash2 = entity2.GetHashCode();
+
+            // Assert
+            Assert.Equal(hash1, hash2);
+        }
+
+
+        [Fact]
         public void GetHashCode_Should_ReturnHashCodeBasedOnId_When_NotTransient()
         {
             // Arrange
@@ -192,11 +251,6 @@ namespace UnitTests.Data
             // Assert
             Assert.Equal(hash1, hash2);
         }
-
-
-
-
-
 
         internal class Patient : EntityWithTypedId<string>
         {
