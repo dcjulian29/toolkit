@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ToolKit.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -46,6 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\build\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="AssemblyProperties.cs" />
     <Compile Include="Base64Encoding.cs" />
@@ -69,10 +73,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+       Other similar extension points exist, see Microsoft.Common.targets. -->
+  <Target Name="BeforeBuild"
+          Condition="!Exists('..\build\CommonAssemblyInfo.cs')">
+    <MakeDir Directories="..\build" Condition="!Exists('..\build')" />
+    <WriteLinesToFile
+      File="..\build\CommonAssemblyInfo.cs"
+      Lines="// Common Assembly Info During CI Build Process"
+      Overwrite="true" />
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  -->
 </Project>
