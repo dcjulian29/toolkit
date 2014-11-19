@@ -24,7 +24,6 @@ namespace UnitTests.Data
 
         internal class Car : Entity
         {
-
         }
     }
 }

@@ -4,6 +4,10 @@ using Xunit;
 
 namespace UnitTests.DirectoryServices
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Test Suites do not need XML Documentation.")]
     public class DistingushedNameTests
     {
         [Fact]

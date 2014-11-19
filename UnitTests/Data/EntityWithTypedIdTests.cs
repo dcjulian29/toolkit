@@ -281,7 +281,6 @@ namespace UnitTests.Data
             Assert.Equal(hash1, hash2);
         }
 
-
         [Fact]
         public void GetHashCode_Should_ReturnHashCodeBasedOnId_When_NotTransient()
         {
