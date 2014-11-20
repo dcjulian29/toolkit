@@ -23,8 +23,7 @@ namespace ToolKit.DirectoryServices
     /// </summary>
     public class DistinguishedName
     {
-        private log4net.ILog _log = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
 
         private List<NameValue> components = new List<NameValue>();
 
