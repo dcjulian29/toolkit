@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ToolKit
 {
-    using System.Linq;
 
     /// <summary>
     /// This class wraps several properties that can be determined by reflection on the Assembly

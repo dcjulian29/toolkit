@@ -12,9 +12,6 @@ namespace ToolKit
     [StructLayout(LayoutKind.Sequential)]
     public class DisposableComObject : DisposableObject
     {
-        #region -- Fields --
-        #endregion
-        #region -- Constructors (ctor) --
         /// <summary>
         /// Initializes a new instance of the <see cref="DisposableComObject"/> class.
         /// </summary>
@@ -31,14 +28,7 @@ namespace ToolKit
         {
             Handle = IntPtr.Zero;
         }
-        #endregion
-        #region -- Delegates --
-        #endregion
-        #region -- Events --
-        #endregion
-        #region -- Enumerations --
-        #endregion
-        #region -- Properties --
+
         /// <summary>
         /// Gets or sets the pointer to an external unmanaged resource.
         /// </summary>
@@ -47,10 +37,7 @@ namespace ToolKit
             get;
             set;
         }
-        #endregion
-        #region -- Methods: Public --
-        #endregion
-        #region -- Methods: Protected --
+
         /// <summary>
         /// Disposes the resources used by the inherited class.
         /// </summary>
@@ -62,14 +49,8 @@ namespace ToolKit
                 CloseHandle(Handle);
             }
         }
-        #endregion
-        #region -- Methods: Native (WinAPI) --
+
         [DllImport("Kernel32")]
         private static extern Boolean CloseHandle(IntPtr handle);
-        #endregion
-        #region -- Methods: Private --
-        #endregion
-        #region -- Nested Types --
-        #endregion
     }
 }

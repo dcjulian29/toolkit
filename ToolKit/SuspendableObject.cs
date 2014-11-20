@@ -9,17 +9,6 @@ namespace ToolKit
     /// </summary>
     public abstract class SuspendableObject
     {
-        #region -- Fields --
-        #endregion
-        #region -- Constructors (ctor) --
-        #endregion
-        #region -- Delegates --
-        #endregion
-        #region -- Events --
-        #endregion
-        #region -- Enumerations --
-        #endregion
-        #region -- Properties --
         /// <summary>
         /// Gets a value indicating whether this instance is currently suspended.
         /// </summary>
@@ -30,8 +19,7 @@ namespace ToolKit
                 return IsSuspended();
             }
         }
-        #endregion
-        #region -- Methods: Public --
+
         /// <summary>
         /// Determines whether this instance is currently suspended.
         /// </summary>
@@ -47,14 +35,5 @@ namespace ToolKit
         /// Temporarily suspends this instance.
         /// </summary>
         public abstract void Suspend();
-        #endregion
-        #region -- Methods: Protected --
-        #endregion
-        #region -- Methods: Native (WinAPI) --
-        #endregion
-        #region -- Methods: Private --
-        #endregion
-        #region -- Nested Types --
-        #endregion
     }
 }
