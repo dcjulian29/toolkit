@@ -7,7 +7,7 @@ namespace ToolKit.DirectoryServices
     /// The exception that is thrown when an invalid distinguished name is parsed.
     /// </summary>
     [Serializable]
-    public class InvalidDistinguishedNameException : Exception
+    public class InvalidDistinguishedNameException : ApplicationException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidDistinguishedNameException"/> class.
