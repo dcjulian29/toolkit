@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToolKit;
+﻿using ToolKit;
+using Xunit;
 
 namespace UnitTests
 {
-    using Xunit;
-
-    public class SuspendableObjectTests
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Test Suites do not need XML Documentation.")]
+   public class SuspendableObjectTests
     {
         #region -- Test SetUp and TearDown --
         #endregion

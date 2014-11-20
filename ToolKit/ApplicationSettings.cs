@@ -17,7 +17,6 @@ namespace ToolKit
     {
         private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
         
-
         /// <summary>
         /// Loads the application settings.
         /// </summary>

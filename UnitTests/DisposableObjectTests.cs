@@ -8,6 +8,10 @@ using Xunit;
 
 namespace UnitTests
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Test Suites do not need XML Documentation.")]
     public class DisposableObjectTests
     {
         #region -- Test SetUp and TearDown --

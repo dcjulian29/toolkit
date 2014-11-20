@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Text;
+using ToolKit;
 using Xunit;
 
 namespace UnitTests
 {
-    using System.Security.Policy;
-    using System.Text;
-    using ToolKit;
-
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Test Suites do not need XML Documentation.")]
     public class Base64EncodingTests
     {
         #region -- Test SetUp and TearDown --
