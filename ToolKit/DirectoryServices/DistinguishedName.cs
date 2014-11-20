@@ -24,7 +24,7 @@ namespace ToolKit.DirectoryServices
     public class DistinguishedName
     {
         private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
-
+        
         private List<NameValue> components = new List<NameValue>();
 
         /// <summary>
