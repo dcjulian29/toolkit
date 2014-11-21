@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 
 namespace ToolKit
 {
-
     /// <summary>
     /// This class wraps several properties that can be determined by reflection on the Assembly
     /// </summary>
