@@ -78,5 +78,5 @@ Task UnitTest -depends Compile {
 }
 
 Task Package -depends Test {
-    exec { nuget pack ToolKit.nuspec -o "$build_directory" -Version $version }
+    exec { nuget pack ToolKit.nuspec -o "$build_directory" }
 }
