@@ -20,7 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,9 +33,8 @@
     <DocumentationFile>bin\Release\ToolKit.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,27 +60,27 @@
     <Compile Include="Data\IReadOnlyRepository.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
+    <Compile Include="Data\MemoryUnitOfWork.cs" />
+    <Compile Include="Data\ReadOnlyRepositoryBase.cs" />
+    <Compile Include="Data\RepositoryBase.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
     <Compile Include="DirectoryServices\InvalidDistinguishedNameException.cs" />
+    <Compile Include="DisposableComObject.cs" />
+    <Compile Include="DisposableObject.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SuspendableObject.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
-  <Target Name="BeforeBuild"
-          Condition="!Exists('..\build\CommonAssemblyInfo.cs')">
+  <Target Name="BeforeBuild" Condition="!Exists('..\build\CommonAssemblyInfo.cs')">
     <MakeDir Directories="..\build" Condition="!Exists('..\build')" />
-    <WriteLinesToFile
-      File="..\build\CommonAssemblyInfo.cs"
-      Lines="// Common Assembly Info During CI Build Process"
-      Overwrite="true" />
+    <WriteLinesToFile File="..\build\CommonAssemblyInfo.cs" Lines="// Common Assembly Info During CI Build Process" Overwrite="true" />
   </Target>
   <Target Name="AfterBuild">
   </Target>

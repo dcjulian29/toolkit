@@ -15,9 +15,8 @@ namespace ToolKit
     [XmlRoot("settings")]
     public abstract class ApplicationSettings<T>
     {
-        private log4net.ILog _log = log4net.LogManager.GetLogger(
-          System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
+        
         /// <summary>
         /// Loads the application settings.
         /// </summary>

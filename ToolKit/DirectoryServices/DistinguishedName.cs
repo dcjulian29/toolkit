@@ -23,9 +23,8 @@ namespace ToolKit.DirectoryServices
     /// </summary>
     public class DistinguishedName
     {
-        private log4net.ILog _log = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
+        
         private List<NameValue> components = new List<NameValue>();
 
         /// <summary>
@@ -57,7 +56,6 @@ namespace ToolKit.DirectoryServices
         /// is Promotions/Northeast and the name of the domain is example.com, the canonical name
         /// is displayed as example.com/Promotions\/Northeast.
         /// </remarks>
-        /// <seealso cref="http://www.microsoft.com/technet/prodtechnol/windows2000serv/reskit/distrib/dsbb_act_kjpw.mspx?mfr=true"/>
         public string CanonicalName
         {
             get
