@@ -79,4 +79,6 @@ Task UnitTest -depends Compile {
 
 Task Package -depends Test {
     exec { nuget pack ToolKit.nuspec -o "$build_directory" }
+    exec { nuget pack ToolKit.Data.NHibernate.nuspec -o "$build_directory" }
+    exec { nuget pack ToolKit.Data.EntityFramework.nuspec -o "$build_directory" }
 }
