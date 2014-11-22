@@ -57,8 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="INHibernateReadOnlyRepository.cs" />
     <Compile Include="INHibernateRepository.cs" />
     <Compile Include="INHibernateUnitOfWork.cs" />
+    <Compile Include="NHibernateReadOnlyRepositoryBase.cs" />
+    <Compile Include="NHibernateRepositoryBase.cs" />
+    <Compile Include="NHibernateUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
