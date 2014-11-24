@@ -25,7 +25,17 @@ namespace ToolKit.Data.EntityFramework
         /// </summary>
         public EntityFrameworkUnitOfWork()
         {
-            _transaction = base.Database.BeginTransaction();
+            _transaction = Database.BeginTransaction();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EntityFrameworkUnitOfWork"/> class.
+        /// </summary>
+        /// <param name="nameOrConnectionString">Either the database name or a connection string. </param>
+        public EntityFrameworkUnitOfWork(string nameOrConnectionString)
+            : base(nameOrConnectionString)
+        {
+            _transaction = Database.BeginTransaction();
         }
 
         /// <summary>
