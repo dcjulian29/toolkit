@@ -96,9 +96,6 @@ namespace UnitTests.Data
             Assert.True(patientPresent);
         }
 
-
-//Contains(Patient)
-
         [Fact]
         public void FindAll_Should_ReturnAllEntities()
         {
@@ -244,7 +241,6 @@ namespace UnitTests.Data
             using (var session = _sessionFactory.OpenSession())
             {
                 _sessionFactory.OpenSession().CreateSQLQuery("DELETE FROM Patient").ExecuteUpdate();
-
 
                 // Add some entities to database
                 using (var transaction = session.BeginTransaction())
