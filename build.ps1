@@ -66,6 +66,12 @@ Task UnitTest -depends Compile {
         Pop-Location
     }
 
+    New-Item "$release_directory\x64" -ItemType Directory | Out-Null
+    New-Item "$release_directory\x86" -ItemType Directory | Out-Null
+    
+    Copy-Item "$base_directory\UnitTests\bin\$build_configuration\x64\*" "$release_directory\x64\"
+    Copy-Item "$base_directory\UnitTests\bin\$build_configuration\x86\*" "$release_directory\x86\"
+         
     $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" `
         | select -Last 1 -ExpandProperty FullName
     $xunit = "$xunit\tools\xunit.console.clr4.exe"
