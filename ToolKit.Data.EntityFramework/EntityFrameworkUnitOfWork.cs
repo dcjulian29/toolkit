@@ -12,24 +12,20 @@ namespace ToolKit.Data.EntityFramework
     /// coordinates the writing out of changes and the resolution of 
     /// concurrency problems.
     /// </summary>
-    public class EntityFrameworkUnitOfWork : IEntityFrameworkUnitOfWork
+    public class EntityFrameworkUnitOfWork : DbContext, IEntityFrameworkUnitOfWork
     {
         private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
 
         private bool _rollbackOnDispose = false;
-
-        private DbContext _context;
 
         private DbContextTransaction _transaction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityFrameworkUnitOfWork"/> class.
         /// </summary>
-        /// <param name="context">The EntityFramework Context.</param>
-        public EntityFrameworkUnitOfWork(DbContext context)
+        public EntityFrameworkUnitOfWork()
         {
-            _context = context;
-            _transaction = _context.Database.BeginTransaction();
+            _transaction = base.Database.BeginTransaction();
         }
 
         /// <summary>
@@ -39,7 +35,7 @@ namespace ToolKit.Data.EntityFramework
         /// <param name="entity">The entity.</param>
         public void Attach<T>(T entity) where T : class
         {
-            _context.Set<T>().Attach(entity);
+            Set<T>().Attach(entity);
         }
 
         /// <summary>
@@ -49,14 +45,14 @@ namespace ToolKit.Data.EntityFramework
         /// <param name="entity">The entity.</param>
         public void Delete<T>(T entity) where T : class
         {
-            _context.Set<T>().Remove(entity);
+            Set<T>().Remove(entity);
         }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing,
         /// or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
+        public new void Dispose()
         {
             if (_rollbackOnDispose)
             {
@@ -65,15 +61,16 @@ namespace ToolKit.Data.EntityFramework
             }
             else
             {
+                SaveChanges();
                 _transaction.Commit();
             }
 
             _transaction.Dispose();
-            _context.Dispose();
+            base.Dispose();
         }
 
         /// <summary>
-        /// Gets this instance from the EntityFramework Session.
+        /// Gets this instance from the EntityFramework Context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <returns>
@@ -81,7 +78,7 @@ namespace ToolKit.Data.EntityFramework
         /// </returns>
         public IQueryable<T> Get<T>() where T : class
         {
-            return _context.Set<T>().AsQueryable();
+            return Set<T>();
         }
 
         /// <summary>
@@ -93,13 +90,13 @@ namespace ToolKit.Data.EntityFramework
         }
 
         /// <summary>
-        /// Saves the specified entity to the EntityFramework Session.
+        /// Saves the specified entity to the EntityFramework Context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
         public void Save<T>(T entity) where T : class
         {
-            _context.SaveChanges();
+            Set<T>().Add(entity);
         }
     }
 }
