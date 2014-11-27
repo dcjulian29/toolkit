@@ -23,7 +23,7 @@ namespace ToolKit.Data
         public virtual TId Id
         {
             get;
-            set;
+            protected internal set;
         }
 
         /// <summary>
