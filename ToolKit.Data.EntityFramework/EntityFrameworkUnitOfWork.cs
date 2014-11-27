@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +47,7 @@ namespace ToolKit.Data.EntityFramework
         public void Attach<T>(T entity) where T : class
         {
             Set<T>().Attach(entity);
+            Entry(entity).State = EntityState.Modified;
         }
 
         /// <summary>
@@ -56,6 +58,7 @@ namespace ToolKit.Data.EntityFramework
         public void Delete<T>(T entity) where T : class
         {
             Set<T>().Remove(entity);
+            Entry(entity).State = EntityState.Deleted;
         }
 
         /// <summary>
@@ -77,6 +80,18 @@ namespace ToolKit.Data.EntityFramework
 
             _transaction.Dispose();
             base.Dispose();
+        }
+
+        /// <summary>
+        /// Gets a <see cref="T:System.Data.Entity.Infrastructure.DbEntityEntry"/> object for the
+        /// given entity providing access to information about the entity and the ability
+        /// to perform actions on the entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns>An entry for the entity.</returns>
+        public new DbEntityEntry Entry(object entity)
+        {
+            return base.Entry(entity);
         }
 
         /// <summary>
@@ -106,7 +121,10 @@ namespace ToolKit.Data.EntityFramework
         /// <param name="entity">The entity.</param>
         public void Save<T>(T entity) where T : class
         {
-            Set<T>().Add(entity);
+            if (Entry(entity).State == EntityState.Added)
+            {
+                Set<T>().Add(entity);
+            }
         }
     }
 }
