@@ -65,6 +65,11 @@ namespace ToolKit.Data
         /// </returns>
         public bool Contains(T entity)
         {
+            if (entity.IsTransient())
+            {
+                return false;
+            }
+
             return Context.Get<T>().FirstOrDefault(e => e == entity) != null;
         }
 

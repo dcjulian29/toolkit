@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ToolBox.Data.NHibernate</id>
+    <version>2014.11.27.1</version>
+    <authors>Julian Easterling</authors>
+    <owners>Julian Easterling</owners>
+    <projectUrl>https://github.com/dcjulian29/toolkit</projectUrl>
+    <licenseUrl>https://github.com/dcjulian29/toolkit/blob/master/LICENSE.txt</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A library that contains common NHibernate-based data classes.</description>
+    <tags>toolkit nhibernate</tags>
+    <dependencies>
+      <dependency id="FluentNHibernate" version="1.4.0" />
+      <dependency id="ToolKit" version="2014.11.27.1" />
+    </dependencies>
+  </metadata>
+    <files>
+        <file src="build\release\ToolKit.Data.NHibernate.dll" target="lib\net40" />
+        <file src="build\release\ToolKit.Data.NHibernate.pdb" target="lib\net40" />
+        <file src="build\release\ToolKit.Data.NHibernate.xml" target="lib\net40" />
+    </files>
+</package>
