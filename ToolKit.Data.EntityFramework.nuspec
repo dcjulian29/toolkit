@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>ToolBox.Data.EntityFramework</id>
-    <version>2014.11.27.1</version>
+    <id>ToolKit.Data.EntityFramework</id>
+    <version>2014.11.27.2</version>
     <authors>Julian Easterling</authors>
     <owners>Julian Easterling</owners>
     <projectUrl>https://github.com/dcjulian29/toolkit</projectUrl>
