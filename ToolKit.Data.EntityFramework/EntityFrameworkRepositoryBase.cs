@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace ToolKit.Data.EntityFramework
 {
@@ -64,6 +62,8 @@ namespace ToolKit.Data.EntityFramework
         /// <param name="entity">The entity.</param>
         public void Save(T entity)
         {
+            Context.Entry(entity).State = entity.IsTransient() ? EntityState.Added : EntityState.Modified;
+
             Context.Save(entity);
         }
 
