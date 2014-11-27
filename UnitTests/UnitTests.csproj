@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate">
       <HintPath>..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
     </Reference>
@@ -41,9 +47,16 @@
       <HintPath>..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.94.0\lib\net45\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.94.1\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -60,6 +73,7 @@
     <Compile Include="Base64EncodingTests.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
+    <Compile Include="Data\EntityFrameworkRepositoryBaseTests.cs" />
     <Compile Include="Data\NHibernateRepositoryBaseTests.cs" />
     <Compile Include="Data\RepositoryBaseTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
@@ -70,6 +84,10 @@
     <Compile Include="SuspendableObjectTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ToolKit.Data.EntityFramework\ToolKit.Data.EntityFramework.csproj">
+      <Project>{4f9f8c27-961f-4fa9-bd7c-0fa9cec68521}</Project>
+      <Name>ToolKit.Data.EntityFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.csproj">
       <Project>{f8774dc0-a6a7-4a4d-a126-9d7637a01ebf}</Project>
       <Name>ToolKit.Data.NHibernate</Name>
