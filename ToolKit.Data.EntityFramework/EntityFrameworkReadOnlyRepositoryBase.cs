@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ToolKit.Data.EntityFramework
 {
@@ -54,6 +50,23 @@ namespace ToolKit.Data.EntityFramework
             {
                 base.Context = value;
             }
+        }
+
+        /// <summary>
+        /// Determines whether the specified entity exists within the repository.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified entity exists within the repository; otherwise, <c>false</c>.
+        /// </returns>
+        public new bool Contains(T entity)
+        {
+            if (entity.IsTransient())
+            {
+                return false;
+            }
+
+            return FindById(entity.Id) != null;
         }
     }
 }
