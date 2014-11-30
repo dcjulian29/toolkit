@@ -80,6 +80,7 @@
     <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
     <Compile Include="GlobalSupressions.cs" />
+    <Compile Include="Network\Ipv4AddressTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuspendableObjectTests.cs" />
   </ItemGroup>
