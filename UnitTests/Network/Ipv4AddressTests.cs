@@ -8,8 +8,11 @@ using Xunit;
 
 namespace UnitTests.Network
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suites do not need XML Documentation.")]
-    public class Ipv4AddressTests
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Test Suites do not need XML Documentation.")]
+    public class IpV4AddressTests
     {
         [Fact]
         public void Constructor_Should_ThrowArgumentException_When_ProvidedWithInvalidOctets()
