@@ -15,6 +15,51 @@ namespace UnitTests.Network
     public class IpV4AddressTests
     {
         [Fact]
+        public void CompareTo_Should_ReturnLessThan_When_AddressesIsLess()
+        {
+            // Arrange
+            var address1 = new IpV4Address(192, 168, 103, 80);
+            var address2 = new IpV4Address(192, 168, 103, 81);
+            var expected = -1;
+
+            // Act
+            var actual = address1.CompareTo(address2);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void CompareTo_Should_ReturnGreaterThan_When_AddressesIsGreater()
+        {
+            // Arrange
+            var address1 = new IpV4Address(192, 168, 80, 80);
+            var address2 = new IpV4Address(192, 168, 103, 80);
+            var expected = 1;
+
+            // Act
+            var actual = address2.CompareTo(address1);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void CompareTo_Should_ReturnEqual_When_AddressesIsEqual()
+        {
+            // Arrange
+            var address1 = new IpV4Address(192, 168, 103, 80);
+            var address2 = new IpV4Address(192, 168, 103, 80);
+            var expected = 0;
+
+            // Act
+            var actual = address1.CompareTo(address2);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+        
+        [Fact]
         public void Constructor_Should_ThrowArgumentException_When_ProvidedWithInvalidOctets()
         {
             Assert.Throws<ArgumentException>(() =>
@@ -48,6 +93,34 @@ namespace UnitTests.Network
                 {
                     var ip = new IpV4Address("192.168.0.1.3");
                 });
+        }
+
+        [Fact]
+        public void Equals_Should_ReturnTrue_When_BothAddressesAreEqual()
+        {
+            // Arrange
+            var address1 = new IpV4Address(192, 168, 103, 80);
+            var address2 = new IpV4Address(192, 168, 103, 80);
+
+            // Act
+            var actual = address1 == address2;
+
+            // Assert
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void Equals_Should_ReturnFalse_When_BothAddressesAreNotEqual()
+        {
+            // Arrange
+            var address1 = new IpV4Address(192, 168, 103, 80);
+            var address2 = new IpV4Address(192, 168, 103, 81);
+
+            // Act
+            var actual = address1 == address2;
+
+            // Assert
+            Assert.False(actual);
         }
 
         [Fact]
