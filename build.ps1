@@ -48,6 +48,20 @@ using System.Runtime.InteropServices;
 "@
 }
 
+Task CopySQLiteInterop {
+    New-Item "$release_directory\x64" -ItemType Directory | Out-Null
+    New-Item "$release_directory\x86" -ItemType Directory | Out-Null
+
+    $sqlite = "System.Data.SQLite.Core.*"
+    $library_directory = (Get-ChildItem -Path $package_directory -Filter $sqlite).FullName `
+        | Sort-Object | Select-Object -Last 1
+    $library_directory = (Get-ChildItem -Path "$library_directory\build").FullName `
+        | Sort-Object | Select-Object -Last 1
+
+    Copy-Item "$library_directory\x64\*" "$release_directory\x64\"
+    Copy-Item "$library_directory\x86\*" "$release_directory\x86\"
+}
+
 Task Compile -depends Version {
     exec { nuget restore "$solution_file" }
     exec { 
@@ -59,19 +73,13 @@ Task Compile -depends Version {
 
 Task Test -depends UnitTest
 
-Task UnitTest -depends Compile {
+Task UnitTest -depends Compile, CopySQLiteInterop {
     if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*").Count -eq 0) {
         Push-Location $package_directory
         exec { nuget install xunit.runners }
         Pop-Location
     }
 
-    New-Item "$release_directory\x64" -ItemType Directory | Out-Null
-    New-Item "$release_directory\x86" -ItemType Directory | Out-Null
-    
-    Copy-Item "$base_directory\UnitTests\bin\$build_configuration\x64\*" "$release_directory\x64\"
-    Copy-Item "$base_directory\UnitTests\bin\$build_configuration\x86\*" "$release_directory\x86\"
-         
     $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" `
         | select -Last 1 -ExpandProperty FullName
     $xunit = "$xunit\tools\xunit.console.clr4.exe"
