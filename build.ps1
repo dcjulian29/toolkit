@@ -37,11 +37,15 @@ Task VsVar32 {
         $batch_file = "$vs12_dir\$vsvar32"
     }
     
-    $cmd = "`"$batch_file`" & set"
-    cmd /c "$cmd" | Foreach-Object `
-    {
-        $p, $v = $_.split('=')
-        Set-Item -path env:$p -value $v
+    if ($batch_file) {
+        $cmd = "`"$batch_file`" & set"
+        cmd /c "$cmd" | Foreach-Object `
+        {
+            $p, $v = $_.split('=')
+            Set-Item -path env:$p -value $v
+        }
+    } else {
+        Write-Warning "Vsvar32.bat was not found!"
     }
 }
 
@@ -98,7 +102,7 @@ Task CopySQLiteInterop -depends PackageRestore {
     Copy-Item "$library_directory\x86\*" "$release_directory\x86\"
 }
 
-Task Compile -depends Version {
+Task Compile -depends Version, PackageRestore {
     exec { 
         msbuild /m /p:BuildInParralel=true /p:Platform="Any CPU" `
             /p:Configuration="$build_configuration" `
