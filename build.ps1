@@ -16,10 +16,38 @@ Properties {
   $version = "$(Get-Date -Format 'yyyy.MM.dd').$build_number"
 }
 
-Task Clean {
+Task VsVar32 {
+    $base_dir = "C:\Program Files"
+
+    if (Test-Path "C:\Program Files (x86)") {
+        $base_dir = "C:\Program Files (x86)"
+    }
+    
+    $vs12_dir = "$base_dir\Microsoft Visual Studio 12.0"
+    $vs11_dir = "$base_dir\Microsoft Visual Studio 11.0"
+    $vsvar32 = "\Common7\Tools\vsvars32.bat"
+    
+    $batch_file = ""
+    
+    if (Test-Path "$vs11_dir\$vsvar32") {
+        $batch_file = "$vs11_dir\$vsvar32"
+    }
+    
+    if (Test-Path "$vs12_dir\$vsvar32") {
+        $batch_file = "$vs12_dir\$vsvar32"
+    }
+    
+    $cmd = "`"$batch_file`" & set"
+    cmd /c "$cmd" | Foreach-Object `
+    {
+        $p, $v = $_.split('=')
+        Set-Item -path env:$p -value $v
+    }
+}
+
+Task Clean -depends VsVar32 {
     Remove-Item -Force -Recurse $build_directory -ErrorAction SilentlyContinue | Out-Null
     exec { msbuild /m /p:Configuration="$build_configuration" /t:clean "$solution_file" }
-
 }
 
 Task Init -depends Clean {
@@ -48,7 +76,15 @@ using System.Runtime.InteropServices;
 "@
 }
 
-Task CopySQLiteInterop {
+Task PackageClean {
+    Remove-Item -Force -Recurse $package_directory -ErrorAction SilentlyContinue | Out-Null
+}
+
+Task PackageRestore -depends Init {
+    exec { nuget restore "$solution_file" }
+}
+
+Task CopySQLiteInterop -depends PackageRestore {
     New-Item "$release_directory\x64" -ItemType Directory | Out-Null
     New-Item "$release_directory\x86" -ItemType Directory | Out-Null
 
@@ -63,7 +99,6 @@ Task CopySQLiteInterop {
 }
 
 Task Compile -depends Version {
-    exec { nuget restore "$solution_file" }
     exec { 
         msbuild /m /p:BuildInParralel=true /p:Platform="Any CPU" `
             /p:Configuration="$build_configuration" `
