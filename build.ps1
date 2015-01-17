@@ -16,10 +16,42 @@ Properties {
   $version = "$(Get-Date -Format 'yyyy.MM.dd').$build_number"
 }
 
-Task Clean {
+Task VsVar32 {
+    $base_dir = "C:\Program Files"
+
+    if (Test-Path "C:\Program Files (x86)") {
+        $base_dir = "C:\Program Files (x86)"
+    }
+    
+    $vs12_dir = "$base_dir\Microsoft Visual Studio 12.0"
+    $vs11_dir = "$base_dir\Microsoft Visual Studio 11.0"
+    $vsvar32 = "\Common7\Tools\vsvars32.bat"
+    
+    $batch_file = ""
+    
+    if (Test-Path "$vs11_dir\$vsvar32") {
+        $batch_file = "$vs11_dir\$vsvar32"
+    }
+    
+    if (Test-Path "$vs12_dir\$vsvar32") {
+        $batch_file = "$vs12_dir\$vsvar32"
+    }
+    
+    if ($batch_file) {
+        $cmd = "`"$batch_file`" & set"
+        cmd /c "$cmd" | Foreach-Object `
+        {
+            $p, $v = $_.split('=')
+            Set-Item -path env:$p -value $v
+        }
+    } else {
+        Write-Warning "Vsvar32.bat was not found!"
+    }
+}
+
+Task Clean -depends VsVar32 {
     Remove-Item -Force -Recurse $build_directory -ErrorAction SilentlyContinue | Out-Null
     exec { msbuild /m /p:Configuration="$build_configuration" /t:clean "$solution_file" }
-
 }
 
 Task Init -depends Clean {
@@ -48,8 +80,29 @@ using System.Runtime.InteropServices;
 "@
 }
 
-Task Compile -depends Version {
+Task PackageClean {
+    Remove-Item -Force -Recurse $package_directory -ErrorAction SilentlyContinue | Out-Null
+}
+
+Task PackageRestore -depends Init {
     exec { nuget restore "$solution_file" }
+}
+
+Task CopySQLiteInterop -depends PackageRestore {
+    New-Item "$release_directory\x64" -ItemType Directory | Out-Null
+    New-Item "$release_directory\x86" -ItemType Directory | Out-Null
+
+    $sqlite = "System.Data.SQLite.Core.*"
+    $library_directory = (Get-ChildItem -Path $package_directory -Filter $sqlite).FullName `
+        | Sort-Object | Select-Object -Last 1
+    $library_directory = (Get-ChildItem -Path "$library_directory\build").FullName `
+        | Sort-Object | Select-Object -Last 1
+
+    Copy-Item "$library_directory\x64\*" "$release_directory\x64\"
+    Copy-Item "$library_directory\x86\*" "$release_directory\x86\"
+}
+
+Task Compile -depends Version, PackageRestore {
     exec { 
         msbuild /m /p:BuildInParralel=true /p:Platform="Any CPU" `
             /p:Configuration="$build_configuration" `
@@ -59,19 +112,13 @@ Task Compile -depends Version {
 
 Task Test -depends UnitTest
 
-Task UnitTest -depends Compile {
+Task UnitTest -depends Compile, CopySQLiteInterop {
     if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*").Count -eq 0) {
         Push-Location $package_directory
         exec { nuget install xunit.runners }
         Pop-Location
     }
 
-    New-Item "$release_directory\x64" -ItemType Directory | Out-Null
-    New-Item "$release_directory\x86" -ItemType Directory | Out-Null
-    
-    Copy-Item "$base_directory\UnitTests\bin\$build_configuration\x64\*" "$release_directory\x64\"
-    Copy-Item "$base_directory\UnitTests\bin\$build_configuration\x86\*" "$release_directory\x86\"
-         
     $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" `
         | select -Last 1 -ExpandProperty FullName
     $xunit = "$xunit\tools\xunit.console.clr4.exe"

@@ -10,9 +10,9 @@ namespace ToolKit.Data
         where TId : IEquatable<TId>, IComparable<TId>
     {
         /// <summary>
-        /// Gets or sets the internal ID of this entity as persisted by the storage sub-system.
+        /// Gets the internal ID of this entity as persisted by the storage sub-system.
         /// </summary>
-        TId Id { get; set; }
+        TId Id { get; }
 
         /// <summary>
         /// Determines whether this instance is transient. Transient objects are not
