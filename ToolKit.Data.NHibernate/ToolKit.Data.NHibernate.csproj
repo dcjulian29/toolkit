@@ -48,6 +48,7 @@
       <HintPath>..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -64,6 +65,15 @@
     <Compile Include="NHibernateRepositoryBase.cs" />
     <Compile Include="NHibernateUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionFactories\JetSessionFactory.cs" />
+    <Compile Include="SessionFactories\MsSqlSessionFactory.cs" />
+    <Compile Include="SessionFactories\MsSqlCeSessionFactory.cs" />
+    <Compile Include="SessionFactories\MySqlSessionFactory.cs" />
+    <Compile Include="SessionFactories\OracleSessionFactory.cs" />
+    <Compile Include="SessionFactories\SessionFactoryBase.cs" />
+    <Compile Include="SessionFactories\SqLiteSessionFactory.cs" />
+    <Compile Include="SessionManager.cs" />
+    <Compile Include="SessionPool.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ToolKit\ToolKit.csproj">
