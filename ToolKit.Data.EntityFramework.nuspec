@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>ToolKit.Data.EntityFramework</id>
-    <version>2014.11.27.2</version>
+    <version>2015.1.25.1</version>
     <authors>Julian Easterling</authors>
     <owners>Julian Easterling</owners>
     <projectUrl>https://github.com/dcjulian29/toolkit</projectUrl>
@@ -12,7 +12,7 @@
     <tags>toolkit entityframework</tags>
     <dependencies>
       <dependency id="EntityFramework" version="6.1.1" />
-      <dependency id="ToolKit" version="2014.11.27.1" />
+      <dependency id="ToolKit" version="2015.1.25.1" />
     </dependencies>
   </metadata>
     <files>
