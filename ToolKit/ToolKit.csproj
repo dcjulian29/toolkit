@@ -57,7 +57,6 @@
     <Compile Include="Data\EntityWithTypedId.cs" />
     <Compile Include="Data\IEntity.cs" />
     <Compile Include="Data\IEntityWithTypedId.cs" />
-    <Compile Include="Data\IReadOnlyRepository.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\MemoryUnitOfWork.cs" />
