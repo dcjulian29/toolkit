@@ -121,7 +121,7 @@ Task xUnit {
 
     $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" `
         | select -Last 1 -ExpandProperty FullName
-    $xunit = "$xunit\tools\xunit.console.exe"
+    $global:xunit = "$xunit\tools\xunit.console.exe"
 }
 
 Task UnitTest -depends Compile, CopySQLiteInterop, xUnit {
