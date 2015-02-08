@@ -57,7 +57,7 @@ namespace ToolKit.Data
                 return false;
             }
 
-            return Context.Get<T>().FirstOrDefault(e => e == entity) != null;
+            return FindById(entity.Id) != null;
         }
 
         /// <summary>
