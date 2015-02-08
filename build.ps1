@@ -112,17 +112,19 @@ Task Compile -depends Version, PackageRestore {
 
 Task Test -depends UnitTest
 
-Task UnitTest -depends Compile, CopySQLiteInterop {
-    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*").Count -eq 0) {
+Task xUnit {
+    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" -Exclude "xunit.runners.visualstudio.*").Count -eq 0) {
         Push-Location $package_directory
-        exec { nuget install xunit.runners }
+        exec { nuget install xunit.runners -Prerelease }
         Pop-Location
     }
 
     $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" `
         | select -Last 1 -ExpandProperty FullName
-    $xunit = "$xunit\tools\xunit.console.clr4.exe"
+    $xunit = "$xunit\tools\xunit.console.exe"
+}
 
+Task UnitTest -depends Compile, CopySQLiteInterop, xUnit {
     if (Test-Path $xunit) {
         exec { & $xunit "$release_directory\UnitTests.dll" }
     } else {
