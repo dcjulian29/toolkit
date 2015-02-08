@@ -3,17 +3,17 @@ $ErrorActionPreference = 'Stop'
 Task default -Depends Compile
 
 Properties {
-  $projectName = "toolkit"
-  $base_directory = Resolve-Path .
-  $build_directory = "$base_directory\build"
-  $release_directory = "$build_directory\release"
-  $package_directory = "$base_directory\packages"
+    $projectName = "toolkit"
+    $base_directory = Resolve-Path .
+    $build_directory = "$base_directory\build"
+    $release_directory = "$build_directory\release"
+    $package_directory = "$base_directory\packages"
   
-  $build_configuration = "Release"
-  $solution_file = "$base_directory\$projectName.sln"
+    $build_configuration = "Release"
+    $solution_file = "$base_directory\$projectName.sln"
 
-  $build_number = Invoke-Command -ScriptBlock { git rev-list HEAD --count }
-  $version = "$(Get-Date -Format 'yyyy.MM.dd').$build_number"
+    $lasttag = Invoke-Command -ScriptBlock { git describe --tags --abbrev=0 }
+    $version = if ($lasttag -eq $null) { "0.0.0" } else { $lasttag }
 }
 
 Task VsVar32 {
@@ -55,8 +55,8 @@ Task Clean -depends VsVar32 {
 }
 
 Task Init -depends Clean {
-  New-Item $build_directory -ItemType Directory | Out-Null
-  New-Item $release_directory -ItemType Directory | Out-Null
+    New-Item $build_directory -ItemType Directory | Out-Null
+    New-Item $release_directory -ItemType Directory | Out-Null
 }
 
 Task Version -depends Init {
