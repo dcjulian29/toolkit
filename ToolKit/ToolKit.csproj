@@ -60,8 +60,7 @@
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\MemoryUnitOfWork.cs" />
-    <Compile Include="Data\ReadOnlyRepositoryBase.cs" />
-    <Compile Include="Data\RepositoryBase.cs" />
+    <Compile Include="Data\Repository.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
     <Compile Include="DirectoryServices\InvalidDistinguishedNameException.cs" />
     <Compile Include="DisposableComObject.cs" />
