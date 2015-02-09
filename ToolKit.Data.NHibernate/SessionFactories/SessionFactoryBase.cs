@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
+using Common.Logging;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
@@ -16,7 +17,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
     /// </summary>
     public abstract class SessionFactoryBase : IDisposable
     {
-        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger<SessionFactoryBase>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionFactoryBase"/> class.

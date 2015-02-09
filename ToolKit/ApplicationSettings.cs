@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
+using Common.Logging;
 
 namespace ToolKit
 {
@@ -15,7 +16,7 @@ namespace ToolKit
     [XmlRoot("settings")]
     public abstract class ApplicationSettings<T>
     {
-        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger<ApplicationSettings<T>>();
         
         /// <summary>
         /// Loads the application settings.

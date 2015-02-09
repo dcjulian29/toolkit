@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using Common.Logging;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -13,9 +10,9 @@ namespace ToolKit.Data.NHibernate
     /// coordinates the writing out of changes and the resolution of 
     /// concurrency problems.
     /// </summary>
-    public class NHibernateUnitOfWork : INHibernateUnitOfWork
+    public class NHibernateUnitOfWork : IUnitOfWork
     {
-        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger<NHibernateUnitOfWork>();
 
         private bool _rollbackOnDispose = false;
 

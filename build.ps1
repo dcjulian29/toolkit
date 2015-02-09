@@ -3,17 +3,17 @@ $ErrorActionPreference = 'Stop'
 Task default -Depends Compile
 
 Properties {
-  $projectName = "toolkit"
-  $base_directory = Resolve-Path .
-  $build_directory = "$base_directory\build"
-  $release_directory = "$build_directory\release"
-  $package_directory = "$base_directory\packages"
+    $projectName = "toolkit"
+    $base_directory = Resolve-Path .
+    $build_directory = "$base_directory\build"
+    $release_directory = "$build_directory\release"
+    $package_directory = "$base_directory\packages"
   
-  $build_configuration = "Release"
-  $solution_file = "$base_directory\$projectName.sln"
+    $build_configuration = "Release"
+    $solution_file = "$base_directory\$projectName.sln"
 
-  $build_number = Invoke-Command -ScriptBlock { git rev-list HEAD --count }
-  $version = "$(Get-Date -Format 'yyyy.MM.dd').$build_number"
+    $lasttag = Invoke-Command -ScriptBlock { git describe --tags --abbrev=0 }
+    $version = if ($lasttag -eq $null) { "0.0.0" } else { $lasttag }
 }
 
 Task VsVar32 {
@@ -55,8 +55,8 @@ Task Clean -depends VsVar32 {
 }
 
 Task Init -depends Clean {
-  New-Item $build_directory -ItemType Directory | Out-Null
-  New-Item $release_directory -ItemType Directory | Out-Null
+    New-Item $build_directory -ItemType Directory | Out-Null
+    New-Item $release_directory -ItemType Directory | Out-Null
 }
 
 Task Version -depends Init {
@@ -112,17 +112,19 @@ Task Compile -depends Version, PackageRestore {
 
 Task Test -depends UnitTest
 
-Task UnitTest -depends Compile, CopySQLiteInterop {
-    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*").Count -eq 0) {
+Task xUnit {
+    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" -Exclude "xunit.runners.visualstudio.*").Count -eq 0) {
         Push-Location $package_directory
-        exec { nuget install xunit.runners }
+        exec { nuget install xunit.runners -Prerelease }
         Pop-Location
     }
 
     $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" `
         | select -Last 1 -ExpandProperty FullName
-    $xunit = "$xunit\tools\xunit.console.clr4.exe"
+    $global:xunit = "$xunit\tools\xunit.console.exe"
+}
 
+Task UnitTest -depends Compile, CopySQLiteInterop, xUnit {
     if (Test-Path $xunit) {
         exec { & $xunit "$release_directory\UnitTests.dll" }
     } else {
@@ -130,8 +132,10 @@ Task UnitTest -depends Compile, CopySQLiteInterop {
     }
 }
 
-Task Package -depends Test {
-    exec { nuget pack ToolKit.nuspec -o "$build_directory" }
-    exec { nuget pack ToolKit.Data.NHibernate.nuspec -o "$build_directory" }
-    exec { nuget pack ToolKit.Data.EntityFramework.nuspec -o "$build_directory" }
+Task Package { #-depends Test {
+    foreach ($package in (Get-ChildItem -Path $base_directory -Filter "*.nuspec")) {
+        exec { 
+            nuget.exe pack "$($package.FullName)" -Version $version -Symbols -o "$build_directory"
+        }
+    }
 }

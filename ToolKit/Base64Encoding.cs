@@ -1,13 +1,14 @@
 ﻿using System;
+using Common.Logging;
 
 namespace ToolKit
 {
     /// <summary>
     /// A class that handles Base64 encoding and decoding.
     /// </summary>
-    public static class Base64Encoding
+    public class Base64Encoding
     {
-        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger(); 
+        private static ILog _log = LogManager.GetLogger<Base64Encoding>();
 
         /// <summary>
         /// Creates a byte array from the Base64 encoded string. 

@@ -5,6 +5,7 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Common.Logging;
 
 namespace ToolKit.DirectoryServices
 {
@@ -23,7 +24,7 @@ namespace ToolKit.DirectoryServices
     /// </summary>
     public class DistinguishedName
     {
-        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger<DistinguishedName>();
         
         private List<NameValue> components = new List<NameValue>();
 

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common.Logging;
 
 namespace ToolKit.Data.EntityFramework
 {
@@ -13,9 +10,9 @@ namespace ToolKit.Data.EntityFramework
     /// coordinates the writing out of changes and the resolution of 
     /// concurrency problems.
     /// </summary>
-    public class EntityFrameworkUnitOfWork : DbContext, IEntityFrameworkUnitOfWork
+    public class EntityFrameworkUnitOfWork : DbContext, IUnitOfWork
     {
-        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger<EntityFrameworkUnitOfWork>();
 
         private bool _rollbackOnDispose = false;
 
@@ -121,6 +118,15 @@ namespace ToolKit.Data.EntityFramework
         /// <param name="entity">The entity.</param>
         public void Save<T>(T entity) where T : class
         {
+            var method = entity.GetType().GetMethod("IsTransient");
+
+            if (method != null)
+            {
+                var transient = (bool)method.Invoke(entity, null);
+
+                Entry(entity).State = transient ? EntityState.Added : EntityState.Modified;
+            }
+
             if (Entry(entity).State == EntityState.Added)
             {
                 Set<T>().Add(entity);
