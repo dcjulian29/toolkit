@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>ToolKit.Data.EntityFramework</id>
-    <version>2015.1.25.1</version>
+    <version>0.0.0</version>
     <authors>Julian Easterling</authors>
     <owners>Julian Easterling</owners>
     <projectUrl>https://github.com/dcjulian29/toolkit</projectUrl>
@@ -11,13 +11,13 @@
     <description>A library that contains common EntityFramework-based data classes.</description>
     <tags>toolkit entityframework</tags>
     <dependencies>
-      <dependency id="EntityFramework" version="6.1.1" />
-      <dependency id="ToolKit" version="2015.1.25.1" />
+      <dependency id="EntityFramework" version="6.1.2" />
+      <dependency id="ToolKit" version="2015.2.8.1" />
     </dependencies>
   </metadata>
     <files>
-        <file src="build\release\ToolKit.Data.EntityFramework.dll" target="lib\net40" />
-        <file src="build\release\ToolKit.Data.EntityFramework.pdb" target="lib\net40" />
-        <file src="build\release\ToolKit.Data.EntityFramework.xml" target="lib\net40" />
+        <file src="build\release\ToolKit.Data.EntityFramework.dll" target="lib\net45" />
+        <file src="build\release\ToolKit.Data.EntityFramework.pdb" target="lib\net45" />
+        <file src="build\release\ToolKit.Data.EntityFramework.xml" target="lib\net45" />
     </files>
 </package>
