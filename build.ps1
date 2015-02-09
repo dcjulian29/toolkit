@@ -132,8 +132,10 @@ Task UnitTest -depends Compile, CopySQLiteInterop, xUnit {
     }
 }
 
-Task Package -depends Test {
-    exec { nuget pack ToolKit.nuspec -o "$build_directory" }
-    exec { nuget pack ToolKit.Data.NHibernate.nuspec -o "$build_directory" }
-    exec { nuget pack ToolKit.Data.EntityFramework.nuspec -o "$build_directory" }
+Task Package { #-depends Test {
+    foreach ($package in (Get-ChildItem -Path $base_directory -Filter "*.nuspec")) {
+        exec { 
+            nuget.exe pack "$($package.FullName)" -Version $version -Symbols -o "$build_directory"
+        }
+    }
 }
