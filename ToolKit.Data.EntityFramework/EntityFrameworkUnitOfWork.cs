@@ -12,7 +12,7 @@ namespace ToolKit.Data.EntityFramework
     /// </summary>
     public class EntityFrameworkUnitOfWork : DbContext, IUnitOfWork
     {
-        private static ILog _log = LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger<EntityFrameworkUnitOfWork>();
 
         private bool _rollbackOnDispose = false;
 
@@ -116,7 +116,7 @@ namespace ToolKit.Data.EntityFramework
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Save<T>(T entity) where T: class
+        public void Save<T>(T entity) where T : class
         {
             var method = entity.GetType().GetMethod("IsTransient");
 

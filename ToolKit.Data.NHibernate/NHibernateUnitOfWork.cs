@@ -12,7 +12,7 @@ namespace ToolKit.Data.NHibernate
     /// </summary>
     public class NHibernateUnitOfWork : IUnitOfWork
     {
-        private static ILog _log = LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger<NHibernateUnitOfWork>();
 
         private bool _rollbackOnDispose = false;
 

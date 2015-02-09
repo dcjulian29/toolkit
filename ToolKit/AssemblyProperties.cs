@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Common.Logging;
 
 namespace ToolKit
 {
@@ -11,7 +12,7 @@ namespace ToolKit
     /// </summary>
     public class AssemblyProperties
     {
-        private static Common.Logging.ILog _log = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static ILog _log = LogManager.GetLogger<AssemblyProperties>();
 
         /// <summary>
         /// Return the build number of the first Assembly loaded in this AppDomain.
