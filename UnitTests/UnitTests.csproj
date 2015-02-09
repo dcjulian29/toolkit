@@ -80,9 +80,9 @@
     <Compile Include="Base64EncodingTests.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
-    <Compile Include="Data\EntityFrameworkRepositoryBaseTests.cs" />
-    <Compile Include="Data\NHibernateRepositoryBaseTests.cs" />
-    <Compile Include="Data\RepositoryBaseTests.cs" />
+    <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
+    <Compile Include="Data\NHibernateRepositoryTests.cs" />
+    <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
     <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
