@@ -49,7 +49,7 @@ namespace ToolKit.Data
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <returns>
-        /// An IQueryable instance of the entity that can be used by the Repository implementation.
+        /// An instance of the entity that can be used by the Repository implementation to further query the results.
         /// </returns>
         public IQueryable<T> Get<T>() where T : class
         {
