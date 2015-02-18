@@ -115,7 +115,9 @@ Task Test -depends UnitTest
 Task xUnit {
     if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" -Exclude "xunit.runners.visualstudio.*").Count -eq 0) {
         Push-Location $package_directory
-        exec { nuget install xunit.runners -Prerelease }
+        # BUG: in the latest version of the xunit runner there is a bug that prevents test from running.
+        #exec { nuget install xunit.runners -Prerelease }
+        exec { nuget install xunit.runners -Version 2.0.0-rc1-build2826 -Prerelease }
         Pop-Location
     }
 
