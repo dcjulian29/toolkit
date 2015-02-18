@@ -70,6 +70,7 @@
     <Compile Include="DisposableComObject.cs" />
     <Compile Include="DisposableObject.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\EnumerationExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Network\IpV4Address.cs" />
     <Compile Include="Network\IpV4Network.cs" />

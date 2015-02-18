@@ -91,6 +91,7 @@
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
     <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
+    <Compile Include="Extensions\EnumerationExtensionsTests.cs" />
     <Compile Include="GlobalSupressions.cs" />
     <Compile Include="Network\IpV4AddressTests.cs" />
     <Compile Include="Network\IpV4NetworkTests.cs" />
