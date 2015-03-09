@@ -88,20 +88,6 @@ Task PackageRestore -depends Init {
     exec { nuget restore "$solution_file" }
 }
 
-Task CopySQLiteInterop -depends PackageRestore {
-    New-Item "$release_directory\x64" -ItemType Directory | Out-Null
-    New-Item "$release_directory\x86" -ItemType Directory | Out-Null
-
-    $sqlite = "System.Data.SQLite.Core.*"
-    $library_directory = (Get-ChildItem -Path $package_directory -Filter $sqlite).FullName `
-        | Sort-Object | Select-Object -Last 1
-    $library_directory = (Get-ChildItem -Path "$library_directory\build").FullName `
-        | Sort-Object | Select-Object -Last 1
-
-    Copy-Item "$library_directory\x64\*" "$release_directory\x64\"
-    Copy-Item "$library_directory\x86\*" "$release_directory\x86\"
-}
-
 Task Compile -depends Version, PackageRestore {
     exec { 
         msbuild /m /p:BuildInParralel=true /p:Platform="Any CPU" `
@@ -124,7 +110,7 @@ Task xUnit {
     $global:xunit = "$xunit\tools\xunit.console.exe"
 }
 
-Task UnitTest -depends Compile, CopySQLiteInterop, xUnit {
+Task UnitTest -depends Compile, xUnit {
     if (Test-Path $xunit) {
         exec { & $xunit "$release_directory\UnitTests.dll" }
     } else {
