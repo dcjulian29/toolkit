@@ -142,7 +142,7 @@ namespace UnitTests.Data
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patientCount, 3);
+            Assert.Equal(3, patientCount);
         }
 
         [Fact]
