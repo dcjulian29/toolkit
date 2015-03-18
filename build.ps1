@@ -88,20 +88,6 @@ Task PackageRestore -depends Init {
     exec { nuget restore "$solution_file" }
 }
 
-Task CopySQLiteInterop -depends PackageRestore {
-    New-Item "$release_directory\x64" -ItemType Directory | Out-Null
-    New-Item "$release_directory\x86" -ItemType Directory | Out-Null
-
-    $sqlite = "System.Data.SQLite.Core.*"
-    $library_directory = (Get-ChildItem -Path $package_directory -Filter $sqlite).FullName `
-        | Sort-Object | Select-Object -Last 1
-    $library_directory = (Get-ChildItem -Path "$library_directory\build").FullName `
-        | Sort-Object | Select-Object -Last 1
-
-    Copy-Item "$library_directory\x64\*" "$release_directory\x64\"
-    Copy-Item "$library_directory\x86\*" "$release_directory\x86\"
-}
-
 Task Compile -depends Version, PackageRestore {
     exec { 
         msbuild /m /p:BuildInParralel=true /p:Platform="Any CPU" `
@@ -113,18 +99,18 @@ Task Compile -depends Version, PackageRestore {
 Task Test -depends UnitTest
 
 Task xUnit {
-    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" -Exclude "xunit.runners.visualstudio.*").Count -eq 0) {
+    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runner.console.*").Count -eq 0) {
         Push-Location $package_directory
-        exec { nuget install xunit.runners -Prerelease }
+        exec { nuget install xunit.runner.console }
         Pop-Location
     }
 
-    $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" `
+    $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runner.console.*" `
         | select -Last 1 -ExpandProperty FullName
     $global:xunit = "$xunit\tools\xunit.console.exe"
 }
 
-Task UnitTest -depends Compile, CopySQLiteInterop, xUnit {
+Task UnitTest -depends Compile, xUnit {
     if (Test-Path $xunit) {
         exec { & $xunit "$release_directory\UnitTests.dll" }
     } else {
@@ -132,7 +118,7 @@ Task UnitTest -depends Compile, CopySQLiteInterop, xUnit {
     }
 }
 
-Task Package { #-depends Test {
+Task Package -depends Test {
     foreach ($package in (Get-ChildItem -Path $base_directory -Filter "*.nuspec")) {
         exec { 
             nuget.exe pack "$($package.FullName)" -Version $version -Symbols -o "$build_directory"
