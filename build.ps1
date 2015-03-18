@@ -99,13 +99,13 @@ Task Compile -depends Version, PackageRestore {
 Task Test -depends UnitTest
 
 Task xUnit {
-    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" -Exclude "xunit.runners.visualstudio.*").Count -eq 0) {
+    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runner.console.*").Count -eq 0) {
         Push-Location $package_directory
-        exec { nuget install xunit.runners -Prerelease }
+        exec { nuget install xunit.runner.console }
         Pop-Location
     }
 
-    $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runners.*" `
+    $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runner.console.*" `
         | select -Last 1 -ExpandProperty FullName
     $global:xunit = "$xunit\tools\xunit.console.exe"
 }
