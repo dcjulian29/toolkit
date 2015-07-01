@@ -121,7 +121,7 @@ Task UnitTest -depends Compile, xUnit {
 Task Package -depends Test {
     foreach ($package in (Get-ChildItem -Path $base_directory -Filter "*.nuspec")) {
         exec { 
-            nuget.exe pack "$($package.FullName)" -Version $version -Symbols -o "$build_directory"
+            nuget.exe pack "$($package.FullName)" -Version $version -o "$build_directory"
         }
     }
 }
