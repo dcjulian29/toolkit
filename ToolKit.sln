@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.EntityFramewor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.WebApi", "ToolKit.WebApi\ToolKit.WebApi.csproj", "{E55DC745-8585-4454-A21E-2CBB20A4BB68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Wpf", "ToolKit.Wpf\ToolKit.Wpf.csproj", "{FD0183D0-FACE-4753-8626-D60F7815B834}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{E55DC745-8585-4454-A21E-2CBB20A4BB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E55DC745-8585-4454-A21E-2CBB20A4BB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E55DC745-8585-4454-A21E-2CBB20A4BB68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD0183D0-FACE-4753-8626-D60F7815B834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD0183D0-FACE-4753-8626-D60F7815B834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD0183D0-FACE-4753-8626-D60F7815B834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD0183D0-FACE-4753-8626-D60F7815B834}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
