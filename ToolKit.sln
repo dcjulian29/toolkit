@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit", "ToolKit\ToolKit.csproj", "{64BDE149-2F82-4A95-AA15-3E295560A2C4}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.EntityFramework", "ToolKit.Data.EntityFramework\ToolKit.Data.EntityFramework.csproj", "{4F9F8C27-961F-4FA9-BD7C-0FA9CEC68521}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.WebApi", "ToolKit.WebApi\ToolKit.WebApi.csproj", "{E55DC745-8585-4454-A21E-2CBB20A4BB68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Wpf", "ToolKit.Wpf\ToolKit.Wpf.csproj", "{FD0183D0-FACE-4753-8626-D60F7815B834}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.MongoDb", "ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj", "{45E88F4D-9E50-40F2-93EF-07439952F6FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{E55DC745-8585-4454-A21E-2CBB20A4BB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E55DC745-8585-4454-A21E-2CBB20A4BB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E55DC745-8585-4454-A21E-2CBB20A4BB68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD0183D0-FACE-4753-8626-D60F7815B834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD0183D0-FACE-4753-8626-D60F7815B834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD0183D0-FACE-4753-8626-D60F7815B834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD0183D0-FACE-4753-8626-D60F7815B834}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
