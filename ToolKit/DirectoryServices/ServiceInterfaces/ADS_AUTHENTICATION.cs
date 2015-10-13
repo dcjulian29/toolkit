@@ -92,8 +92,8 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
         /// <summary>
         /// Windows 2000 SP1 and later: Specify this flag when using the LDAP provider if your
         /// ADsPath includes a server name. Do not use this flag for paths that include a domain
-        /// name or for a serverless bind. If you specify a server name without also specifying this
-        /// flag, unnecessary network traffic can result.
+        /// name or for a server-less bind. If you specify a server name without also specifying
+        /// this flag, unnecessary network traffic can result.
         /// </summary>
         SERVER_BIND = 0x200,
 
@@ -101,7 +101,7 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
         /// Specify this flag to turn referral chasing off for the life of the connection. However,
         /// even when this flag is specified, ADSI still allows the setting of referral chasing
         /// behavior for container enumeration when set using ADS_OPTION_REFERRALS in
-        /// ADS_OPTION_ENUM (as documented in container enumeration wtih referral chasing in
+        /// ADS_OPTION_ENUM (as documented in container enumeration with referral chasing in
         /// IADsObjectOptions::SetOption) and searching separately (as documented in Referral
         /// Chasing with IDirectorySearch).
         /// Note: This option is not supported by the WinNT provider.

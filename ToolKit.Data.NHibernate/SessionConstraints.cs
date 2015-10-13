@@ -4,7 +4,7 @@ using NHibernate;
 namespace ToolKit.Data.NHibernate
 {
     /// <summary>
-    /// Provides Testing Constraints to NHibernate's session object.
+    /// Provides Testing Constraints to NHibernate session object.
     /// </summary>
     public class SessionConstraint
     {

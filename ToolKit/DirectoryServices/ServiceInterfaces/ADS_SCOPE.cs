@@ -18,7 +18,7 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
         ONELEVEL = 1,
 
         /// <summary>
-        /// Searches the whole subtree, including all the children and the base object itself.
+        /// Searches the whole sub-tree, including all the children and the base object itself.
         /// </summary>
         SUBTREE = 2
     }

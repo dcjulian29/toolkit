@@ -63,9 +63,9 @@ namespace ToolKit.DirectoryServices
         string ManagedBy { get; }
 
         /// <summary>
-        /// Get the distinguished name list of groups this group is a member of.
+        /// Gets the distinguished name list of groups this group is a member of.
         /// </summary>
-        /// <value>The distingushed name list of the groups</value>
+        /// <value>The distinguished name list of the groups</value>
         List<string> MemberOf { get; }
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace ToolKit.DirectoryServices
         List<string> Members { get; }
 
         /// <summary>
-        /// Gets the modifed date and time for the group.
+        /// Gets the modified date and time for the group.
         /// </summary>
-        /// <value>The modifed date and time for the group.</value>
-        DateTime Modifed { get; }
+        /// <value>The modified date and time for the group.</value>
+        DateTime Modified { get; }
 
         /// <summary>
         /// Gets the name of the group.

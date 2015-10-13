@@ -202,10 +202,10 @@ namespace ToolKit.DirectoryServices
         string MobilePhone { get; }
 
         /// <summary>
-        /// Gets the modifed date and time for the user account.
+        /// Gets the modified date and time for the user account.
         /// </summary>
-        /// <value>The modifed date and time for the user account.</value>
-        DateTime Modifed { get; }
+        /// <value>The modified date and time for the user account.</value>
+        DateTime Modified { get; }
 
         /// <summary>
         /// Gets the name of the user account.
@@ -316,9 +316,9 @@ namespace ToolKit.DirectoryServices
         int UserAccountControl { get; }
 
         /// <summary>
-        /// Gets the userprincipal name of the user account.
+        /// Gets the user principal name of the user account.
         /// </summary>
-        /// <value>The userprincipal name of the user account.</value>
+        /// <value>The user principal name of the user account.</value>
         string UserPrincipalName { get; }
 
         /// <summary>

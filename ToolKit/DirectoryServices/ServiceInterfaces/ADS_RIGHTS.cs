@@ -62,7 +62,7 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
         GENERIC_EXECUTE = 0x20000000,
 
         /// <summary>
-        /// The right to create or delete child objects, delete a subtree, read and write
+        /// The right to create or delete child objects, delete a sub-tree, read and write
         /// properties, examine child objects and the object itself, add and remove the object from
         /// the directory, and read or write with an extended right.
         /// </summary>
