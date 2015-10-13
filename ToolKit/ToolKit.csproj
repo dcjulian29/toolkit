@@ -66,7 +66,10 @@
     <Compile Include="Data\MemoryUnitOfWork.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
+    <Compile Include="DirectoryServices\IComputer.cs" />
+    <Compile Include="DirectoryServices\IGroup.cs" />
     <Compile Include="DirectoryServices\InvalidDistinguishedNameException.cs" />
+    <Compile Include="DirectoryServices\IUser.cs" />
     <Compile Include="DirectoryServices\LdapFilter.cs" />
     <Compile Include="DirectoryServices\ServiceInterfaces\ADSI_DIALECT.cs" />
     <Compile Include="DirectoryServices\ServiceInterfaces\ADS_ACEFLAG.cs" />
