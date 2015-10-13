@@ -81,6 +81,10 @@
     <Compile Include="SessionFactories\SqLiteSessionFactory.cs" />
     <Compile Include="SessionManager.cs" />
     <Compile Include="SessionPool.cs" />
+    <Compile Include="UserTypes\BoolAsByte.cs" />
+    <Compile Include="UserTypes\BoolAsNumber.cs" />
+    <Compile Include="UserTypes\NullableDateTime.cs" />
+    <Compile Include="UserTypes\TrimString.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ToolKit\ToolKit.csproj">
