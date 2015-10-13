@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ToolKit
 {
     /// <summary>
-    /// An abstract class that wraps an object that uses scarce resources and will dispose
-    /// those resource when they are no longer needed.
+    /// An abstract class that wraps an object that uses scarce resources and will dispose those
+    /// resource when they are no longer needed.
     /// </summary>
     public abstract class DisposableObject : IDisposable
     {
@@ -21,8 +19,10 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting
+        /// unmanaged resources.
         /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="obj"/> is null.</exception>
         public void Dispose()
         {
             Dispose(true);
@@ -33,7 +33,8 @@ namespace ToolKit
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+        /// only unmanaged resources.
         /// </param>
         public virtual void Dispose(bool disposing)
         {
@@ -47,7 +48,9 @@ namespace ToolKit
         /// <summary>
         /// Disposes the resources used by the inherited class.
         /// </summary>
-        /// <param name="disposing">if set to <c>false</c>, this method has been called by the runtime.</param>
+        /// <param name="disposing">
+        /// if set to <c>false</c>, this method has been called by the runtime.
+        /// </param>
         protected abstract void DisposeResources(bool disposing);
     }
 }
