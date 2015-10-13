@@ -94,6 +94,7 @@
     <Compile Include="Data\NHibernateRepositoryTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
+    <Compile Include="DirectoryServices\LdapFilterTests.cs" />
     <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
     <Compile Include="Extensions\EnumerationExtensionsTests.cs" />

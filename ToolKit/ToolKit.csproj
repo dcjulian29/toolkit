@@ -67,6 +67,7 @@
     <Compile Include="Data\Repository.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
     <Compile Include="DirectoryServices\InvalidDistinguishedNameException.cs" />
+    <Compile Include="DirectoryServices\LdapFilter.cs" />
     <Compile Include="DisposableComObject.cs" />
     <Compile Include="DisposableObject.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
@@ -82,7 +83,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="DirectoryServices\LDAP Search Filters.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
