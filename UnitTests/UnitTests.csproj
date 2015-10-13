@@ -68,6 +68,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.96.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -95,6 +96,7 @@
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
     <Compile Include="DirectoryServices\LdapFilterTests.cs" />
+    <Compile Include="DirectoryServices\LdapQueryTests.cs" />
     <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
     <Compile Include="Extensions\EnumerationExtensionsTests.cs" />
