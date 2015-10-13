@@ -1,10 +1,16 @@
 //// ReSharper disable InconsistentNaming
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
     /// <summary>
     /// Specifies the type of values in a pathname object.
     /// </summary>
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1650:ElementDocumentationMustBeSpelledCorrectly",
+        Justification = "This class contains acronyms or abbreviations.")]
     public enum ADS_FORMAT
     {
         /// <summary>

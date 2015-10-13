@@ -1,10 +1,16 @@
 //// ReSharper disable InconsistentNaming
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
     /// <summary>
     /// Specifies whether special characters are escaped, unescaped, or untouched.
     /// </summary>
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1650:ElementDocumentationMustBeSpelledCorrectly",
+        Justification = "This class contains acronyms or abbreviations.")]
     public enum ADS_ESCAPE_MODE
     {
         /// <summary>
