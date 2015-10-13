@@ -35,7 +35,7 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
         /// <summary>
         /// Gets a VT_I4 value that determines if mutual authentication is performed by the SSPI
         /// layer. If the returned option value contains the ISC_RET_MUTUAL_AUTH flag, defined in
-        /// Sspi.h, then mutual authentication has been performed. If the returned option value does
+        /// SSPI.h, then mutual authentication has been performed. If the returned option value does
         /// not contain the ISC_RET_MUTUAL_AUTH flag, then mutual authentication has not been
         /// performed. For more information about mutual authentication, see SSPI. This option is
         /// not supported by the IADsObjectOptions.SetOption method.

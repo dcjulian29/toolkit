@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 //// ReSharper disable InconsistentNaming
 
@@ -8,6 +9,10 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
     /// Specifies flags used for manipulating user properties.
     /// </summary>
     [Flags]
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1650:ElementDocumentationMustBeSpelledCorrectly",
+        Justification = "This class contains references to Win32 API.")]
     public enum ADS_USER_FLAG
     {
         /// <summary>

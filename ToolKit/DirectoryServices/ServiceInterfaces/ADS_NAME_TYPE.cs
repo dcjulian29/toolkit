@@ -1,24 +1,30 @@
 //// ReSharper disable InconsistentNaming
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
     /// <summary>
     /// Specifies the format used to represent distinguished names.
     /// </summary>
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1650:ElementDocumentationMustBeSpelledCorrectly",
+        Justification = "This class contains references to Win32 API.")]
     public enum ADS_NAME_TYPE
     {
         /// <summary>
-        /// Name format as specified in RFC 1779. For example, "CN=Jeff Smith,CN=users,DC=Fabrikam,DC=com".
+        /// Name format as specified in RFC 1779. For example, "CN=Jeff Smith,CN=users,DC=Company,DC=com".
         /// </summary>
         RFC1779 = 1,
 
         /// <summary>
-        /// Canonical name format. For example, "Fabrikam.com/Users/Jeff Smith".
+        /// Canonical name format. For example, "Company.com/Users/Jeff Smith".
         /// </summary>
         CANONICAL = 2,
 
         /// <summary>
-        /// Account name format used in Windows NT 4.0. For example, "Fabrikam\JeffSmith".
+        /// Account name format used in Windows NT 4.0. For example, "Company\JeffSmith".
         /// </summary>
         NT4 = 3,
 
@@ -28,12 +34,12 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
         DISPLAY = 4,
 
         /// <summary>
-        /// Simple domain name format. For example, "JeffSmith@Fabrikam.com".
+        /// Simple domain name format. For example, "JeffSmith@Company.com".
         /// </summary>
         DOMAIN_SIMPLE = 5,
 
         /// <summary>
-        /// Simple enterprise name format. For example, "JeffSmith@Fabrikam.com".
+        /// Simple enterprise name format. For example, "JeffSmith@Company.com".
         /// </summary>
         ENTERPRISE_SIMPLE = 6,
 
@@ -50,17 +56,17 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
         UNKNOWN = 8,
 
         /// <summary>
-        /// User principal name format. For example, "JeffSmith@Fabrikam.com".
+        /// User principal name format. For example, "JeffSmith@Company.com".
         /// </summary>
         USER_PRINCIPAL_NAME = 9,
 
         /// <summary>
-        /// Extended canonical name format. For example, "Fabrikam.com/Users Jeff Smith".
+        /// Extended canonical name format. For example, "Company.com/Users Jeff Smith".
         /// </summary>
         CANONICAL_EX = 10,
 
         /// <summary>
-        /// Service principal name format. For example, "www/www.fabrikam.com@fabrikam.com".
+        /// Service principal name format. For example, "www/www.Company.com@Company.com".
         /// </summary>
         SERVICE_PRINCIPAL_NAME = 11,
 
