@@ -102,6 +102,7 @@
     <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SYSTEM_FLAG.cs" />
     <Compile Include="DirectoryServices\ServiceInterfaces\ADS_TYPE.cs" />
     <Compile Include="DirectoryServices\ServiceInterfaces\ADS_USER_FLAG.cs" />
+    <Compile Include="DirectoryServices\Users.cs" />
     <Compile Include="DisposableComObject.cs" />
     <Compile Include="DisposableObject.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
