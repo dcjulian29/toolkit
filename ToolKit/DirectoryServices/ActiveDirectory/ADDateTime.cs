@@ -17,7 +17,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Converts a DateTime object into an IADsLargeInteger object
         /// </summary>
         /// <param name="dateTime">The DateTime object to convert</param>
-        /// <returns>The DateTime object represented as an IADsLargeInteger</returns>
+        /// <returns>The UTC DateTime object represented as an IADsLargeInteger</returns>
         public static IADsLargeInteger ToADsLargeInteger(DateTime dateTime)
         {
             var int64Value = dateTime.ToFileTimeUtc();
@@ -55,7 +55,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             high = high << 32;
 
-            return DateTime.FromFileTime(high + low);
+            return DateTime.FromFileTime(high + low).ToUniversalTime();
         }
 
         /// <summary>

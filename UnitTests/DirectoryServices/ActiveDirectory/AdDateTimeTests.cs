@@ -34,7 +34,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void ToDateTime_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = new DateTime(2015, 10, 15, 6, 32, 00);
+            var expected = new DateTime(2015, 10, 15, 10, 32, 00, DateTimeKind.Utc);
             var date = new LargeInteger()
             {
                 HighPart = 30476084,
