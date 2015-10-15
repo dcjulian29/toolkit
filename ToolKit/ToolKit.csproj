@@ -65,6 +65,10 @@
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\MemoryUnitOfWork.cs" />
     <Compile Include="Data\Repository.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFilters.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\AdDateTime.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\IADsLargeInteger.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\LargeInteger.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
     <Compile Include="DirectoryServices\IComputer.cs" />
     <Compile Include="DirectoryServices\IGroup.cs" />
