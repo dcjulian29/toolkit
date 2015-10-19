@@ -100,7 +100,6 @@
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFiltersTest.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\AdDateTimeTests.cs" />
-    <Compile Include="DirectoryServices\ActiveDirectory\AdutilitiesTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
     <Compile Include="DirectoryServices\LdapFilterTests.cs" />
     <Compile Include="DirectoryServices\LdapQueryTests.cs" />
