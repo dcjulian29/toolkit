@@ -11,8 +11,8 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         "StyleCop.CSharp.DocumentationRules",
         "SA1600:ElementsMustBeDocumented",
         Justification = "Test Suites do not need XML Documentation.")]
-    [SuppressMessage("ReSharper", "StringLiteralTypo")]
-    [SuppressMessage("ReSharper", "IdentifierTypo")]
+    [SuppressMessage("ReSharper", "StringLiteralTypo", Justification = "Contains Many Acroymns")]
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Contains Many Acroymns")]
     public class ActiveDirectoryCommonFiltersTest
     {
         [Fact]
