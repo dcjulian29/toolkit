@@ -9,8 +9,8 @@ namespace ToolKit.Security
     public class Sid
     {
         /// <summary>
-        /// Gets the SID for the builtin administrators group on the machine. This is not the same
-        /// as the builtin Administrator *account*.
+        /// Gets the SID for the built-in administrators group on the machine. This is not the same
+        /// as the built-in Administrator *account*.
         /// </summary>
         /// <value>The administrators.</value>
         public static string Administrators
@@ -23,10 +23,10 @@ namespace ToolKit.Security
 
         /// <summary>
         /// Gets the SID for any user logged on without an identity, for instance via an anonymous
-        /// network session. Note that users logged in using the Builtin Guest account are neither
+        /// network session. Note that users logged in using the Built-in Guest account are neither
         /// authenticated nor anonymous. Available on XP and later.
         /// </summary>
-        /// <value>The anonymous loggedon user.</value>
+        /// <value>The anonymous logged on user.</value>
         public static string AnonymousLoggedonUser
         {
             get
@@ -37,7 +37,7 @@ namespace ToolKit.Security
 
         /// <summary>
         /// Gets the SID for any user recognized by the local machine or by a domain. Note that
-        /// users logged in using the Builtin Guest account are not authenticated. However, members
+        /// users logged in using the Built-in Guest account are not authenticated. However, members
         /// of the Guests group with individual accounts on the machine or domain are authenticated.
         /// </summary>
         /// <value>The authenticated users.</value>
@@ -65,7 +65,7 @@ namespace ToolKit.Security
         /// <summary>
         /// Gets the SID for group covering all local user accounts, and users on the domain.
         /// </summary>
-        /// <value>The builtin user.</value>
+        /// <value>The built-in user.</value>
         public static string BuiltinUser
         {
             get
@@ -75,7 +75,7 @@ namespace ToolKit.Security
         }
 
         /// <summary>
-        /// Gets the SID for users who initally logged onto the machine "interactively", such as
+        /// Gets the SID for users who initially logged onto the machine "interactively", such as
         /// local logon and Remote Desktops logon.
         /// </summary>
         /// <value>The interactive users.</value>
@@ -102,7 +102,7 @@ namespace ToolKit.Security
 
         /// <summary>
         /// Gets the SID for users accessing the machine remotely, without interactive desktop
-        /// access (ie, file sharing or RPC calls).
+        /// access (i.e., file sharing or RPC calls).
         /// </summary>
         /// <value>The network logon user.</value>
         public static string NetworkLogonUser
@@ -153,8 +153,8 @@ namespace ToolKit.Security
 
         /// <summary>
         /// Gets the SID for prior to Windows XP, this SID covers every session: authenticated,
-        /// anonymous, and the Builtin Guest account. For Windows XP and later, this SID does not
-        /// cover anonymous logon sessions - only authenticated and the Builtin Guest account.
+        /// anonymous, and the Built-in Guest account. For Windows XP and later, this SID does not
+        /// cover anonymous logon sessions - only authenticated and the Built-in Guest account.
         /// </summary>
         /// <value>The world.</value>
         public static string World
@@ -190,7 +190,7 @@ namespace ToolKit.Security
         }
 
         /// <summary>
-        /// Convert the string formated SID to a string in Hexadecimal format
+        /// Convert the string formatted SID to a string in Hexadecimal format
         /// </summary>
         /// <param name="stringSid">The string sid.</param>
         /// <returns>string in Hexadecimal format</returns>

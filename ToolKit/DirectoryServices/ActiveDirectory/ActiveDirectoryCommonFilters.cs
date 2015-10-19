@@ -1,6 +1,6 @@
-﻿using Common.Logging;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Common.Logging;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
@@ -9,9 +9,13 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
     /// This class provide Common LDAP Queries for Active Directory. It is based on a document that
     /// was created by a previous co-worker.
     /// </summary>
-    [SuppressMessage("ReSharper", "StringLiteralTypo")]
-    [SuppressMessage("ReSharper", "IdentifierTypo")]
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1650:ElementDocumentationMustBeSpelledCorrectly",
+        Justification = "This class contains acronyms or abbreviations.")]
+    [SuppressMessage("ReSharper", "StringLiteralTypo", Justification = "Contains Many Acroymns")]
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Contains Many Acroymns")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Contains Many Acroymns")]
     public class ActiveDirectoryCommonFilters
     {
         private static ILog _log = LogManager.GetLogger<ActiveDirectoryCommonFilters>();
