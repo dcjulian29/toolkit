@@ -120,6 +120,7 @@
     <Compile Include="SuspendableObject.cs" />
     <Compile Include="UnhandledException.cs" />
     <Compile Include="Validation\Check.cs" />
+    <Compile Include="Xml\XmlEncoder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -115,6 +115,7 @@
     <Compile Include="Security\SidTests.cs" />
     <Compile Include="SuspendableObjectTests.cs" />
     <Compile Include="Validation\CheckTests.cs" />
+    <Compile Include="Xml\XmlEncoderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ToolKit.Data.EntityFramework\ToolKit.Data.EntityFramework.csproj">
