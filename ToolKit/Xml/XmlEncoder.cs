@@ -22,7 +22,7 @@ namespace ToolKit.Xml
         {
             if (String.IsNullOrEmpty(inputText))
             {
-                throw new ArgumentNullException(nameof(inputText));
+                throw new ArgumentNullException("inputText");
             }
 
             // If the string doesn't have a & character, it doesn't have any entities.
