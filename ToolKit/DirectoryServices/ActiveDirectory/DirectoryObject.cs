@@ -59,7 +59,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             _distinguishedName = String.Empty;
             if (String.IsNullOrEmpty(distinguishedName))
             {
-                throw new ArgumentNullException(nameof(distinguishedName));
+                throw new ArgumentNullException("distinguishedName");
             }
 
             Initialize(DistinguishedName.Parse(distinguishedName));
@@ -75,7 +75,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             _distinguishedName = String.Empty;
             if (distinguishedName == null)
             {
-                throw new ArgumentNullException(nameof(distinguishedName));
+                throw new ArgumentNullException("distinguishedName");
             }
 
             Initialize(distinguishedName);
@@ -91,7 +91,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             _distinguishedName = String.Empty;
             if (result == null)
             {
-                throw new ArgumentNullException(nameof(result));
+                throw new ArgumentNullException("result");
             }
 
             Initialize(DistinguishedName.Parse(result.Path));
@@ -107,7 +107,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             _distinguishedName = String.Empty;
             if (entry == null)
             {
-                throw new ArgumentNullException(nameof(entry));
+                throw new ArgumentNullException("entry");
             }
 
             Initialize(DistinguishedName.Parse(entry.Path));
