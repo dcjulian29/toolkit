@@ -57,7 +57,7 @@ namespace ToolKit.Xml
                     continue;
                 }
 
-                var entity = inputText.Substring(i, (endOfEntity + 1 - i));
+                var entity = inputText.Substring(i, endOfEntity + 1 - i);
 
                 if ((entity.Length > 1) && (entity[1] == '#'))
                 {
