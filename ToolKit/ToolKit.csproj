@@ -67,6 +67,7 @@
     <Compile Include="Data\Repository.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFilters.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\AdDateTime.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\Computer.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\DirectoryObject.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\IADsLargeInteger.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\LargeInteger.cs" />
