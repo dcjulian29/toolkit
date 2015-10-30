@@ -364,7 +364,14 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             foreach (string key in collection.PropertyNames)
             {
-                extracted.Add(key, collection[key]);
+                if (collection[key].Count == 1)
+                {
+                    extracted.Add(key, collection[key][0]);
+                }
+                else
+                {
+                    extracted.Add(key, collection[key].Cast<object>().ToArray());
+                }
             }
 
             Initialize(extracted);
@@ -384,47 +391,26 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             foreach (var item in collection)
             {
-                var element = _properties.CreateElement(item.Key);
-                var attribute = _properties.CreateAttribute("type");
-
-                attribute.InnerText = item.Value.GetType().ToString();
-                element.Attributes.Append(attribute);
-
-                if (item.Value.GetType() == typeof(byte[]))
+                if (item.Value is object[])
                 {
-                    element.InnerText = HexEncoding.ToString((byte[])item.Value);
+                    foreach (var property in (object[])item.Value)
+                    {
+                        var element = CreateXmlElement(item.Key, property);
+
+                        if (topNode != null)
+                        {
+                            topNode.AppendChild(element);
+                        }
+                    }
                 }
                 else
                 {
-                    if (item.Key == "userparameters")
-                    {
-                        // This is a weird value in that it contains non-printable characters which
-                        // are invalid for the underlying XML storage... so we'll just convert the
-                        // value to Hexadecimal for storage and then convert out a string if needed later.
-                        var valueBytes = new UnicodeEncoding().GetBytes((string)item.Value);
-                        element.InnerText = HexEncoding.ToString(valueBytes);
-                    }
-                    else
-                    {
-                        if (item.Value is string)
-                        {
-                            element.InnerText = XmlEncoder.Encode(item.Value.ToString());
-                        }
-                        else
-                        {
-                            element.InnerText = item.Value.ToString();
-                        }
-                    }
-                }
+                    var element = CreateXmlElement(item.Key, item.Value);
 
-                if (_debugMode)
-                {
-                    _log.Debug(m => m("{0} > {1} : {2}", item.Key, attribute.InnerText, element.InnerText));
-                }
-
-                if (topNode != null)
-                {
-                    topNode.AppendChild(element);
+                    if (topNode != null)
+                    {
+                        topNode.AppendChild(element);
+                    }
                 }
             }
 
@@ -594,6 +580,49 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 .Aggregate(String.Empty, (current, property) => current + String.Format("{0} ", property.ToString()));
 
             return objectClass.Contains(objectType);
+        }
+
+        private XmlElement CreateXmlElement(string key, object value)
+        {
+            var element = _properties.CreateElement(key);
+            var attribute = _properties.CreateAttribute("type");
+
+            attribute.InnerText = value.GetType().ToString();
+            element.Attributes.Append(attribute);
+
+            if (value.GetType() == typeof(byte[]))
+            {
+                element.InnerText = HexEncoding.ToString((byte[])value);
+            }
+            else
+            {
+                if (key == "userparameters")
+                {
+                    // This is a weird value in that it contains non-printable characters which are
+                    // invalid for the underlying XML storage... so we'll just convert the value to
+                    // Hexadecimal for storage and then convert out a string if needed later.
+                    var valueBytes = new UnicodeEncoding().GetBytes((string)value);
+                    element.InnerText = HexEncoding.ToString(valueBytes);
+                }
+                else
+                {
+                    if (value is string)
+                    {
+                        element.InnerText = XmlEncoder.Encode(value.ToString());
+                    }
+                    else
+                    {
+                        element.InnerText = value.ToString();
+                    }
+                }
+            }
+
+            if (_debugMode)
+            {
+                _log.Debug(m => m("{0} > {1} : {2}", key, attribute.InnerText, element.InnerText));
+            }
+
+            return element;
         }
     }
 }
