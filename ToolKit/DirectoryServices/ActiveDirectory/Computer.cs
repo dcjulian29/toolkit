@@ -110,7 +110,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                         return DateTime.MaxValue;
                     }
 
-                    return DateTime.FromFileTime(Convert.ToInt64(expiration));
+                    return DateTime.FromFileTimeUtc(Convert.ToInt64(expiration));
                 }
                 catch (ArgumentOutOfRangeException)
                 {

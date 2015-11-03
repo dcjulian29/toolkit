@@ -17,7 +17,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void AccountExpires_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = DateTime.Parse("1893-04-11T19:47:16.8775807", null, DateTimeStyles.AdjustToUniversal);
+            var expected = new DateTime(2015, 12, 2, 5, 0, 0, DateTimeKind.Utc);
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -336,7 +336,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void LastLogoff_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = DateTime.Parse("2015-10-29T00:24:10.5124008-400");
+            var expected = DateTime.Parse("2015-10-29T00:24:10.5124008", null, DateTimeStyles.AdjustToUniversal);
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -350,7 +350,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void LastLogon_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = DateTime.Parse("2015-10-27T00:24:04.3524715-400");
+            var expected = DateTime.Parse("2015-10-27T00:24:04.3524715", null, DateTimeStyles.AdjustToUniversal);
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -621,7 +621,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         {
             return new Dictionary<string, object>()
             {
-                { "accountexpires", 92233720368775807 },
+                { "accountexpires", 130935060000000000 },
                 { "badpwdcount", 2 },
                 { "badpasswordtime", 130885164510451845 },
                 { "objectcategory", "CN=Computer,CN=Schema,CN=Configuration,DC=company,DC=local" },
