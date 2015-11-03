@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using ToolKit.DirectoryServices.ActiveDirectory;
 using Xunit;
 
@@ -16,7 +17,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void AccountExpires_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = DateTime.Parse("1893-04-11T19:47:16.8775807-04:00");
+            var expected = DateTime.Parse("1893-04-11T19:47:16.8775807", null, DateTimeStyles.AdjustToUniversal);
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -58,7 +59,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void BadPasswordTime_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = DateTime.Parse("2015-10-05T11:00:51.0451845-400");
+            var expected = DateTime.Parse("2015-10-05T11:00:51.0451845", null, DateTimeStyles.AdjustToUniversal);
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -86,7 +87,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Changed_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = new DateTime(2015, 10, 28, 11, 39, 34);
+            var expected = new DateTime(2015, 10, 28, 15, 39, 34, DateTimeKind.Utc);
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -142,7 +143,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Created_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = new DateTime(2015, 10, 5, 7, 0, 50);
+            var expected = new DateTime(2015, 10, 5, 11, 0, 50);
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -405,7 +406,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Modified_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = new DateTime(2015, 10, 28, 11, 39, 34);
+            var expected = new DateTime(2015, 10, 28, 15, 39, 34);
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -627,7 +628,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
                 { "cn", "COMPUTER01" },
                 { "useraccountcontrol", 4096 },
                 { "countrycode", 42 },
-                { "whencreated" , DateTime.Parse("10/5/2015 11:00:50 AM")},
+                { "whencreated" , DateTime.Parse("10/5/2015 11:00:50", null, DateTimeStyles.AdjustToUniversal) },
                 { "description", "Computer For Stuff" },
                 { "distinguishedname", "CN=COMPUTER01,CN=Computers,DC=company,DC=local" },
                 { "dnshostname", "computer01.company.local" },
@@ -639,7 +640,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
                 { "location", "Ashburn" },
                 { "logoncount", 60 },
                 { "managedby", "CN=user1,CN=Users,DC=company,DC=local" },
-                { "whenchanged", DateTime.Parse("10/28/2015 3:39:34 PM") },
+                { "whenchanged", DateTime.Parse("10/28/2015 15:39:34", null, DateTimeStyles.AdjustToUniversal) },
                 { "name", "COMPUTER01" },
                 { "operatingsystem", "Windows 10 Pro" },
                 { "operatingsystemservicepack", "1" },

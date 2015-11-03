@@ -216,7 +216,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 return DateTime.Parse(
                     GetNodeValue("//DirectoryObject/whencreated"),
                     null,
-                    DateTimeStyles.AssumeUniversal);
+                    DateTimeStyles.AdjustToUniversal);
             }
         }
 
@@ -378,7 +378,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 return DateTime.Parse(
                     GetNodeValue("//DirectoryObject/whenchanged"),
                     null,
-                    DateTimeStyles.AssumeUniversal);
+                    DateTimeStyles.AdjustToUniversal);
             }
         }
 
