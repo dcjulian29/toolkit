@@ -103,6 +103,7 @@
     <Compile Include="DirectoryServices\ActiveDirectory\ComputerTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\DirectoryObjectTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\UserTests.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\ContactTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
     <Compile Include="DirectoryServices\LdapFilterTests.cs" />
     <Compile Include="DirectoryServices\LdapQueryTests.cs" />
