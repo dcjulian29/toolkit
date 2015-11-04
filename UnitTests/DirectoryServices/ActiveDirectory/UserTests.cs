@@ -698,7 +698,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void PasswordLastSet_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = DateTime.Parse("2015-10-05T11:00:51.0459354-400");
+            var expected = DateTime.Parse("2015-10-05T11:00:51.0459354", null, DateTimeStyles.AdjustToUniversal);
             var user = new User(InitializeProperties());
 
             // Act
