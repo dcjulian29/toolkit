@@ -71,6 +71,7 @@
     <Compile Include="DirectoryServices\ActiveDirectory\DirectoryObject.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\IADsLargeInteger.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\LargeInteger.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\User.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
     <Compile Include="DirectoryServices\IComputer.cs" />
     <Compile Include="DirectoryServices\IGroup.cs" />

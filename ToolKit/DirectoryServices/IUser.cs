@@ -346,13 +346,6 @@ namespace ToolKit.DirectoryServices
         bool IsApplicationAccount();
 
         /// <summary>
-        /// Determines whether this user is a generic account. Generic accounts are used to hold a
-        /// mailbox which is assigned to other user object during the generic accounts lifespan.
-        /// </summary>
-        /// <returns><c>true</c> if this user is an generic account; otherwise, <c>false</c>.</returns>
-        bool IsGenericAccount();
-
-        /// <summary>
         /// Determines whether this user is an regular account.
         /// </summary>
         /// <returns><c>true</c> if this user is an regular account; otherwise, <c>false</c>.</returns>

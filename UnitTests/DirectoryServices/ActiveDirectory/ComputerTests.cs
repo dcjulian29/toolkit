@@ -628,13 +628,17 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
                 { "cn", "COMPUTER01" },
                 { "useraccountcontrol", 4096 },
                 { "countrycode", 42 },
-                { "whencreated" , DateTime.Parse("10/5/2015 11:00:50", null, DateTimeStyles.AdjustToUniversal) },
+                { "whencreated", DateTime.Parse("10/5/2015 11:00:50", null, DateTimeStyles.AdjustToUniversal) },
                 { "description", "Computer For Stuff" },
                 { "distinguishedname", "CN=COMPUTER01,CN=Computers,DC=company,DC=local" },
                 { "dnshostname", "computer01.company.local" },
                 { "memberof", "CN=group1,CN=Users,DC=company,DC=local" },
-                { "objectguid", new Byte[] { 0x8B, 0x41, 0x29, 0xCD, 0xD7, 0x45, 0x55, 0x4D,
-                                             0x95, 0x2E, 0xE4, 0xDA, 0x71, 0x71, 0x72, 0xAF } },
+                { "objectguid", new Byte[]
+                    {
+                        0x8B, 0x41, 0x29, 0xCD, 0xD7, 0x45, 0x55, 0x4D,
+                        0x95, 0x2E, 0xE4, 0xDA, 0x71, 0x71, 0x72, 0xAF
+                    }
+                },
                 { "lastlogoff", 130905518505124008 },
                 { "lastlogontimestamp", 130903790443524715 },
                 { "location", "Ashburn" },
@@ -649,21 +653,26 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
                 { "primarygroupid", 515 },
                 { "samaccountname", "COMPUTER01$" },
                 { "serviceprincipalname", new[]
-                {
-                    "WSMAN/COMPUTER01",
-                    "WSMAN/COMPUTER01.company.local",
-                    "TERMSRV/COMPUTER01",
-                    "TERMSRV/COMPUTER01.company.local",
-                    "HOST/COMPUTER01",
-                    "HOST/COMPUTER01.company.local"
-                } },
-                { "objectsid", new Byte[] { 0x01, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05,
-                                            0x15, 0x00, 0x00, 0x00, 0xEB, 0xC5, 0x80, 0x59,
-                                            0x3D, 0x15, 0xAE, 0x04, 0xE4, 0xB2, 0xDB, 0x3B,
-                                            0x39, 0x08, 0x00, 0x00 } },
+                    {
+                        "WSMAN/COMPUTER01",
+                        "WSMAN/COMPUTER01.company.local",
+                        "TERMSRV/COMPUTER01",
+                        "TERMSRV/COMPUTER01.company.local",
+                        "HOST/COMPUTER01",
+                        "HOST/COMPUTER01.company.local"
+                    }
+                },
+                { "objectsid", new Byte[]
+                    {
+                        0x01, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05,
+                        0x15, 0x00, 0x00, 0x00, 0xEB, 0xC5, 0x80, 0x59,
+                        0x3D, 0x15, 0xAE, 0x04, 0xE4, 0xB2, 0xDB, 0x3B,
+                        0x39, 0x08, 0x00, 0x00
+                    }
+                },
                 { "usncreated", (Int64)43640 },
                 { "usnchanged", (Int64)129204 },
-                { "objectclass", new[] { "top", "person", "user", "computer"} }
+                { "objectclass", new[] { "top", "person", "user", "computer" } }
             };
         }
 
