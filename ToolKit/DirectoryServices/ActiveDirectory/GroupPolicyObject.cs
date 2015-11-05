@@ -82,7 +82,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the Distinguished Name of the Group Policy Object
         /// </summary>
         /// <returns>A string representing the Distinguished Name</returns>
-        public string DistinguishedName { get; }
+        public string DistinguishedName { get; private set; }
 
         /// <summary>
         /// Gets the name of the domain where the GPO resides
