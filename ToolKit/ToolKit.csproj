@@ -70,6 +70,8 @@
     <Compile Include="DirectoryServices\ActiveDirectory\Computer.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\Contact.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\DirectoryObject.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\Group.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\GroupPolicyObject.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\IADsLargeInteger.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\LargeInteger.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\User.cs" />

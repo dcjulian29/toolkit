@@ -101,6 +101,7 @@
     <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFiltersTest.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\AdDateTimeTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ComputerTests.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\GroupTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\DirectoryObjectTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\UserTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ContactTests.cs" />

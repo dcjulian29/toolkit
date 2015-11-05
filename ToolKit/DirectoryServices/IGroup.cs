@@ -24,7 +24,7 @@ namespace ToolKit.DirectoryServices
         /// Gets the CN of the group.
         /// </summary>
         /// <value>The common name of the group</value>
-        string Cn { get; }
+        string CommonName { get; }
 
         /// <summary>
         /// Gets when the account was created.
@@ -61,12 +61,6 @@ namespace ToolKit.DirectoryServices
         /// </summary>
         /// <value>The DistinguishedName for the group's manager.</value>
         string ManagedBy { get; }
-
-        /// <summary>
-        /// Gets the distinguished name list of groups this group is a member of.
-        /// </summary>
-        /// <value>The distinguished name list of the groups</value>
-        List<string> MemberOf { get; }
 
         /// <summary>
         /// Gets the distinguished name list of members.
