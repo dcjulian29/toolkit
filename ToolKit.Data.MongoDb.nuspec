@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ToolKit.Data.MongoDb</id>
+    <version>0.0.0</version>
+    <authors>Julian Easterling</authors>
+    <owners>Julian Easterling</owners>
+    <projectUrl>https://github.com/dcjulian29/toolkit</projectUrl>
+    <licenseUrl>https://github.com/dcjulian29/toolkit/blob/master/LICENSE.txt</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A library that contains common NHibernate-based data classes.</description>
+    <tags>toolkit nhibernate</tags>
+    <dependencies>
+      <dependency id="mongocsharpdriver" version="[1.10.0,2.0.0)" />
+      <dependency id="ToolKit" version="2015.6.30.2" />
+    </dependencies>
+  </metadata>
+    <files>
+        <file src="build\release\ToolKit.Data.MongoDb.dll" target="lib\net45" />
+        <file src="build\release\ToolKit.Data.MongoDb.pdb" target="lib\net45" />
+        <file src="build\release\ToolKit.Data.MongoDb.xml" target="lib\net45" />
+    </files>
+</package>

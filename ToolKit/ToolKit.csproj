@@ -65,24 +65,75 @@
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\MemoryUnitOfWork.cs" />
     <Compile Include="Data\Repository.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFilters.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\AdDateTime.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\Computer.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\Contact.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\DirectoryObject.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\Group.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\GroupPolicyObject.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\IADsLargeInteger.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\LargeInteger.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\User.cs" />
     <Compile Include="DirectoryServices\DistinguishedName.cs" />
+    <Compile Include="DirectoryServices\IComputer.cs" />
+    <Compile Include="DirectoryServices\IGroup.cs" />
     <Compile Include="DirectoryServices\InvalidDistinguishedNameException.cs" />
+    <Compile Include="DirectoryServices\IUser.cs" />
+    <Compile Include="DirectoryServices\LdapFilter.cs" />
+    <Compile Include="DirectoryServices\LdapQuery.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADSI_DIALECT.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_ACEFLAG.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_ACETYPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_AUTHENTICATION.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_CHASE_REFERRALS.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_DEREF.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_DISPLAY.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_ESCAPE_MODE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_FLAGTYPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_FORMAT.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_GROUP_TYPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_NAME_INITTYPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_NAME_TYPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_OPTION.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_PASSWORD_ENCODING.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_PATHTYPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_PREFERENCES.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_PROPERTY_OPERATION.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_RIGHTS.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SCOPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SD_CONTROL.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SD_FORMAT.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SD_REVISION.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SEARCHPREF.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SECURITY_INFO.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SETTYPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_STATUS.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_SYSTEM_FLAG.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_TYPE.cs" />
+    <Compile Include="DirectoryServices\ServiceInterfaces\ADS_USER_FLAG.cs" />
+    <Compile Include="DirectoryServices\Users.cs" />
     <Compile Include="DisposableComObject.cs" />
     <Compile Include="DisposableObject.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EnumerationExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="HexEncoding.cs" />
     <Compile Include="Network\IpV4Address.cs" />
     <Compile Include="Network\IpV4Network.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\Sid.cs" />
     <Compile Include="SuspendableObject.cs" />
     <Compile Include="UnhandledException.cs" />
     <Compile Include="Validation\Check.cs" />
+    <Compile Include="Xml\XmlEncoder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="DirectoryServices\LDAP Search Filters.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->

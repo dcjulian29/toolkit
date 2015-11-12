@@ -49,6 +49,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
@@ -68,6 +72,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.96.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -93,16 +98,29 @@
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
     <Compile Include="Data\NHibernateRepositoryTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFiltersTest.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\AdDateTimeTests.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\ComputerTests.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\GroupTests.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\DirectoryObjectTests.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\UserTests.cs" />
+    <Compile Include="DirectoryServices\ActiveDirectory\ContactTests.cs" />
     <Compile Include="DirectoryServices\DistingushedNameTests.cs" />
+    <Compile Include="DirectoryServices\LdapFilterTests.cs" />
+    <Compile Include="DirectoryServices\LdapQueryTests.cs" />
+    <Compile Include="DirectoryServices\UsersTest.cs" />
     <Compile Include="DisposableObjectTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
     <Compile Include="Extensions\EnumerationExtensionsTests.cs" />
     <Compile Include="GlobalSupressions.cs" />
+    <Compile Include="HexEncodingTest.cs" />
     <Compile Include="Network\IpV4AddressTests.cs" />
     <Compile Include="Network\IpV4NetworkTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\SidTests.cs" />
     <Compile Include="SuspendableObjectTests.cs" />
     <Compile Include="Validation\CheckTests.cs" />
+    <Compile Include="Xml\XmlEncoderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ToolKit.Data.EntityFramework\ToolKit.Data.EntityFramework.csproj">
