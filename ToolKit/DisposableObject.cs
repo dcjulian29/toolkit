@@ -22,7 +22,9 @@ namespace ToolKit
         /// Performs application-defined tasks associated with freeing, releasing, or resetting
         /// unmanaged resources.
         /// </summary>
-        /// <exception cref="ArgumentNullException"><paramref name="obj"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">
+        /// When requestin the runtime to not call the finalizer, this object is null.
+        /// </exception>
         public void Dispose()
         {
             Dispose(true);
