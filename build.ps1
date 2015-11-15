@@ -23,6 +23,7 @@ Task VsVar32 {
         $base_dir = "C:\Program Files (x86)"
     }
     
+    $vs14_dir = "$base_dir\Microsoft Visual Studio 14.0"
     $vs12_dir = "$base_dir\Microsoft Visual Studio 12.0"
     $vs11_dir = "$base_dir\Microsoft Visual Studio 11.0"
     $vsvar32 = "\Common7\Tools\vsvars32.bat"
@@ -35,6 +36,10 @@ Task VsVar32 {
     
     if (Test-Path "$vs12_dir\$vsvar32") {
         $batch_file = "$vs12_dir\$vsvar32"
+    }
+    
+    if (Test-Path "$vs14_dir\$vsvar32") {
+        $batch_file = "$vs14_dir\$vsvar32"
     }
     
     if ($batch_file) {
