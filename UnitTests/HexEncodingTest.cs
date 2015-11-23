@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Toolkit;
+using ToolKit;
 using Xunit;
 
 namespace UnitTests

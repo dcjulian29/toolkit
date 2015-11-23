@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using Common.Logging;
 
-namespace Toolkit
+namespace ToolKit
 {
     /// <summary>
     /// A class that handles Hex encoding and decoding.

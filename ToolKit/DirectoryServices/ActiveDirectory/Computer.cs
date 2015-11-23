@@ -4,7 +4,7 @@ using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using Common.Logging;
-using Toolkit;
+using ToolKit;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 using DN = ToolKit.DirectoryServices.DistinguishedName;
 

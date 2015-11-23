@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Common.Logging;
-using Toolkit;
+using ToolKit;
 using ToolKit.Xml;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
