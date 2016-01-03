@@ -94,6 +94,7 @@
     <Compile Include="ApplicationSettingTests.cs" />
     <Compile Include="AssemblyPropertiesTests.cs" />
     <Compile Include="Base64EncodingTests.cs" />
+    <Compile Include="ConsoleArgumentsTest.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
