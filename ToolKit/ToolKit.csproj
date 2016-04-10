@@ -57,6 +57,7 @@
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="AssemblyProperties.cs" />
     <Compile Include="Base64Encoding.cs" />
+    <Compile Include="ConsoleArguments.cs" />
     <Compile Include="Data\Entity.cs" />
     <Compile Include="Data\EntityWithTypedId.cs" />
     <Compile Include="Data\IEntity.cs" />

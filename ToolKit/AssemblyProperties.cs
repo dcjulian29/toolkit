@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -34,11 +35,43 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Returns a string representation of the compile mode for the first Assembly loaded in this AppDomain.
+        /// Return the date and time the first Assembly loaded in this AppDomain was compiled on.
         /// </summary>
         /// <returns>
-        /// "RELEASE" if in release mode; otherwise "DEBUG"
+        /// the date and time the first Assembly loaded in this AppDomain was compiled on
         /// </returns>
+        public static DateTime CompiledOn()
+        {
+            return CompiledOn(null);
+        }
+
+        /// <summary>
+        /// Return the date and time the file containing an assembly was compiled on.
+        /// </summary>
+        /// <param name="assemblyFileName">Name of the assembly file.</param>
+        /// <returns>the date and time the file containing an assembly was compiled on</returns>
+        public static DateTime CompiledOn(string assemblyFileName)
+        {
+            // The most reliable method to get the date and time that an assembly was compiled on
+            // appears to be by retrieving the linker timestamp from the PE header.
+            var filePath = GetAssembly(assemblyFileName).Location;
+            var buffer = new byte[2048];
+
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                stream.Read(buffer, 0, 2048);
+            }
+
+            var secondsSince1970 = BitConverter.ToInt32(buffer, BitConverter.ToInt32(buffer, 60) + 8);
+            var linkTimeUtc = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(secondsSince1970);
+
+            return TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, TimeZoneInfo.Local);
+        }
+
+        /// <summary>
+        /// Returns a string representation of the compile mode for the first Assembly loaded in this AppDomain.
+        /// </summary>
+        /// <returns>"RELEASE" if in release mode; otherwise "DEBUG"</returns>
         public static string Configuration()
         {
             return Configuration(null);
@@ -48,9 +81,7 @@ namespace ToolKit
         /// Returns a string representation of the compile mode for the named assembly
         /// </summary>
         /// <param name="assemblyFileName">Filename of the assembly file.</param>
-        /// <returns>
-        /// "RELEASE" if in release mode; otherwise "DEBUG"
-        /// </returns>
+        /// <returns>"RELEASE" if in release mode; otherwise "DEBUG"</returns>
         public static string Configuration(string assemblyFileName)
         {
             if (IsDebugMode(assemblyFileName))
@@ -88,9 +119,7 @@ namespace ToolKit
         /// <summary>
         /// Determines whether the first Assembly loaded in this AppDomain is in debug mode.
         /// </summary>
-        /// <returns>
-        ///   <c>true</c> if in debug mode; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if in debug mode; otherwise, <c>false</c>.</returns>
         public static bool IsDebugMode()
         {
             return IsDebugMode(null);
@@ -100,9 +129,7 @@ namespace ToolKit
         /// Determines whether the file containing an assembly is in debug mode.
         /// </summary>
         /// <param name="assemblyFileName">Filename of the assembly file.</param>
-        /// <returns>
-        ///   <c>true</c> if in debug mode; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if in debug mode; otherwise, <c>false</c>.</returns>
         public static bool IsDebugMode(string assemblyFileName)
         {
             var assembly = GetAssembly(assemblyFileName);
@@ -114,9 +141,7 @@ namespace ToolKit
         /// <summary>
         /// Determines whether the first Assembly loaded in this AppDomain is in release mode.
         /// </summary>
-        /// <returns>
-        ///   <c>true</c> if in release mode; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if in release mode; otherwise, <c>false</c>.</returns>
         public static bool IsReleaseMode()
         {
             return !IsDebugMode();
@@ -126,20 +151,35 @@ namespace ToolKit
         /// Determines whether the file containing an assembly is in release mode.
         /// </summary>
         /// <param name="assemblyFileName">Filename of the assembly file.</param>
-        /// <returns>
-        ///   <c>true</c> if in release mode; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if in release mode; otherwise, <c>false</c>.</returns>
         public static bool IsReleaseMode(string assemblyFileName)
         {
             return !IsDebugMode(assemblyFileName);
         }
 
         /// <summary>
+        /// Return the last time this assembly was modified.
+        /// </summary>
+        /// <returns>the last time this assembly was modified</returns>
+        public static DateTime LastModified()
+        {
+            return LastModified(null);
+        }
+
+        /// <summary>
+        /// Return the last time this assembly was modified.
+        /// </summary>
+        /// <param name="assemblyFileName">Name of the assembly file.</param>
+        /// <returns>the last time this assembly was modified</returns>
+        public static DateTime LastModified(string assemblyFileName)
+        {
+            return File.GetLastWriteTime(GetAssembly(assemblyFileName).Location);
+        }
+
+        /// <summary>
         /// Return the Major Version number of the first Assembly loaded in this AppDomain.
         /// </summary>
-        /// <returns>
-        /// a number containing the Major Version number
-        /// </returns>
+        /// <returns>a number containing the Major Version number</returns>
         public static int MajorVersion()
         {
             return MajorVersion(null);
@@ -149,9 +189,7 @@ namespace ToolKit
         /// Return the Major Version number of the file containing an assembly.
         /// </summary>
         /// <param name="assemblyFileName">Name of the assembly file.</param>
-        /// <returns>
-        /// a number containing the Major Version number
-        /// </returns>
+        /// <returns>a number containing the Major Version number</returns>
         public static int MajorVersion(string assemblyFileName)
         {
             return GetAssembly(assemblyFileName).GetName().Version.Major;
@@ -160,9 +198,7 @@ namespace ToolKit
         /// <summary>
         /// Return the Minor Version number of the first Assembly loaded in this AppDomain.
         /// </summary>
-        /// <returns>
-        /// a number containing the Minor Version number
-        /// </returns>
+        /// <returns>a number containing the Minor Version number</returns>
         public static int MinorVersion()
         {
             return MinorVersion(null);
@@ -172,9 +208,7 @@ namespace ToolKit
         /// Return the Minor Version number of the file containing an assembly.
         /// </summary>
         /// <param name="assemblyFileName">Name of the assembly file.</param>
-        /// <returns>
-        /// a number containing the Minor Version number
-        /// </returns>
+        /// <returns>a number containing the Minor Version number</returns>
         public static int MinorVersion(string assemblyFileName)
         {
             return GetAssembly(assemblyFileName).GetName().Version.Minor;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
-using Toolkit;
+using ToolKit;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory

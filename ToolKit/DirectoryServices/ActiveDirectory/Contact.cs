@@ -4,7 +4,7 @@ using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using Common.Logging;
-using Toolkit;
+using ToolKit;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
