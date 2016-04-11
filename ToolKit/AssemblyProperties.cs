@@ -35,7 +35,7 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Return the date and time the first Assembly loaded in this AppDomain was compiled on.
+        /// Return the UTC date and time the first Assembly loaded in this AppDomain was compiled on.
         /// </summary>
         /// <returns>
         /// the date and time the first Assembly loaded in this AppDomain was compiled on
@@ -46,7 +46,7 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Return the date and time the file containing an assembly was compiled on.
+        /// Return the UTC date and time the file containing an assembly was compiled on.
         /// </summary>
         /// <param name="assemblyFileName">Name of the assembly file.</param>
         /// <returns>the date and time the file containing an assembly was compiled on</returns>
@@ -63,9 +63,8 @@ namespace ToolKit
             }
 
             var secondsSince1970 = BitConverter.ToInt32(buffer, BitConverter.ToInt32(buffer, 60) + 8);
-            var linkTimeUtc = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(secondsSince1970);
 
-            return TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, TimeZoneInfo.Local);
+            return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(secondsSince1970);
         }
 
         /// <summary>
