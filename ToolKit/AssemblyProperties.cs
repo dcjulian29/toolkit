@@ -21,7 +21,7 @@ namespace ToolKit
         /// <returns>a number containing the build number</returns>
         public static int BuildVersion()
         {
-            return BuildVersion(null);
+            return BuildVersion(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -31,7 +31,17 @@ namespace ToolKit
         /// <returns>a number containing the build number</returns>
         public static int BuildVersion(string assemblyFileName)
         {
-            return GetAssembly(assemblyFileName).GetName().Version.Build;
+            return BuildVersion(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Return the build number of the file containing an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>a number containing the build number</returns>
+        public static int BuildVersion(Assembly assembly)
+        {
+            return assembly.GetName().Version.Build;
         }
 
         /// <summary>
@@ -42,7 +52,7 @@ namespace ToolKit
         /// </returns>
         public static DateTime CompiledOn()
         {
-            return CompiledOn(null);
+            return CompiledOn(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -52,9 +62,19 @@ namespace ToolKit
         /// <returns>the date and time the file containing an assembly was compiled on</returns>
         public static DateTime CompiledOn(string assemblyFileName)
         {
+            return CompiledOn(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Return the UTC date and time the file containing an assembly was compiled on.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>the date and time the file containing an assembly was compiled on</returns>
+        public static DateTime CompiledOn(Assembly assembly)
+        {
             // The most reliable method to get the date and time that an assembly was compiled on
             // appears to be by retrieving the linker timestamp from the PE header.
-            var filePath = GetAssembly(assemblyFileName).Location;
+            var filePath = assembly.Location;
             var buffer = new byte[2048];
 
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -73,7 +93,7 @@ namespace ToolKit
         /// <returns>"RELEASE" if in release mode; otherwise "DEBUG"</returns>
         public static string Configuration()
         {
-            return Configuration(null);
+            return Configuration(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -83,7 +103,17 @@ namespace ToolKit
         /// <returns>"RELEASE" if in release mode; otherwise "DEBUG"</returns>
         public static string Configuration(string assemblyFileName)
         {
-            if (IsDebugMode(assemblyFileName))
+            return Configuration(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Returns a string representation of the compile mode for the named assembly
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>"RELEASE" if in release mode; otherwise "DEBUG"</returns>
+        public static string Configuration(Assembly assembly)
+        {
+            if (IsDebugMode(assembly))
             {
                 return "DEBUG";
             }
@@ -99,7 +129,7 @@ namespace ToolKit
         /// <returns>a string of the Assembly GUID</returns>
         public static string Guid()
         {
-            return Guid(null);
+            return Guid(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -109,7 +139,16 @@ namespace ToolKit
         /// <returns>a string of the Assembly GUID</returns>
         public static string Guid(string assemblyFileName)
         {
-            var assembly = GetAssembly(assemblyFileName);
+            return Guid(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Return the GUID string of the file containing an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>a string of the Assembly GUID</returns>
+        public static string Guid(Assembly assembly)
+        {
             var attributes = assembly.GetCustomAttributes(typeof(GuidAttribute), false);
 
             return attributes.Length == 0 ? String.Empty : ((GuidAttribute)attributes[0]).Value;
@@ -121,7 +160,7 @@ namespace ToolKit
         /// <returns><c>true</c> if in debug mode; otherwise, <c>false</c>.</returns>
         public static bool IsDebugMode()
         {
-            return IsDebugMode(null);
+            return IsDebugMode(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -131,7 +170,16 @@ namespace ToolKit
         /// <returns><c>true</c> if in debug mode; otherwise, <c>false</c>.</returns>
         public static bool IsDebugMode(string assemblyFileName)
         {
-            var assembly = GetAssembly(assemblyFileName);
+            return IsDebugMode(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Determines whether the file containing an assembly is in debug mode.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns><c>true</c> if in debug mode; otherwise, <c>false</c>.</returns>
+        public static bool IsDebugMode(Assembly assembly)
+        {
             var attributes = assembly.GetCustomAttributes(false);
 
             return attributes.OfType<DebuggableAttribute>().Select(attribute => attribute.IsJITTrackingEnabled).FirstOrDefault();
@@ -143,7 +191,7 @@ namespace ToolKit
         /// <returns><c>true</c> if in release mode; otherwise, <c>false</c>.</returns>
         public static bool IsReleaseMode()
         {
-            return !IsDebugMode();
+            return !IsDebugMode(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -153,7 +201,17 @@ namespace ToolKit
         /// <returns><c>true</c> if in release mode; otherwise, <c>false</c>.</returns>
         public static bool IsReleaseMode(string assemblyFileName)
         {
-            return !IsDebugMode(assemblyFileName);
+            return !IsDebugMode(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Determines whether the file containing an assembly is in release mode.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns><c>true</c> if in release mode; otherwise, <c>false</c>.</returns>
+        public static bool IsReleaseMode(Assembly assembly)
+        {
+            return !IsDebugMode(assembly);
         }
 
         /// <summary>
@@ -162,7 +220,7 @@ namespace ToolKit
         /// <returns>the last time this assembly was modified</returns>
         public static DateTime LastModified()
         {
-            return LastModified(null);
+            return LastModified(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -172,7 +230,17 @@ namespace ToolKit
         /// <returns>the last time this assembly was modified</returns>
         public static DateTime LastModified(string assemblyFileName)
         {
-            return File.GetLastWriteTime(GetAssembly(assemblyFileName).Location);
+            return LastModified(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Return the last time this assembly was modified.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>the last time this assembly was modified</returns>
+        public static DateTime LastModified(Assembly assembly)
+        {
+            return File.GetLastWriteTime(assembly.Location);
         }
 
         /// <summary>
@@ -181,7 +249,7 @@ namespace ToolKit
         /// <returns>a number containing the Major Version number</returns>
         public static int MajorVersion()
         {
-            return MajorVersion(null);
+            return MajorVersion(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -191,7 +259,17 @@ namespace ToolKit
         /// <returns>a number containing the Major Version number</returns>
         public static int MajorVersion(string assemblyFileName)
         {
-            return GetAssembly(assemblyFileName).GetName().Version.Major;
+            return MajorVersion(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Return the Major Version number of the file containing an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>a number containing the Major Version number</returns>
+        public static int MajorVersion(Assembly assembly)
+        {
+            return assembly.GetName().Version.Major;
         }
 
         /// <summary>
@@ -200,7 +278,7 @@ namespace ToolKit
         /// <returns>a number containing the Minor Version number</returns>
         public static int MinorVersion()
         {
-            return MinorVersion(null);
+            return MinorVersion(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -210,7 +288,46 @@ namespace ToolKit
         /// <returns>a number containing the Minor Version number</returns>
         public static int MinorVersion(string assemblyFileName)
         {
-            return GetAssembly(assemblyFileName).GetName().Version.Minor;
+            return MinorVersion(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Return the Minor Version number of the file containing an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>a number containing the Minor Version number</returns>
+        public static int MinorVersion(Assembly assembly)
+        {
+            return assembly.GetName().Version.Minor;
+        }
+
+        /// <summary>
+        /// Return the Assembly Name of the file containing an assembly.
+        /// </summary>
+        /// <returns>a string containing the name of the assembly</returns>
+        public static string Name()
+        {
+            return Name(Assembly.GetCallingAssembly());
+        }
+
+        /// <summary>
+        /// Return the Assembly Name of the file containing an assembly.
+        /// </summary>
+        /// <param name="assemblyFileName">Name of the assembly file.</param>
+        /// <returns>a string containing the name of the assembly</returns>
+        public static string Name(string assemblyFileName)
+        {
+            return Name(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Return the Assembly Name of the file containing an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>a string containing the name of the assembly</returns>
+        public static string Name(Assembly assembly)
+        {
+            return assembly.GetName().Name;
         }
 
         /// <summary>
@@ -219,7 +336,7 @@ namespace ToolKit
         /// <returns>a number containing the Revision number</returns>
         public static int RevisionVersion()
         {
-            return RevisionVersion(null);
+            return RevisionVersion(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -229,7 +346,17 @@ namespace ToolKit
         /// <returns>a number containing the Revision number</returns>
         public static int RevisionVersion(string assemblyFileName)
         {
-            return GetAssembly(assemblyFileName).GetName().Version.Revision;
+            return RevisionVersion(LoadAssembly(assemblyFileName));
+        }
+
+        /// <summary>
+        /// Return the Revision number of the file containing an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>a number containing the Revision number</returns>
+        public static int RevisionVersion(Assembly assembly)
+        {
+            return assembly.GetName().Version.Revision;
         }
 
         /// <summary>
@@ -238,7 +365,7 @@ namespace ToolKit
         /// <returns>a string containing the version number</returns>
         public static string Version()
         {
-            return Version(null);
+            return Version(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -248,22 +375,22 @@ namespace ToolKit
         /// <returns>a string containing the version number</returns>
         public static string Version(string assemblyFileName)
         {
-            return GetAssembly(assemblyFileName).GetName().Version.ToString();
+            return Version(LoadAssembly(assemblyFileName));
         }
 
-        private static Assembly GetAssembly(string fileName)
+        /// <summary>
+        /// Return the version number of the file containing an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>a string containing the version number</returns>
+        public static string Version(Assembly assembly)
         {
-            Assembly assembly;
-            var assemblyProvided = !String.IsNullOrEmpty(fileName);
+            return assembly.GetName().Version.ToString();
+        }
 
-            if (assemblyProvided)
-            {
-                assembly = Assembly.LoadFile(fileName);
-            }
-            else
-            {
-                assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
-            }
+        private static Assembly LoadAssembly(string fileName)
+        {
+            var assembly = Assembly.LoadFile(fileName);
 
             if (assembly == null)
             {
