@@ -155,7 +155,7 @@ Task Coverage -Depends Compile, xUnit {
 
     exec {
         & $OpenCover -target:$xunit `
-                     -targetargs:"$release_directory\UnitTests.dll -noshadow" `
+                     -targetargs:"`"$release_directory\UnitTests.dll`" -noshadow" `
                      -output:"$build_directory\coverage\coverage.xml" `
                      -register:user `
                      -excludebyattribute:"System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" `
