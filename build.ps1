@@ -153,9 +153,11 @@ Task Coverage -Depends Compile, xUnit {
         | select -Last 1 -ExpandProperty FullName
     $ReportGenerator = "$ReportGenerator\tools\ReportGenerator.exe"
 
+    $targetArgs = "`"$release_directory\UnitTests.dll`" -noshadow"
+
     exec {
         & $OpenCover -target:$xunit `
-                     -targetargs:"`"$release_directory\UnitTests.dll`" -noshadow" `
+                     -targetargs:$targetArgs `
                      -output:"$build_directory\coverage\coverage.xml" `
                      -register:user `
                      -excludebyattribute:"System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" `
