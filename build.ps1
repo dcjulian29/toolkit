@@ -154,7 +154,7 @@ Task Coverage -Depends Compile, xUnit {
     $ReportGenerator = "$ReportGenerator\tools\ReportGenerator.exe"
 
     $targetArgs = "`"$release_directory\UnitTests.dll`" -noshadow"
-    $filter = "+[*]* -[UnitTests]*"
+    $filter = "`"+[*]* -[UnitTests]*`""
 
     exec {
         & $OpenCover -target:$xunit `
