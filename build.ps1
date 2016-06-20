@@ -154,7 +154,7 @@ Task Coverage -Depends Compile, xUnit {
     $ReportGenerator = "$ReportGenerator\tools\ReportGenerator.exe"
 
     $targetArgs = "`"$release_directory\UnitTests.dll`" -noshadow"
-    $filter = "`"+[*]* -[UnitTests]*`""
+    $filter = "-filter `"+[*]* -[UnitTests]*`""
 
     exec {
         & $OpenCover -target:$xunit `
@@ -163,7 +163,7 @@ Task Coverage -Depends Compile, xUnit {
                      -register:user `
                      -excludebyattribute:"System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" `
                      -excludebyfile:"*\*Designer.cs;*\*.g.cs;*.*.g.i.cs" `
-                     -filter:$filter `
+                     $filter `
                      -hideskipped:All -skipautoprops -mergebyhash `
                      -returntargetcode
     }
