@@ -77,6 +77,7 @@ Task("PackageRestore")
     });
 
 Task("Compile")
+    .IsDependentOn("PackageRestore")
     .IsDependentOn("Version")
     .Does(() =>
     {
