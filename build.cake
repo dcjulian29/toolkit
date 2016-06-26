@@ -116,7 +116,7 @@ Task("Coverage")
                     ShadowCopy = false });
             },
             new FilePath(buildDirectory + "\\coverage\\coverage.xml"),
-            new OpenCoverSettings()
+            new OpenCoverSettings() { Register = "user" }
                 .WithFilter(@"+[*]*")
                 .WithFilter(@"-[UnitTests]*")
                 .ExcludeByAttribute("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")
