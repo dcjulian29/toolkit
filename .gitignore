@@ -110,3 +110,7 @@ UpgradeLog*.XML
 
 # Cake Build Tools Directory
 tools
+
+# Visual Studio Settings Directories
+.vs
+.vscode
