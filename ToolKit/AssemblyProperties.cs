@@ -16,15 +16,6 @@ namespace ToolKit
         private static ILog _log = LogManager.GetLogger<AssemblyProperties>();
 
         /// <summary>
-        /// Return the build number of the first Assembly loaded in this AppDomain.
-        /// </summary>
-        /// <returns>a number containing the build number</returns>
-        public static int BuildVersion()
-        {
-            return BuildVersion(Assembly.GetCallingAssembly());
-        }
-
-        /// <summary>
         /// Return the build number of the file containing an assembly.
         /// </summary>
         /// <param name="assemblyFileName">Name of the assembly file.</param>
@@ -42,17 +33,6 @@ namespace ToolKit
         public static int BuildVersion(Assembly assembly)
         {
             return assembly.GetName().Version.Build;
-        }
-
-        /// <summary>
-        /// Return the UTC date and time the first Assembly loaded in this AppDomain was compiled on.
-        /// </summary>
-        /// <returns>
-        /// the date and time the first Assembly loaded in this AppDomain was compiled on
-        /// </returns>
-        public static DateTime CompiledOn()
-        {
-            return CompiledOn(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -88,15 +68,6 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Returns a string representation of the compile mode for the first Assembly loaded in this AppDomain.
-        /// </summary>
-        /// <returns>"RELEASE" if in release mode; otherwise "DEBUG"</returns>
-        public static string Configuration()
-        {
-            return Configuration(Assembly.GetCallingAssembly());
-        }
-
-        /// <summary>
         /// Returns a string representation of the compile mode for the named assembly
         /// </summary>
         /// <param name="assemblyFileName">Filename of the assembly file.</param>
@@ -124,15 +95,6 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Return the GUID string of the first Assembly loaded in this AppDomain.
-        /// </summary>
-        /// <returns>a string of the Assembly GUID</returns>
-        public static string Guid()
-        {
-            return Guid(Assembly.GetCallingAssembly());
-        }
-
-        /// <summary>
         /// Return the GUID string of the file containing an assembly.
         /// </summary>
         /// <param name="assemblyFileName">Name of the assembly file.</param>
@@ -152,15 +114,6 @@ namespace ToolKit
             var attributes = assembly.GetCustomAttributes(typeof(GuidAttribute), false);
 
             return attributes.Length == 0 ? String.Empty : ((GuidAttribute)attributes[0]).Value;
-        }
-
-        /// <summary>
-        /// Determines whether the first Assembly loaded in this AppDomain is in debug mode.
-        /// </summary>
-        /// <returns><c>true</c> if in debug mode; otherwise, <c>false</c>.</returns>
-        public static bool IsDebugMode()
-        {
-            return IsDebugMode(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -186,15 +139,6 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Determines whether the first Assembly loaded in this AppDomain is in release mode.
-        /// </summary>
-        /// <returns><c>true</c> if in release mode; otherwise, <c>false</c>.</returns>
-        public static bool IsReleaseMode()
-        {
-            return !IsDebugMode(Assembly.GetCallingAssembly());
-        }
-
-        /// <summary>
         /// Determines whether the file containing an assembly is in release mode.
         /// </summary>
         /// <param name="assemblyFileName">Filename of the assembly file.</param>
@@ -212,15 +156,6 @@ namespace ToolKit
         public static bool IsReleaseMode(Assembly assembly)
         {
             return !IsDebugMode(assembly);
-        }
-
-        /// <summary>
-        /// Return the last time this assembly was modified.
-        /// </summary>
-        /// <returns>the last time this assembly was modified</returns>
-        public static DateTime LastModified()
-        {
-            return LastModified(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -244,15 +179,6 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Return the Major Version number of the first Assembly loaded in this AppDomain.
-        /// </summary>
-        /// <returns>a number containing the Major Version number</returns>
-        public static int MajorVersion()
-        {
-            return MajorVersion(Assembly.GetCallingAssembly());
-        }
-
-        /// <summary>
         /// Return the Major Version number of the file containing an assembly.
         /// </summary>
         /// <param name="assemblyFileName">Name of the assembly file.</param>
@@ -270,15 +196,6 @@ namespace ToolKit
         public static int MajorVersion(Assembly assembly)
         {
             return assembly.GetName().Version.Major;
-        }
-
-        /// <summary>
-        /// Return the Minor Version number of the first Assembly loaded in this AppDomain.
-        /// </summary>
-        /// <returns>a number containing the Minor Version number</returns>
-        public static int MinorVersion()
-        {
-            return MinorVersion(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -304,15 +221,6 @@ namespace ToolKit
         /// <summary>
         /// Return the Assembly Name of the file containing an assembly.
         /// </summary>
-        /// <returns>a string containing the name of the assembly</returns>
-        public static string Name()
-        {
-            return Name(Assembly.GetCallingAssembly());
-        }
-
-        /// <summary>
-        /// Return the Assembly Name of the file containing an assembly.
-        /// </summary>
         /// <param name="assemblyFileName">Name of the assembly file.</param>
         /// <returns>a string containing the name of the assembly</returns>
         public static string Name(string assemblyFileName)
@@ -328,15 +236,6 @@ namespace ToolKit
         public static string Name(Assembly assembly)
         {
             return assembly.GetName().Name;
-        }
-
-        /// <summary>
-        /// Return the Revision number of the first Assembly loaded in this AppDomain.
-        /// </summary>
-        /// <returns>a number containing the Revision number</returns>
-        public static int RevisionVersion()
-        {
-            return RevisionVersion(Assembly.GetCallingAssembly());
         }
 
         /// <summary>
@@ -357,15 +256,6 @@ namespace ToolKit
         public static int RevisionVersion(Assembly assembly)
         {
             return assembly.GetName().Version.Revision;
-        }
-
-        /// <summary>
-        /// Return the version number of the first Assembly loaded in this AppDomain.
-        /// </summary>
-        /// <returns>a string containing the version number</returns>
-        public static string Version()
-        {
-            return Version(Assembly.GetCallingAssembly());
         }
 
         /// <summary>

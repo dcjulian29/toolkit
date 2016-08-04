@@ -30,7 +30,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.BuildVersion();
+            var actual = AssemblyProperties.BuildVersion(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.True(actual >= 0);
@@ -54,7 +54,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.Configuration();
+            var actual = AssemblyProperties.Configuration(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.NotEqual(String.Empty, actual);
@@ -78,7 +78,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.Guid();
+            var actual = AssemblyProperties.Guid(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.NotEqual(String.Empty, actual);
@@ -90,8 +90,8 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var releaseMode = AssemblyProperties.IsReleaseMode();
-            var debugMode = AssemblyProperties.IsDebugMode();
+            var releaseMode = AssemblyProperties.IsReleaseMode(typeof(AssemblyPropertiesTests).Assembly.Location);
+            var debugMode = AssemblyProperties.IsDebugMode(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.NotEqual(releaseMode, debugMode);
@@ -128,7 +128,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.MajorVersion();
+            var actual = AssemblyProperties.MajorVersion(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.True(actual >= 0);
@@ -152,7 +152,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.MinorVersion();
+            var actual = AssemblyProperties.MinorVersion(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.True(actual >= 0);
@@ -176,7 +176,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.Name();
+            var actual = AssemblyProperties.Name(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.Equal("UnitTests", actual);
@@ -200,7 +200,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.RevisionVersion();
+            var actual = AssemblyProperties.RevisionVersion(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.True(actual >= 0);
@@ -224,7 +224,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.Version();
+            var actual = AssemblyProperties.Version(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.NotEqual(String.Empty, actual);
