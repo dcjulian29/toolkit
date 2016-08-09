@@ -3,6 +3,11 @@
 #tool "nuget:?package=ReportGenerator"
 
 var target = Argument("target", "Default");
+
+if (TeamCity.IsRunningOnTeamCity) {
+    target = "teamcity";
+}
+
 var configuration = Argument("configuration", "Release");
 
 var projectName = "toolkit";
@@ -126,61 +131,63 @@ Task("Coverage")
     });
 
 Task("TeamCity")
-    .IsDependentOn("Coverage")
     .Does(() =>
     {
-        // For CI builds, I want to pass these values to TeamCity for the code coverage
+        if (DirectoryExists(baseDirectory + "\\UnitTests")) {
+            RunTarget("coverage");
 
-        // Write class coverage
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageAbsCCovered' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedClasses")));
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageAbsCTotal' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numClasses")));
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageC' value='{0:N2}']",
-            (
-                Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedClasses")) /
-                Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numClasses"))
-            ) * 100));
+            // Write class coverage
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageAbsCCovered' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedClasses")));
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageAbsCTotal' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numClasses")));
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageC' value='{0:N2}']",
+                (
+                    Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedClasses")) /
+                    Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numClasses"))
+                ) * 100));
 
-        // Report method coverage
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageAbsMCovered' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedMethods")));
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageAbsMTotal' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numMethods")));
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageM' value='{0:N2}']",
-            (
-                Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedMethods")) /
-                Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numMethods"))
-            ) * 100));
+            // Report method coverage
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageAbsMCovered' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedMethods")));
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageAbsMTotal' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numMethods")));
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageM' value='{0:N2}']",
+                (
+                    Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedMethods")) /
+                    Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numMethods"))
+                ) * 100));
 
-        // Report branch coverage
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageAbsBCovered' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedBranchPoints")));
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageAbsBTotal' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numBranchPoints")));
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageB' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@branchCoverage")));
+            // Report branch coverage
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageAbsBCovered' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedBranchPoints")));
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageAbsBTotal' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numBranchPoints")));
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageB' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@branchCoverage")));
 
-
-        // Report statement coverage
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageAbsSCovered' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedSequencePoints")));
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageAbsSTotal' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numSequencePoints")));
-        Information(String.Format(
-            "##teamcity[buildStatisticValue key='CodeCoverageS' value='{0}']",
-            XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@sequenceCoverage")));
+            // Report statement coverage
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageAbsSCovered' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedSequencePoints")));
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageAbsSTotal' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numSequencePoints")));
+            Information(String.Format(
+                "##teamcity[buildStatisticValue key='CodeCoverageS' value='{0}']",
+                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@sequenceCoverage")));
+        } else {
+            RunTarget("default");
+        }
     });
 
 Task("Package")
