@@ -16,8 +16,8 @@
     </dependencies>
   </metadata>
     <files>
-        <file src="build\release\ToolKit.Data.EntityFramework.dll" target="lib\net45" />
-        <file src="build\release\ToolKit.Data.EntityFramework.pdb" target="lib\net45" />
-        <file src="build\release\ToolKit.Data.EntityFramework.xml" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.EntityFramework.dll" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.EntityFramework.pdb" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.EntityFramework.xml" target="lib\net45" />
     </files>
 </package>

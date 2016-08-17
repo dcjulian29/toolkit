@@ -16,8 +16,8 @@
     </dependencies>
   </metadata>
     <files>
-        <file src="build\release\ToolKit.WebApi.dll" target="lib\net45" />
-        <file src="build\release\ToolKit.WebApi.pdb" target="lib\net45" />
-        <file src="build\release\ToolKit.WebApi.xml" target="lib\net45" />
+        <file src="build\output\ToolKit.WebApi.dll" target="lib\net45" />
+        <file src="build\output\ToolKit.WebApi.pdb" target="lib\net45" />
+        <file src="build\output\ToolKit.WebApi.xml" target="lib\net45" />
     </files>
 </package>

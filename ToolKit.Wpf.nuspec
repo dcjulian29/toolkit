@@ -15,8 +15,8 @@
     </dependencies>
   </metadata>
     <files>
-        <file src="build\release\ToolKit.Wpf.dll" target="lib\net45" />
-        <file src="build\release\ToolKit.Wpf.pdb" target="lib\net45" />
-        <file src="build\release\ToolKit.Wpf.xml" target="lib\net45" />
+        <file src="build\output\ToolKit.Wpf.dll" target="lib\net45" />
+        <file src="build\output\ToolKit.Wpf.pdb" target="lib\net45" />
+        <file src="build\output\ToolKit.Wpf.xml" target="lib\net45" />
     </files>
 </package>

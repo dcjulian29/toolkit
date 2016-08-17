@@ -1,132 +1,145 @@
-$ErrorActionPreference = 'Stop'
+##########################################################################
+# This is the Cake bootstrapper script for PowerShell.
+# This file was downloaded from https://github.com/cake-build/resources
+# Feel free to change this file to fit your needs.
+##########################################################################
 
-Task default -Depends Compile
+<#
 
-Properties {
-    $projectName = "toolkit"
-    $base_directory = Resolve-Path .
-    $build_directory = "$base_directory\build"
-    $release_directory = "$build_directory\release"
-    $package_directory = "$base_directory\packages"
-  
-    $build_configuration = "Release"
-    $solution_file = "$base_directory\$projectName.sln"
+.SYNOPSIS
+This is a Powershell script to bootstrap a Cake build.
 
-    $lasttag = Invoke-Command -ScriptBlock { git describe --tags --abbrev=0 }
-    $version = if ($lasttag -eq $null) { "0.0.0" } else { $lasttag }
+.DESCRIPTION
+This Powershell script will download NuGet if missing, restore NuGet tools (including Cake)
+and execute your Cake build script with the parameters you provide.
+
+.PARAMETER Script
+The build script to execute.
+.PARAMETER Target
+The build script target to run.
+.PARAMETER Configuration
+The build configuration to use.
+.PARAMETER Verbosity
+Specifies the amount of information to be displayed.
+.PARAMETER Experimental
+Tells Cake to use the latest Roslyn release.
+.PARAMETER WhatIf
+Performs a dry run of the build script.
+No tasks will be executed.
+.PARAMETER Mono
+Tells Cake to use the Mono scripting engine.
+.PARAMETER SkipToolPackageRestore
+Skips restoring of packages.
+.PARAMETER ScriptArgs
+Remaining arguments are added here.
+
+.LINK
+http://cakebuild.net
+
+#>
+
+[CmdletBinding()]
+Param(
+    [string]$Script = "build.cake",
+    [string]$Target = "Default",
+    [string]$Configuration = "Release",
+    [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
+    [string]$Verbosity = "Verbose",
+    [switch]$Experimental,
+    [Alias("DryRun","Noop")]
+    [switch]$WhatIf,
+    [switch]$Mono,
+    [switch]$SkipToolPackageRestore,
+    [Parameter(Position=0,Mandatory=$false,ValueFromRemainingArguments=$true)]
+    [string[]]$ScriptArgs
+)
+
+Write-Host "Preparing to run build script..."
+
+$PSScriptRoot = split-path -parent $MyInvocation.MyCommand.Definition;
+$TOOLS_DIR = Join-Path $PSScriptRoot "tools"
+$NUGET_EXE = Join-Path $TOOLS_DIR "nuget.exe"
+$NUGET_URL = "http://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
+$CAKE_EXE = Join-Path $TOOLS_DIR "Cake/Cake.exe"
+$PACKAGES_CONFIG = Join-Path $TOOLS_DIR "packages.config"
+
+# Should we use mono?
+$UseMono = "";
+if($Mono.IsPresent) {
+    Write-Verbose -Message "Using the Mono based scripting engine."
+    $UseMono = "-mono"
 }
 
-Task VsVar32 {
-    $base_dir = "C:\Program Files"
-
-    if (Test-Path "C:\Program Files (x86)") {
-        $base_dir = "C:\Program Files (x86)"
-    }
-    
-    $vs14_dir = "$base_dir\Microsoft Visual Studio 14.0"
-    $vs12_dir = "$base_dir\Microsoft Visual Studio 12.0"
-    $vs11_dir = "$base_dir\Microsoft Visual Studio 11.0"
-    $vsvar32 = "\Common7\Tools\vsvars32.bat"
-    
-    $batch_file = ""
-    
-    if (Test-Path "$vs11_dir\$vsvar32") {
-        $batch_file = "$vs11_dir\$vsvar32"
-    }
-    
-    if (Test-Path "$vs12_dir\$vsvar32") {
-        $batch_file = "$vs12_dir\$vsvar32"
-    }
-    
-    if (Test-Path "$vs14_dir\$vsvar32") {
-        $batch_file = "$vs14_dir\$vsvar32"
-    }
-    
-    if ($batch_file) {
-        $cmd = "`"$batch_file`" & set"
-        cmd /c "$cmd" | Foreach-Object `
-        {
-            $p, $v = $_.split('=')
-            Set-Item -path env:$p -value $v
-        }
-    } else {
-        Write-Warning "Vsvar32.bat was not found!"
-    }
+# Should we use the new Roslyn?
+$UseExperimental = "";
+if($Experimental.IsPresent -and !($Mono.IsPresent)) {
+    Write-Verbose -Message "Using experimental version of Roslyn."
+    $UseExperimental = "-experimental"
 }
 
-Task Clean -depends VsVar32 {
-    Remove-Item -Force -Recurse $build_directory -ErrorAction SilentlyContinue | Out-Null
-    exec { msbuild /m /p:Configuration="$build_configuration" /t:clean "$solution_file" }
+# Is this a dry run?
+$UseDryRun = "";
+if($WhatIf.IsPresent) {
+    $UseDryRun = "-dryrun"
 }
 
-Task Init -depends Clean {
-    New-Item $build_directory -ItemType Directory | Out-Null
-    New-Item $release_directory -ItemType Directory | Out-Null
+# Make sure tools folder exists
+if ((Test-Path $PSScriptRoot) -and !(Test-Path $TOOLS_DIR)) {
+    Write-Verbose -Message "Creating tools directory..."
+    New-Item -Path $TOOLS_DIR -Type directory | out-null
 }
 
-Task Version -depends Init {
-    if (Test-Path "$build_directory\CommonAssemblyInfo.cs") { 
-        return
-    }
-
-    Write-Output "MARKING THIS BUILD AS VERSION $version"
-
-    Set-Content $build_directory\CommonAssemblyInfo.cs @"
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
-[assembly: AssemblyVersionAttribute("$version")]
-[assembly: AssemblyFileVersionAttribute("$version")]
-[assembly: AssemblyInformationalVersionAttribute("$version")]
-[assembly: AssemblyCopyrightAttribute("(c) Julian Easterling $(Get-Date -Format "yyyy")")]
-[assembly: AssemblyCompanyAttribute("")]
-[assembly: AssemblyConfigurationAttribute("$build_configuration")]
-"@
-}
-
-Task PackageClean {
-    Remove-Item -Force -Recurse $package_directory -ErrorAction SilentlyContinue | Out-Null
-}
-
-Task PackageRestore -depends Init {
-    exec { nuget restore "$solution_file" }
-}
-
-Task Compile -depends Version, PackageRestore {
-    exec { 
-        msbuild /m /p:BuildInParralel=true /p:Platform="Any CPU" `
-            /p:Configuration="$build_configuration" `
-            /p:OutDir="$release_directory"\\ "$solution_file" 
+# Make sure that packages.config exist.
+if (!(Test-Path $PACKAGES_CONFIG)) {
+    Write-Verbose -Message "Downloading packages.config..."
+    try { Invoke-WebRequest -Uri http://cakebuild.net/download/bootstrapper/packages -OutFile $PACKAGES_CONFIG } catch {
+        Throw "Could not download packages.config."
     }
 }
 
-Task Test -depends UnitTest
-
-Task xUnit {
-    if ((Get-ChildItem -Path $package_directory -Filter "xunit.runner.console.*").Count -eq 0) {
-        Push-Location $package_directory
-        exec { nuget install xunit.runner.console }
-        Pop-Location
-    }
-
-    $xunit = Get-ChildItem -Path $package_directory -Filter "xunit.runner.console.*" `
-        | select -Last 1 -ExpandProperty FullName
-    $global:xunit = "$xunit\tools\xunit.console.exe"
-}
-
-Task UnitTest -depends Compile, xUnit {
-    if (Test-Path $xunit) {
-        exec { & $xunit "$release_directory\UnitTests.dll" }
-    } else {
-        Write-Error "xUnit console runner must be available to run tests."
+# Try find NuGet.exe in path if not exists
+if (!(Test-Path $NUGET_EXE)) {
+    Write-Verbose -Message "Trying to find nuget.exe in PATH..."
+    $existingPaths = $Env:Path -Split ';' | Where-Object { (![string]::IsNullOrEmpty($_)) -and (Test-Path $_) }
+    $NUGET_EXE_IN_PATH = Get-ChildItem -Path $existingPaths -Filter "nuget.exe" | Select -First 1
+    if ($NUGET_EXE_IN_PATH -ne $null -and (Test-Path $NUGET_EXE_IN_PATH.FullName)) {
+        Write-Verbose -Message "Found in PATH at $($NUGET_EXE_IN_PATH.FullName)."
+        $NUGET_EXE = $NUGET_EXE_IN_PATH.FullName
     }
 }
 
-Task Package -depends Test {
-    foreach ($package in (Get-ChildItem -Path $base_directory -Filter "*.nuspec")) {
-        exec { 
-            nuget.exe pack "$($package.FullName)" -Version $version -o "$build_directory"
-        }
+# Try download NuGet.exe if not exists
+if (!(Test-Path $NUGET_EXE)) {
+    Write-Verbose -Message "Downloading NuGet.exe..."
+    try {
+        (New-Object System.Net.WebClient).DownloadFile($NUGET_URL, $NUGET_EXE)
+    } catch {
+        Throw "Could not download NuGet.exe."
     }
 }
+
+# Save nuget.exe path to environment to be available to child processed
+$ENV:NUGET_EXE = $NUGET_EXE
+
+# Restore tools from NuGet?
+if(-Not $SkipToolPackageRestore.IsPresent) {
+    Push-Location
+    Set-Location $TOOLS_DIR
+    Write-Verbose -Message "Restoring tools from NuGet..."
+    $NuGetOutput = Invoke-Expression "&`"$NUGET_EXE`" install -ExcludeVersion -OutputDirectory `"$TOOLS_DIR`""
+    if ($LASTEXITCODE -ne 0) {
+        Throw "An error occured while restoring NuGet tools."
+    }
+    Write-Verbose -Message ($NuGetOutput | out-string)
+    Pop-Location
+}
+
+# Make sure that Cake has been installed.
+if (!(Test-Path $CAKE_EXE)) {
+    Throw "Could not find Cake.exe at $CAKE_EXE"
+}
+
+# Start Cake
+Write-Host "Running build script..."
+Invoke-Expression "& `"$CAKE_EXE`" `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseMono $UseDryRun $UseExperimental $ScriptArgs"
+exit $LASTEXITCODE

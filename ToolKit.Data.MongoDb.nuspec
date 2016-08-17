@@ -16,8 +16,8 @@
     </dependencies>
   </metadata>
     <files>
-        <file src="build\release\ToolKit.Data.MongoDb.dll" target="lib\net45" />
-        <file src="build\release\ToolKit.Data.MongoDb.pdb" target="lib\net45" />
-        <file src="build\release\ToolKit.Data.MongoDb.xml" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.MongoDb.dll" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.MongoDb.pdb" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.MongoDb.xml" target="lib\net45" />
     </files>
 </package>

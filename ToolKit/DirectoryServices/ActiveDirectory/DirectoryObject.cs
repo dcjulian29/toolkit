@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Common.Logging;
-using ToolKit;
 using ToolKit.Xml;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
@@ -17,7 +16,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
     public class DirectoryObject
     {
         // This class can do a lot a debug logging. No need to do most of it if running in release mode.
-        private static bool _debugMode = AssemblyProperties.IsDebugMode();
+        private static bool _debugMode = AssemblyProperties.IsDebugMode(typeof(DirectoryObject).Assembly.Location);
 
         private static ILog _log = LogManager.GetLogger<DirectoryObject>();
 

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using ToolKit;
 using Xunit;
 
@@ -12,22 +10,7 @@ namespace UnitTests
         Justification = "Test Suites do not need XML Documentation.")]
     public class AssemblyPropertiesTests
     {
-        #region -- Test SetUp and TearDown --
-
         private string _toolkitLibraryPath = AppDomain.CurrentDomain.BaseDirectory + "\\toolkit.dll";
-        #endregion
-        #region -- Test Cases --
-        [Fact]
-        public void BuildVersion_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
-        {
-            // Arrange
-
-            // Act
-            var actual = AssemblyProperties.BuildVersion();
-
-            // Assert
-            Assert.True(actual >= 0);
-        }
 
         [Fact]
         public void BuildVersion_Should_ReturnTheVersionOfTheSpecifiedAssembly_When_AnAssemblyIsProvided()
@@ -42,15 +25,15 @@ namespace UnitTests
         }
 
         [Fact]
-        public void Configuration_Should_ReturnTheConfigurationOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
+        public void BuildVersion_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
         {
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.Configuration();
+            var actual = AssemblyProperties.BuildVersion(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
-            Assert.NotEqual(String.Empty, actual);
+            Assert.True(actual >= 0);
         }
 
         [Fact]
@@ -66,12 +49,12 @@ namespace UnitTests
         }
 
         [Fact]
-        public void Guid_Should_ReturnTheGuidOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
+        public void Configuration_Should_ReturnTheConfigurationOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
         {
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.Guid();
+            var actual = AssemblyProperties.Configuration(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.NotEqual(String.Empty, actual);
@@ -90,13 +73,25 @@ namespace UnitTests
         }
 
         [Fact]
+        public void Guid_Should_ReturnTheGuidOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
+        {
+            // Arrange
+
+            // Act
+            var actual = AssemblyProperties.Guid(typeof(AssemblyPropertiesTests).Assembly.Location);
+
+            // Assert
+            Assert.NotEqual(String.Empty, actual);
+        }
+
+        [Fact]
         public void IsDebugMode_Should_NotEqualIsReleaseMode_When_AnAssemblyIsNotProvided()
         {
             // Arrange
 
             // Act
-            var releaseMode = AssemblyProperties.IsReleaseMode();
-            var debugMode = AssemblyProperties.IsDebugMode();
+            var releaseMode = AssemblyProperties.IsReleaseMode(typeof(AssemblyPropertiesTests).Assembly.Location);
+            var debugMode = AssemblyProperties.IsDebugMode(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.NotEqual(releaseMode, debugMode);
@@ -116,18 +111,6 @@ namespace UnitTests
         }
 
         [Fact]
-        public void MajorVersion_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
-        {
-            // Arrange
-
-            // Act
-            var actual = AssemblyProperties.MajorVersion();
-
-            // Assert
-            Assert.True(actual >= 0);
-        }
-
-        [Fact]
         public void MajorVersion_Should_ReturnTheVersionOfTheSpecifiedAssembly_When_AnAssemblyIsProvided()
         {
             // Arrange
@@ -140,12 +123,12 @@ namespace UnitTests
         }
 
         [Fact]
-        public void MinorVersion_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
+        public void MajorVersion_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
         {
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.MinorVersion();
+            var actual = AssemblyProperties.MajorVersion(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.True(actual >= 0);
@@ -164,15 +147,39 @@ namespace UnitTests
         }
 
         [Fact]
-        public void RevisionVersion_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
+        public void MinorVersion_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
         {
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.RevisionVersion();
+            var actual = AssemblyProperties.MinorVersion(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
             Assert.True(actual >= 0);
+        }
+
+        [Fact]
+        public void Name_Should_ReturnTheNameOfTheUnittestAssembly_When_AnAssemblyIsProvided()
+        {
+            // Arrange
+
+            // Act
+            var actual = AssemblyProperties.Name(_toolkitLibraryPath);
+
+            // Assert
+            Assert.Equal("ToolKit", actual);
+        }
+
+        [Fact]
+        public void Name_Should_ReturnTheTheNameOfTheUnittestAssembly_When_AnAssemblyIsNotProvided()
+        {
+            // Arrange
+
+            // Act
+            var actual = AssemblyProperties.Name(typeof(AssemblyPropertiesTests).Assembly.Location);
+
+            // Assert
+            Assert.Equal("UnitTests", actual);
         }
 
         [Fact]
@@ -188,15 +195,15 @@ namespace UnitTests
         }
 
         [Fact]
-        public void Version_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
+        public void RevisionVersion_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
         {
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.Version();
+            var actual = AssemblyProperties.RevisionVersion(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
-            Assert.NotEqual(String.Empty, actual);
+            Assert.True(actual >= 0);
         }
 
         [Fact]
@@ -210,8 +217,17 @@ namespace UnitTests
             // Assert
             Assert.NotEqual(String.Empty, actual);
         }
-        #endregion
-        #region -- Supporting Test Classes --
-        #endregion
+
+        [Fact]
+        public void Version_Should_ReturnTheVersionOfTheTestsAssembly_When_AnAssemblyIsNotProvided()
+        {
+            // Arrange
+
+            // Act
+            var actual = AssemblyProperties.Version(typeof(AssemblyPropertiesTests).Assembly.Location);
+
+            // Assert
+            Assert.NotEqual(String.Empty, actual);
+        }
     }
 }

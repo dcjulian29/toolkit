@@ -16,8 +16,8 @@
     </dependencies>
   </metadata>
     <files>
-        <file src="build\release\ToolKit.Data.NHibernate.dll" target="lib\net45" />
-        <file src="build\release\ToolKit.Data.NHibernate.pdb" target="lib\net45" />
-        <file src="build\release\ToolKit.Data.NHibernate.xml" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.NHibernate.dll" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.NHibernate.pdb" target="lib\net45" />
+        <file src="build\output\ToolKit.Data.NHibernate.xml" target="lib\net45" />
     </files>
 </package>

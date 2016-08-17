@@ -8,7 +8,6 @@ namespace UnitTests
         "StyleCop.CSharp.DocumentationRules",
         "SA1600:ElementsMustBeDocumented",
         Justification = "Test Suites do not need XML Documentation.")]
-    [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public class ConsoleArgumentsTest
     {
         [Fact]

@@ -23,7 +23,7 @@ namespace ToolKit
         /// unmanaged resources.
         /// </summary>
         /// <exception cref="ArgumentNullException">
-        /// When requestin the runtime to not call the finalizer, this object is null.
+        /// When requesting the runtime to not call the finalize, this object is null.
         /// </exception>
         public void Dispose()
         {
@@ -35,8 +35,8 @@ namespace ToolKit
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
-        /// only unmanaged resources.
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
+        /// unmanaged resources.
         /// </param>
         public virtual void Dispose(bool disposing)
         {

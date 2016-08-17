@@ -6,8 +6,8 @@ using Common.Logging;
 namespace ToolKit
 {
     /// <summary>
-    /// This Class will parse the command line arguments and provide a dictionary that can be used
-    /// to determine the arguments that were passed to the program.
+    /// This Class will parse the command line arguments and provide a dictionary that can be used to
+    /// determine the arguments that were passed to the program.
     /// </summary>
     public class ConsoleArguments : StringDictionary
     {
@@ -47,7 +47,8 @@ namespace ToolKit
         /// <summary>
         /// Parses the specified arguments.
         /// </summary>
-        /// <param name="args">The arguments. Valid parameters forms: {-,/,--}param{ ,=,:}((",')value(",')).</param>
+        /// <param name="args">The arguments.</param>
+        /// <example>Valid parameters forms: {-,/,--}parameter{ ,=,:}((",')value(",'))</example>
         public void Parse(string[] args)
         {
             var parameterName = String.Empty;
