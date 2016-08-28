@@ -59,6 +59,7 @@
     <Compile Include="AssemblyProperties.cs" />
     <Compile Include="Base64Encoding.cs" />
     <Compile Include="ConsoleArguments.cs" />
+    <Compile Include="Cryptography\EncryptionData.cs" />
     <Compile Include="Data\Entity.cs" />
     <Compile Include="Data\EntityWithTypedId.cs" />
     <Compile Include="Data\IEntity.cs" />
