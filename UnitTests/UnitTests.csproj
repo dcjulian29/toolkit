@@ -102,6 +102,7 @@
     <Compile Include="ConsoleArgumentsTest.cs" />
     <Compile Include="Cryptography\EncryptionDataTests.cs" />
     <Compile Include="Cryptography\HashTest.cs" />
+    <Compile Include="Cryptography\MD5Test.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
