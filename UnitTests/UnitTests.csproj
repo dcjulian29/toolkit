@@ -101,6 +101,7 @@
     <Compile Include="Base64EncodingTests.cs" />
     <Compile Include="ConsoleArgumentsTest.cs" />
     <Compile Include="Cryptography\EncryptionDataTests.cs" />
+    <Compile Include="Cryptography\HashTest.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
@@ -150,6 +151,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Content Include="gettysburg.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sample.doc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

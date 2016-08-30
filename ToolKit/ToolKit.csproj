@@ -60,6 +60,7 @@
     <Compile Include="Base64Encoding.cs" />
     <Compile Include="ConsoleArguments.cs" />
     <Compile Include="Cryptography\EncryptionData.cs" />
+    <Compile Include="Cryptography\Hash.cs" />
     <Compile Include="Cryptography\IHash.cs" />
     <Compile Include="Data\Entity.cs" />
     <Compile Include="Data\EntityWithTypedId.cs" />
