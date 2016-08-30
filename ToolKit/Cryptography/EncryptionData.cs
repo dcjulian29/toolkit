@@ -67,12 +67,12 @@ namespace ToolKit.Cryptography
         {
             get
             {
-                return Base64Encoding.ToString(_byteData);
+                return Base64Encoding.ToString(Bytes);
             }
 
             set
             {
-                _byteData = Base64Encoding.ToBytes(value);
+                Bytes = Base64Encoding.ToBytes(value);
             }
         }
 
@@ -129,12 +129,12 @@ namespace ToolKit.Cryptography
         {
             get
             {
-                return HexEncoding.ToString(_byteData);
+                return HexEncoding.ToString(Bytes);
             }
 
             set
             {
-                _byteData = HexEncoding.ToBytes(value);
+                Bytes = HexEncoding.ToBytes(value);
             }
         }
 
@@ -146,12 +146,12 @@ namespace ToolKit.Cryptography
         {
             get
             {
-                if (_byteData == null)
+                if (Bytes == null)
                 {
                     return true;
                 }
 
-                return _byteData.Length == 0;
+                return Bytes.Length == 0;
             }
         }
 
@@ -202,29 +202,6 @@ namespace ToolKit.Cryptography
         public int MinimumBytes { get; set; }
 
         /// <summary>
-        /// Gets or sets the step interval, in bits for this data.
-        /// </summary>
-        /// <value>The step interval, in bits for this data; if 0, no limit.</value>
-        public int StepBits
-        {
-            get
-            {
-                return StepBytes * 8;
-            }
-
-            set
-            {
-                StepBytes = value / 8;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the step interval, in bytes for this data.
-        /// </summary>
-        /// <value>The step interval, in bytes for this data; if 0, no limit.</value>
-        public int StepBytes { get; set; }
-
-        /// <summary>
         /// Gets or sets the text representation of bytes using the text encoding assigned to this instance.
         /// </summary>
         /// <value>The text representation of bytes.</value>
@@ -232,21 +209,21 @@ namespace ToolKit.Cryptography
         {
             get
             {
-                if (_byteData == null)
+                if (Bytes == null)
                 {
                     return String.Empty;
                 }
 
                 // Need to handle nulls here; oddly, C# will happily convert nulls into the string
                 // whereas VB stops converting at the first null.
-                var i = Array.IndexOf(_byteData, Convert.ToByte(0));
+                var i = Array.IndexOf(Bytes, Convert.ToByte(0));
 
-                return i >= 0 ? EncodingToUse.GetString(_byteData, 0, i) : EncodingToUse.GetString(_byteData);
+                return i >= 0 ? EncodingToUse.GetString(Bytes, 0, i) : EncodingToUse.GetString(Bytes);
             }
 
             set
             {
-                _byteData = EncodingToUse.GetBytes(value);
+                Bytes = EncodingToUse.GetBytes(value);
             }
         }
 
@@ -281,7 +258,6 @@ namespace ToolKit.Cryptography
         {
             MinimumBytes = 0;
             MaximumBytes = 0;
-            StepBytes = 0;
             EncodingToUse = Encoding.UTF8;
         }
     }
