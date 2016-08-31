@@ -10,11 +10,11 @@ namespace UnitTests.Cryptography
         "StyleCop.CSharp.DocumentationRules",
         "SA1600:ElementsMustBeDocumented",
         Justification = "Test Suites do not need XML Documentation.")]
-    public class HashTest
+    public class HashTests
     {
         public readonly string TargetString;
 
-        public HashTest()
+        public HashTests()
         {
             TargetString = "The instinct of nearly all societies is to lock up anybody who is truly free. "
                            + "First, society begins by trying to beat you up. If this fails, they try to poison you. "

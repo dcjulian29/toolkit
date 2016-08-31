@@ -11,7 +11,7 @@ namespace UnitTests.Cryptography
         "StyleCop.CSharp.DocumentationRules",
         "SA1600:ElementsMustBeDocumented",
         Justification = "Test Suites do not need XML Documentation.")]
-    public class MD5Test
+    public class MD5Tests
     {
         [Fact]
         public void MD5_Should_CalculateCorrectHash()
