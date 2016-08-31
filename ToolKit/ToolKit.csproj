@@ -64,6 +64,7 @@
     <Compile Include="Cryptography\Hash.cs" />
     <Compile Include="Cryptography\IHash.cs" />
     <Compile Include="Cryptography\MD5Hash.cs" />
+    <Compile Include="Cryptography\RIPEMD160Hash.cs" />
     <Compile Include="Data\Entity.cs" />
     <Compile Include="Data\EntityWithTypedId.cs" />
     <Compile Include="Data\IEntity.cs" />
