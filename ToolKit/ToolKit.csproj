@@ -59,6 +59,7 @@
     <Compile Include="AssemblyProperties.cs" />
     <Compile Include="Base64Encoding.cs" />
     <Compile Include="ConsoleArguments.cs" />
+    <Compile Include="Cryptography\CRC32.cs" />
     <Compile Include="Cryptography\EncryptionData.cs" />
     <Compile Include="Cryptography\Hash.cs" />
     <Compile Include="Cryptography\IHash.cs" />

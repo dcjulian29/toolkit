@@ -100,6 +100,7 @@
     <Compile Include="AssemblyPropertiesTests.cs" />
     <Compile Include="Base64EncodingTests.cs" />
     <Compile Include="ConsoleArgumentsTest.cs" />
+    <Compile Include="Cryptography\CRC32Test.cs" />
     <Compile Include="Cryptography\EncryptionDataTests.cs" />
     <Compile Include="Cryptography\HashTest.cs" />
     <Compile Include="Cryptography\MD5Test.cs" />
