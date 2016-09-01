@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace ToolKit.Cryptography
 {
@@ -20,9 +21,10 @@ namespace ToolKit.Cryptography
         private Hash _algorithm = new Hash(Hash.Provider.SHA256);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SHA256Hash"/> class.
+        /// Prevents a default instance of the <see cref="SHA256Hash"/> class from being created.
         /// </summary>
-        public SHA256Hash()
+        [ExcludeFromCodeCoverage]
+        private SHA256Hash()
         {
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace ToolKit.Cryptography
@@ -23,6 +24,14 @@ namespace ToolKit.Cryptography
     public class MD5Hash : IHash
     {
         private Hash _algorithm = new Hash(Hash.Provider.MD5);
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="MD5Hash"/> class from being created.
+        /// </summary>
+        [ExcludeFromCodeCoverage]
+        private MD5Hash()
+        {
+        }
 
         /// <summary>
         /// Creates an instance of the Hash Algorithm.

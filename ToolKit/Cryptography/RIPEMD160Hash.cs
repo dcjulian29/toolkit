@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace ToolKit.Cryptography
 {
@@ -20,9 +21,10 @@ namespace ToolKit.Cryptography
         private readonly Hash _algorithm = new Hash(Hash.Provider.RIPEMD160);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RIPEMD160Hash"/> class.
+        /// Prevents a default instance of the <see cref="RIPEMD160Hash"/> class from being created.
         /// </summary>
-        public RIPEMD160Hash()
+        [ExcludeFromCodeCoverage]
+        private RIPEMD160Hash()
         {
         }
 
