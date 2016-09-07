@@ -109,6 +109,7 @@
     <Compile Include="Cryptography\SHA256Tests.cs" />
     <Compile Include="Cryptography\SHA384Tests.cs" />
     <Compile Include="Cryptography\SHA512Tests.cs" />
+    <Compile Include="Cryptography\SymmetricEncryptionTests.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
