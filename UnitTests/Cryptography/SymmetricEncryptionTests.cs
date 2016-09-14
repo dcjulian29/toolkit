@@ -78,7 +78,10 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var e1 = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael);
-            var e2 = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael);
+            var e2 = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
+            {
+                InitializationVector = e1.InitializationVector
+            };
 
             var key = new EncryptionData("SecretKey");
             var wrong = new EncryptionData("wrongkey");

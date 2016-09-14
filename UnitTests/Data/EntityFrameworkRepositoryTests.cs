@@ -26,16 +26,20 @@ namespace UnitTests.Data
         {
             var connectionString = new SQLiteConnectionStringBuilder()
             {
-                DataSource = "temp.db",
+                DataSource = "EntityFrameworkRepositoryTests.db",
                 ForeignKeys = true
             }.ConnectionString;
 
-            // Entity Framework SQLite Provider doesn't create database file or tables so we'll create
-            // it manually here for the unit test...
+            // Entity Framework SQLite Provider doesn't create database file or tables so we'll
+            // create it manually here for the unit test...
             if (!_databaseCreated)
             {
-                File.Delete("temp.db");
-                SQLiteConnection.CreateFile("temp.db");
+                if (File.Exists("EntityFrameworkRepositoryTests.db"))
+                {
+                    File.Delete("EntityFrameworkRepositoryTests.db");
+                }
+
+                SQLiteConnection.CreateFile("EntityFrameworkRepositoryTests.db");
 
                 using (var c = new SQLiteConnection(connectionString))
                 {
@@ -70,6 +74,12 @@ namespace UnitTests.Data
             }
         }
 
+        ~EntityFrameworkRepositoryTests()
+        {
+            // SQLite doesn't always unlock DB file when test ends, Let's force it.
+            GC.Collect();
+        }
+
         public enum Gender
         {
             /// <summary>
@@ -81,29 +91,6 @@ namespace UnitTests.Data
             /// The female gender.
             /// </summary>
             Female
-        }
-
-        [Fact]
-        public void Delete_Should_RemoveEntitiesFromDatabase()
-        {
-            // Arrange
-            InitializeDatabase();
-            var patientCount = 0;
-
-            // Act
-            using (var repository = new PatientRepository())
-            {
-                var patients = repository.FindBy(p => p.DateAdded > p.AdmitDate);
-                repository.Delete(patients);
-            }
-
-            using (var repository = new PatientRepository())
-            {
-                patientCount = repository.FindAll().Count();
-            }
-
-            // Assert
-            Assert.Equal(patientCount, 1);
         }
 
         [Fact]
@@ -127,6 +114,29 @@ namespace UnitTests.Data
 
             // Assert
             Assert.True(patientPresent);
+        }
+
+        [Fact]
+        public void Delete_Should_RemoveEntitiesFromDatabase()
+        {
+            // Arrange
+            InitializeDatabase();
+            var patientCount = 0;
+
+            // Act
+            using (var repository = new PatientRepository())
+            {
+                var patients = repository.FindBy(p => p.DateAdded > p.AdmitDate);
+                repository.Delete(patients);
+            }
+
+            using (var repository = new PatientRepository())
+            {
+                patientCount = repository.FindAll().Count();
+            }
+
+            // Assert
+            Assert.Equal(patientCount, 1);
         }
 
         [Fact]
@@ -214,12 +224,12 @@ namespace UnitTests.Data
             using (var repository = new PatientRepository())
             {
                 var entity = new Patient
-                    {
-                        Name = "Lotho Fairbairn",
-                        Sex = Gender.Male,
-                        AdmitDate = DateTime.Now.AddDays(-2),
-                        DateAdded = DateTime.Now
-                    };
+                {
+                    Name = "Lotho Fairbairn",
+                    Sex = Gender.Male,
+                    AdmitDate = DateTime.Now.AddDays(-2),
+                    DateAdded = DateTime.Now
+                };
 
                 repository.Save(entity);
             }
@@ -269,28 +279,28 @@ namespace UnitTests.Data
             using (var db = new PatientContext())
             {
                 var foo = new Patient
-                    {
-                        Name = "Foo",
-                        Sex = Gender.Male,
-                        DateAdded = new DateTime(2012, 1, 1),
-                        AdmitDate = new DateTime(2012, 1, 2)
-                    };
+                {
+                    Name = "Foo",
+                    Sex = Gender.Male,
+                    DateAdded = new DateTime(2012, 1, 1),
+                    AdmitDate = new DateTime(2012, 1, 2)
+                };
 
                 var bar = new Patient
-                    {
-                        Name = "Bar",
-                        Sex = Gender.Female,
-                        DateAdded = new DateTime(2012, 1, 3),
-                        AdmitDate = new DateTime(2012, 1, 2)
-                    };
+                {
+                    Name = "Bar",
+                    Sex = Gender.Female,
+                    DateAdded = new DateTime(2012, 1, 3),
+                    AdmitDate = new DateTime(2012, 1, 2)
+                };
 
                 var doh = new Patient
-                    {
-                        Name = "Doh",
-                        Sex = Gender.Female,
-                        DateAdded = new DateTime(2012, 2, 3),
-                        AdmitDate = new DateTime(2012, 2, 2)
-                    };
+                {
+                    Name = "Doh",
+                    Sex = Gender.Female,
+                    DateAdded = new DateTime(2012, 2, 3),
+                    AdmitDate = new DateTime(2012, 2, 2)
+                };
 
                 db.Patients.Add(foo);
                 db.Patients.Add(bar);
@@ -300,12 +310,13 @@ namespace UnitTests.Data
             }
         }
 
-        public class PatientRepository : Repository<Patient, Int64>
+        public class Patient : EntityWithTypedId<Int64>
         {
-            public PatientRepository()
-            {
-                Context = new PatientContext();
-            }
+            public virtual DateTime AdmitDate { get; set; }
+            public virtual DateTime DateAdded { get; set; }
+            public virtual string Name { get; set; }
+
+            public virtual Gender Sex { get; set; }
         }
 
         public class PatientContext : EntityFrameworkUnitOfWork
@@ -313,28 +324,11 @@ namespace UnitTests.Data
             public DbSet<Patient> Patients { get; set; }
         }
 
-        public class Patient : EntityWithTypedId<Int64>
+        public class PatientRepository : Repository<Patient, Int64>
         {
-            public virtual string Name { get; set; }
-
-            public virtual Gender Sex { get; set; }
-
-            public virtual DateTime DateAdded { get; set; }
-
-            public virtual DateTime AdmitDate { get; set; }
-        }
-
-        public class SqLiteConnectionFactory : IDbConnectionFactory
-        {
-            public DbConnection CreateConnection(string nameOrConnectionString)
+            public PatientRepository()
             {
-                var connectionString = new SQLiteConnectionStringBuilder()
-                {
-                    DataSource = "temp.db",
-                    ForeignKeys = true
-                }.ConnectionString;
-
-                return new SQLiteConnection(connectionString);
+                Context = new PatientContext();
             }
         }
 
@@ -348,6 +342,20 @@ namespace UnitTests.Data
                 var t = Type.GetType("System.Data.SQLite.EF6.SQLiteProviderServices, System.Data.SQLite.EF6");
                 var fi = t.GetField("Instance", BindingFlags.NonPublic | BindingFlags.Static);
                 SetProviderServices("System.Data.SQLite", (DbProviderServices)fi.GetValue(null));
+            }
+        }
+
+        public class SqLiteConnectionFactory : IDbConnectionFactory
+        {
+            public DbConnection CreateConnection(string nameOrConnectionString)
+            {
+                var connectionString = new SQLiteConnectionStringBuilder()
+                {
+                    DataSource = "EntityFrameworkRepositoryTests.db",
+                    ForeignKeys = true
+                }.ConnectionString;
+
+                return new SQLiteConnection(connectionString);
             }
         }
     }
