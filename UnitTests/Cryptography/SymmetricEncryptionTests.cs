@@ -531,7 +531,7 @@ namespace UnitTests.Cryptography
         public void EncryptWithTripleDES_Should_ReturnExpectedResult_When_UsingStream()
         {
             // Arrange
-            var expected = "CD4123AC876D1F206E710E25EA33C723";
+            var expected = "B5293E7C53966F4388D6B420A27CEBD7";
 
             var e1 = new SymmetricEncryption(SymmetricEncryption.Provider.TripleDES)
             {
