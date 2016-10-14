@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security.Cryptography;
 using ToolKit.Cryptography;
 using Xunit;
 
@@ -58,23 +57,25 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void Decrypt_Should_ThrowException_When_CorrectInitializationVectorIsNotProvided()
+        public void Decrypt_Should_ReturnWrongData_When_CorrectInitializationVectorIsNotProvided()
         {
             // Arrange
-            var e1 = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
+            var e1 = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael);
+            var e2 = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
             {
-                Key = new EncryptionData("UnitTest")
+                Key = e1.Key
             };
 
-            // Act & Assert
-            Assert.Throws<CryptographicException>(() =>
-            {
-                e1.Decrypt(_targetData);
-            });
+            // Act
+            var encrypted = e1.Encrypt(_targetData);
+            var actual = e2.Decrypt(encrypted);
+
+            // Assert
+            Assert.NotEqual(_targetData.Hex, actual.Hex);
         }
 
         [Fact]
-        public void Decrypt_Should_ThrowException_When_ProvidedWrongKey()
+        public void Decrypt_Should_ReturnWrongData_When_ProvidedWrongKey()
         {
             // Arrange
             var e1 = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael);
@@ -83,15 +84,14 @@ namespace UnitTests.Cryptography
                 InitializationVector = e1.InitializationVector
             };
 
+            // Act
             var key = new EncryptionData("SecretKey");
             var wrong = new EncryptionData("wrongkey");
             var encrypted = e1.Encrypt(_targetData, key);
+            var actual = e2.Decrypt(encrypted, wrong);
 
-            // Act & Assert
-            Assert.Throws<CryptographicException>(() =>
-            {
-                e2.Decrypt(encrypted, wrong);
-            });
+            // Assert
+            Assert.NotEqual(_targetData.Hex, actual.Hex);
         }
 
         [Fact]

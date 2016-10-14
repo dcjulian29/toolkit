@@ -56,6 +56,9 @@ namespace ToolKit.Cryptography
                     throw new ArgumentException("Invalid Provider Provided!");
             }
 
+            // Ensure that any IV or key can be used regardless of length
+            _crypto.Padding = PaddingMode.Zeros;
+
             // Make sure key and IV are always set, no matter what
             Key = RandomKey();
             InitializationVector = RandomInitializationVector();
@@ -231,7 +234,9 @@ namespace ToolKit.Cryptography
                 }
                 catch (CryptographicException ex)
                 {
-                    throw new CryptographicException("Unable to decrypt data. The provided key may be invalid.", ex);
+                    _log.Error(m => m("Unable to decrypt data: {0}", ex.Message));
+
+                    throw;
                 }
                 finally
                 {
