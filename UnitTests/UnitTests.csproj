@@ -114,6 +114,7 @@
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
     <Compile Include="Data\NHibernateRepositoryTests.cs" />
+    <Compile Include="Data\NHibernateSymmetricEncryptedStringTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFiltersTest.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\AdDateTimeTests.cs" />

@@ -230,13 +230,7 @@ namespace ToolKit.Cryptography
 
                 try
                 {
-                    cs.Read(b, 0, encryptedData.Bytes.Length - 1);
-                }
-                catch (CryptographicException ex)
-                {
-                    _log.Error(m => m("Unable to decrypt data: {0}", ex.Message));
-
-                    throw;
+                    cs.Read(b, 0, encryptedData.Bytes.Length);
                 }
                 finally
                 {

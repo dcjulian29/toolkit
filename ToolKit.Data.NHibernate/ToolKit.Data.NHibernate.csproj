@@ -85,6 +85,7 @@
     <Compile Include="UserTypes\BoolAsByte.cs" />
     <Compile Include="UserTypes\BoolAsNumber.cs" />
     <Compile Include="UserTypes\NullableDateTime.cs" />
+    <Compile Include="UserTypes\SymmetricEncryptedString.cs" />
     <Compile Include="UserTypes\TrimString.cs" />
   </ItemGroup>
   <ItemGroup>
