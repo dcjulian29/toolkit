@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
@@ -24,12 +25,23 @@ namespace UnitTests.Data
         {
             if (_sessionFactory == null)
             {
+                if (File.Exists("NHibernateRepositoryTests.db"))
+                {
+                    File.Delete("NHibernateRepositoryTests.db");
+                }
+
                 _sessionFactory = Fluently.Configure()
-                    .Database(SQLiteConfiguration.Standard.UsingFile("temp.db"))
+                    .Database(SQLiteConfiguration.Standard.UsingFile("NHibernateRepositoryTests.db"))
                     .Mappings(m => m.FluentMappings.AddFromAssemblyOf<NHibernateRepositoryTests>())
                     .ExposeConfiguration(cfg => new SchemaExport(cfg).Create(false, true))
                     .BuildSessionFactory();
             }
+        }
+
+        ~NHibernateRepositoryTests()
+        {
+            // SQLite doesn't always unlock DB file when test ends, Let's force it.
+            GC.Collect();
         }
 
         public enum Gender
@@ -43,29 +55,6 @@ namespace UnitTests.Data
             /// The female gender.
             /// </summary>
             Female
-        }
-
-        [Fact]
-        public void Delete_Should_RemoveEntitiesFromDatabase()
-        {
-            // Arrange
-            InitializeDatabase();
-            var patientCount = 0;
-
-            // Act
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
-            {
-                var patients = repository.FindBy(p => p.DateAdded > p.AdmitDate);
-                repository.Delete(patients);
-            }
-
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
-            {
-                patientCount = repository.FindAll().Count();
-            }
-
-            // Assert
-            Assert.Equal(patientCount, 1);
         }
 
         [Fact]
@@ -89,6 +78,29 @@ namespace UnitTests.Data
 
             // Assert
             Assert.True(patientPresent);
+        }
+
+        [Fact]
+        public void Delete_Should_RemoveEntitiesFromDatabase()
+        {
+            // Arrange
+            InitializeDatabase();
+            var patientCount = 0;
+
+            // Act
+            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            {
+                var patients = repository.FindBy(p => p.DateAdded > p.AdmitDate);
+                repository.Delete(patients);
+            }
+
+            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            {
+                patientCount = repository.FindAll().Count();
+            }
+
+            // Assert
+            Assert.Equal(patientCount, 1);
         }
 
         [Fact]
@@ -194,7 +206,7 @@ namespace UnitTests.Data
         }
 
         // Create a blank database for unit test.
-        private static void InitializeDatabase()
+        private void InitializeDatabase()
         {
             using (var session = _sessionFactory.OpenSession())
             {
@@ -238,12 +250,13 @@ namespace UnitTests.Data
             }
         }
 
-        public class PatientRepository : Repository<Patient, int>
+        public class Patient : Entity
         {
-            public PatientRepository(ISession session)
-            {
-                Context = new NHibernateUnitOfWork(session);
-            }
+            public virtual DateTime AdmitDate { get; set; }
+            public virtual DateTime DateAdded { get; set; }
+            public virtual string Name { get; set; }
+
+            public virtual Gender Sex { get; set; }
         }
 
         public class PatientMap : ClassMap<Patient>
@@ -261,15 +274,12 @@ namespace UnitTests.Data
             }
         }
 
-        public class Patient : Entity
+        public class PatientRepository : Repository<Patient, int>
         {
-            public virtual string Name { get; set; }
-
-            public virtual Gender Sex { get; set; }
-
-            public virtual DateTime DateAdded { get; set; }
-
-            public virtual DateTime AdmitDate { get; set; }
+            public PatientRepository(ISession session)
+            {
+                Context = new NHibernateUnitOfWork(session);
+            }
         }
     }
 }

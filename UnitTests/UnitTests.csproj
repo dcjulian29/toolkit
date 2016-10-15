@@ -100,10 +100,21 @@
     <Compile Include="AssemblyPropertiesTests.cs" />
     <Compile Include="Base64EncodingTests.cs" />
     <Compile Include="ConsoleArgumentsTest.cs" />
+    <Compile Include="Cryptography\CRC32Test.cs" />
+    <Compile Include="Cryptography\EncryptionDataTests.cs" />
+    <Compile Include="Cryptography\HashTests.cs" />
+    <Compile Include="Cryptography\MD5Tests.cs" />
+    <Compile Include="Cryptography\RIPEMD160Tests.cs" />
+    <Compile Include="Cryptography\SHA1Tests.cs" />
+    <Compile Include="Cryptography\SHA256Tests.cs" />
+    <Compile Include="Cryptography\SHA384Tests.cs" />
+    <Compile Include="Cryptography\SHA512Tests.cs" />
+    <Compile Include="Cryptography\SymmetricEncryptionTests.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
     <Compile Include="Data\NHibernateRepositoryTests.cs" />
+    <Compile Include="Data\NHibernateSymmetricEncryptedStringTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFiltersTest.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\AdDateTimeTests.cs" />
@@ -149,6 +160,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Content Include="gettysburg.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sample.doc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
