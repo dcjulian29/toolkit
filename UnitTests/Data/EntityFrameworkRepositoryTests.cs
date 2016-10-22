@@ -313,7 +313,9 @@ namespace UnitTests.Data
         public class Patient : EntityWithTypedId<Int64>
         {
             public virtual DateTime AdmitDate { get; set; }
+
             public virtual DateTime DateAdded { get; set; }
+
             public virtual string Name { get; set; }
 
             public virtual Gender Sex { get; set; }

@@ -64,8 +64,15 @@ namespace UnitTests.Data
             var originalVector = SymmetricEncryptedString.InitializationVector;
             var originalKey = SymmetricEncryptedString.EncryptionKey;
 
-            if (key != null) SymmetricEncryptedString.InitializationVector = new EncryptionData(key);
-            if (vector != null) SymmetricEncryptedString.EncryptionKey = new EncryptionData(vector);
+            if (key != null)
+            {
+                SymmetricEncryptedString.InitializationVector = new EncryptionData(key);
+            }
+
+            if (vector != null)
+            {
+                SymmetricEncryptedString.EncryptionKey = new EncryptionData(vector);
+            }
 
             using (var repository = new OrderRepository(_sessionFactory.OpenSession()))
             {
@@ -79,7 +86,10 @@ namespace UnitTests.Data
             var sql = $"SELECT CreditCardNumber FROM [Order] WHERE ExpirationDate = '{criteria}'";
             var query = _sessionFactory.OpenSession().CreateSQLQuery(sql).List();
 
-            if (query.Count != 5) return;
+            if (query.Count != 5)
+            {
+                return;
+            }
 
             // Assert
             var previous = new object();
@@ -232,7 +242,9 @@ namespace UnitTests.Data
         public class Order : Entity
         {
             public virtual string CreditCardNumber { get; set; }
+
             public virtual DateTime ExpirationDate { get; set; }
+
             public virtual string Name { get; set; }
         }
 
