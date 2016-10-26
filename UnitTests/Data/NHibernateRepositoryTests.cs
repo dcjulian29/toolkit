@@ -253,7 +253,9 @@ namespace UnitTests.Data
         public class Patient : Entity
         {
             public virtual DateTime AdmitDate { get; set; }
+
             public virtual DateTime DateAdded { get; set; }
+
             public virtual string Name { get; set; }
 
             public virtual Gender Sex { get; set; }

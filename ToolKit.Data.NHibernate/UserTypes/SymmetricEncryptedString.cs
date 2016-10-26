@@ -21,7 +21,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         private SymmetricEncryption _encryptor = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael);
 
         /// <summary>
-        /// Initializes the <see cref="SymmetricEncryptedString"/> class.
+        /// Initializes static members of the <see cref="SymmetricEncryptedString"/> class.
         /// </summary>
         static SymmetricEncryptedString()
         {
@@ -31,7 +31,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         }
 
         /// <summary>
-        /// Sets the encryption key to use when saving or reading from database.
+        /// Gets or sets the encryption key to use when saving or reading from database.
         /// </summary>
         public static EncryptionData EncryptionKey
         {
