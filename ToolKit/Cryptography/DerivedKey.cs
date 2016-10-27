@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using Common.Logging;
 
@@ -48,6 +49,7 @@ namespace ToolKit.Cryptography
         /// Performs application-defined tasks associated with freeing, releasing, or resetting
         /// unmanaged resources.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public void Dispose()
         {
             Dispose(true);
@@ -71,6 +73,7 @@ namespace ToolKit.Cryptography
         /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
         /// unmanaged resources.
         /// </param>
+        [ExcludeFromCodeCoverage]
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
