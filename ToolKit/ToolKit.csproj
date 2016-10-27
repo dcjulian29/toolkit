@@ -62,6 +62,7 @@
     <Compile Include="Cryptography\CRC32.cs" />
     <Compile Include="Cryptography\DataProtectionKeyType.cs" />
     <Compile Include="Cryptography\DataProtectionApi.cs" />
+    <Compile Include="Cryptography\DerivedKey.cs" />
     <Compile Include="Cryptography\EncryptionData.cs" />
     <Compile Include="Cryptography\Hash.cs" />
     <Compile Include="Cryptography\IHash.cs" />
