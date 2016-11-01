@@ -63,7 +63,7 @@ namespace ToolKit.Cryptography
         /// Loads public key from an X509 Certificate.
         /// </summary>
         /// <param name="certificateFileName">Name of the certificate file.</param>
-        /// <returns>an AsymmetricPublicKey instance containing the public key, or null.</returns>
+        /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
         public static RsaPublicKey LoadFromCertificateFile(string certificateFileName)
         {
             if (!File.Exists(certificateFileName))
@@ -81,9 +81,31 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
+        /// Loads public key from an X509 Certificate.
+        /// </summary>
+        /// <param name="certificateFileName">Name of the certificate file.</param>
+        /// <param name="filePassword">Passwrod of the certificate file.</param>
+        /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
+        public static RsaPublicKey LoadFromCertificateFile(string certificateFileName, string filePassword)
+        {
+            if (!File.Exists(certificateFileName))
+            {
+                throw new ArgumentException("Certificate File does not exist!", nameof(certificateFileName));
+            }
+
+            var rawCert = File.ReadAllBytes(certificateFileName);
+
+            var cert = new X509Certificate2();
+
+            cert.Import(rawCert, filePassword, X509KeyStorageFlags.DefaultKeySet);
+
+            return new RsaPublicKey(cert.PublicKey.Key.ToXmlString(false));
+        }
+
+        /// <summary>
         /// Load public key from app.config or web.config file
         /// </summary>
-        /// <returns>an AsymmetricPublicKey instance containing the public key, or null.</returns>
+        /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
         public static RsaPublicKey LoadFromConfig()
         {
             var key = new RsaPublicKey
@@ -99,22 +121,30 @@ namespace ToolKit.Cryptography
         /// Load public key from XML represented as a string.
         /// </summary>
         /// <param name="keyXml">The key represented as a XML String.</param>
-        /// <returns>an AsymmetricPublicKey instance containing the public key, or null.</returns>
+        /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
         public static RsaPublicKey LoadFromXml(string keyXml)
         {
             return new RsaPublicKey(keyXml);
         }
 
         /// <summary>
-        /// Load public key from a Stream containing XML represented as a string.
+        /// Load public key from a File containing XML represented as a string.
         /// </summary>
-        /// <param name="keyStream">The Stream containing the key represented as a XML String.</param>
-        /// <returns>an AsymmetricPublicKey instance containing the public key, or null.</returns>
-        public static RsaPublicKey LoadFromXmlFile(Stream keyStream)
+        /// <param name="filePath">The name of the file to load the XML from.</param>
+        /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
+        public static RsaPublicKey LoadFromXmlFile(string filePath)
         {
-            using (var reader = new StreamReader(keyStream))
+            if (!File.Exists(filePath))
             {
-                return new RsaPublicKey(reader.ReadToEnd());
+                throw new ArgumentException("Public key file does not exist!", nameof(filePath));
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    return new RsaPublicKey(reader.ReadToEnd());
+                }
             }
         }
 
@@ -122,12 +152,23 @@ namespace ToolKit.Cryptography
         /// Writes the XML representation of this public key to a file.
         /// </summary>
         /// <param name="filePath">The file path to export the XML to.</param>
-        public void ExportToXmlFile(string filePath)
+        /// <param name="overwrite">if set to <c>true</c> and the file exists, it will be overwritten.</param>
+        public void ExportToXmlFile(string filePath, bool overwrite = false)
         {
-            using (var sw = new StreamWriter(filePath, false))
+            var mode = FileMode.CreateNew;
+
+            if (overwrite)
             {
-                sw.Write(ToXml());
-                sw.Close();
+                mode = FileMode.Create;
+            }
+
+            using (var stream = new FileStream(filePath, mode))
+            {
+                using (var sw = new StreamWriter(stream))
+                {
+                    sw.Write(ToXml());
+                    sw.Close();
+                }
             }
         }
 
@@ -178,7 +219,7 @@ namespace ToolKit.Cryptography
         {
             var m = Regex.Match(xml, $"<{element}>(?<Element>[^>]*)</{element}>", RegexOptions.IgnoreCase);
 
-            if (m == null)
+            if (m.Captures.Count == 0)
             {
                 throw new ArgumentException($"Could not find <{element}></{element}> in provided Public Key XML.");
             }
