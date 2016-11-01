@@ -2,7 +2,7 @@
 using ToolKit.Cryptography;
 using Xunit;
 
-namespace ToolBox.UnitTests.Cryptography
+namespace UnitTests.Cryptography
 {
     [SuppressMessage(
          "StyleCop.CSharp.DocumentationRules",
