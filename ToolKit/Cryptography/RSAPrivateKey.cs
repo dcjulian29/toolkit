@@ -159,30 +159,45 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Load private key from a Stream containing XML represented as a string.
         /// </summary>
-        /// <param name="keyStream">The Stream containing the key represented as a XML String.</param>
+        /// <param name="filePath">The name of the file to load the XML from.</param>
         /// <returns>an AsymmetricPrivateKey instance containing the private key, or null.</returns>
-        public static RsaPrivateKey LoadFromXmlFile(Stream keyStream)
+        public static RsaPrivateKey LoadFromXmlFile(string filePath)
         {
-            string keyXml;
-
-            using (var reader = new StreamReader(keyStream))
+            if (!File.Exists(filePath))
             {
-                keyXml = reader.ReadToEnd();
+                throw new ArgumentException("Private key file does not exist!", nameof(filePath));
             }
 
-            return new RsaPrivateKey(keyXml);
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    return new RsaPrivateKey(reader.ReadToEnd());
+                }
+            }
         }
 
         /// <summary>
         /// Writes the XML representation of this private key to a file.
         /// </summary>
         /// <param name="filePath">The file path to export the XML to.</param>
-        public void ExportToXmlFile(string filePath)
+        /// <param name="overwrite">if set to <c>true</c> and the file exists, it will be overwritten.</param>
+        public void ExportToXmlFile(string filePath, bool overwrite = false)
         {
-            using (var sw = new StreamWriter(filePath, false))
+            var mode = FileMode.CreateNew;
+
+            if (overwrite)
             {
-                sw.Write(ToXml());
-                sw.Close();
+                mode = FileMode.Create;
+            }
+
+            using (var stream = new FileStream(filePath, mode))
+            {
+                using (var sw = new StreamWriter(stream))
+                {
+                    sw.Write(ToXml());
+                    sw.Close();
+                }
             }
         }
 
@@ -248,24 +263,19 @@ namespace ToolKit.Cryptography
         {
             var s = Convert.ToString(ConfigurationManager.AppSettings.Get(key));
 
-            if (String.IsNullOrEmpty(s))
+            if (!String.IsNullOrEmpty(s))
             {
-                if (required)
-                {
-                    throw new ConfigurationErrorsException($"key <{key}> is missing from .config file");
-                }
-
-                return String.Empty;
+                return s;
             }
 
-            return s;
+            throw new ConfigurationErrorsException($"key <{key}> is missing from .config file");
         }
 
         private static string ReadXmlElement(string xml, string element)
         {
             var m = Regex.Match(xml, $"<{element}>(?<Element>[^>]*)</{element}>", RegexOptions.IgnoreCase);
 
-            if (m == null)
+            if (m.Captures.Count == 0)
             {
                 throw new ArgumentException($"Could not find <{element}></{element}> in provided Public Key XML.");
             }
