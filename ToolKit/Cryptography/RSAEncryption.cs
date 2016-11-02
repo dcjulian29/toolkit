@@ -169,28 +169,25 @@ namespace ToolKit.Cryptography
             }
             catch (CryptographicException ex)
             {
-                _log.Error(ex.Message, ex);
+                _log.Error(m => m(ex.Message), ex);
 
-                if ((ex.Message.ToLower().IndexOf("bad length", StringComparison.Ordinal) > -1)
-                    || (ex.Message.ToLower()
-                        .IndexOf("key not valid for use in specified state.", StringComparison.Ordinal) > -1))
-                {
-                    var sb = new StringBuilder();
+                var sb = new StringBuilder();
 
-                    sb.Append("Your data is too large; RSA implementation in .Net is designed to encrypt ");
-                    sb.Append("relatively small amounts of data. The exact byte limit depends ");
-                    sb.Append("on the key size. To encrypt more data, use symmetric encryption ");
-                    sb.Append("and then encrypt that symmetric key with ");
-                    sb.Append("asymmetric encryption.");
+                sb.Append("Your data is too large; RSA implementation in .Net is designed to encrypt ");
+                sb.Append("relatively small amounts of data. The exact byte limit depends ");
+                sb.Append("on the key size. To encrypt more data, use symmetric encryption ");
+                sb.Append("and then encrypt that symmetric key with ");
+                sb.Append("asymmetric encryption.");
 
-                    _log.Warn(sb.ToString());
+                _log.Warn(sb.ToString());
 
-                    throw new CryptographicException(sb.ToString(), ex);
-                }
-                else
-                {
-                    throw;
-                }
+                throw new CryptographicException(sb.ToString(), ex);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(m => m(ex.ToString()), ex);
+
+                throw;
             }
             finally
             {
