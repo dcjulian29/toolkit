@@ -103,6 +103,9 @@
     <Compile Include="ConsoleArgumentsTest.cs" />
     <Compile Include="Cryptography\DataProtectionApiTests.cs" />
     <Compile Include="Cryptography\DerivedKeyTests.cs" />
+    <Compile Include="Cryptography\RsaEncryptionTests.cs" />
+    <Compile Include="Cryptography\RsaPrivateKeyTests.cs" />
+    <Compile Include="Cryptography\RsaPublicKeyTests.cs" />
     <Compile Include="Cryptography\SslAcceptPolicyTests.cs" />
     <Compile Include="Cryptography\CRC32Test.cs" />
     <Compile Include="Cryptography\EncryptionDataTests.cs" />
