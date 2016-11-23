@@ -68,6 +68,8 @@
     <Compile Include="Cryptography\Hash.cs" />
     <Compile Include="Cryptography\IHash.cs" />
     <Compile Include="Cryptography\MD5Hash.cs" />
+    <Compile Include="Cryptography\PasswordGenerator.cs" />
+    <Compile Include="Cryptography\PasswordComplexity.cs" />
     <Compile Include="Cryptography\RIPEMD160Hash.cs" />
     <Compile Include="Cryptography\RSAEncryption.cs" />
     <Compile Include="Cryptography\RSAPrivateKey.cs" />
