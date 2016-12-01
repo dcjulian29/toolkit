@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ToolKit;
+﻿using ToolKit;
 using Xunit;
 
 namespace UnitTests
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "StyleCop.CSharp.DocumentationRules",
-        "SA1600:ElementsMustBeDocumented",
-        Justification = "Test Suites do not need XML Documentation.")]
+         "StyleCop.CSharp.DocumentationRules",
+         "SA1600:ElementsMustBeDocumented",
+         Justification = "Test Suites do not need XML Documentation.")]
     public class DisposableObjectTests
     {
-        #region -- Test SetUp and TearDown --
-        #endregion
-        #region -- Test Cases --
         [Fact]
-        public void DrivedClassDispose_Should_BeCalledDuringDispose()
+        public void DisposeResources_Should_BeCalledDuringDispose()
         {
             // Arrange
             var o = new ScarceResource();
@@ -32,8 +24,21 @@ namespace UnitTests
             // Assert
             Assert.True(o.DisposeCalled);
         }
-        #endregion
-        #region -- Supporting Test Classes --
+
+        [Fact]
+        public void DisposeResources_Should_NotDispose_When_DisposeIsFalse()
+        {
+            // Arrange
+            var o = new ScarceResource();
+
+            // Act
+            o.Open();
+            o.Dispose(false);
+
+            // Assert
+            Assert.False(o.DisposeCalled);
+        }
+
         internal class ScarceResource : DisposableObject
         {
             public bool DisposeCalled { get; set; }
@@ -45,9 +50,13 @@ namespace UnitTests
 
             protected override void DisposeResources(bool disposing)
             {
+                if (!disposing)
+                {
+                    return;
+                }
+
                 DisposeCalled = true;
             }
         }
-        #endregion
     }
 }
