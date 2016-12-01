@@ -9,7 +9,7 @@ namespace ToolKit.Cryptography
     /// Implements password-based key derivation functionality, Password-Based Key Derivation
     /// Function 2, by using a pseudo-random number generator based on <see cref="System.Security.Cryptography.HMACSHA1"/>.
     /// </summary>
-    public class DerivedKey : IDisposable
+    public class DerivedKey : DisposableObject
     {
         private static ILog _log = LogManager.GetLogger<DerivedKey>();
 
@@ -42,18 +42,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         ~DerivedKey()
         {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting
-        /// unmanaged resources.
-        /// </summary>
-        [ExcludeFromCodeCoverage]
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            DisposeResources(false);
         }
 
         /// <summary>
@@ -74,7 +63,7 @@ namespace ToolKit.Cryptography
         /// unmanaged resources.
         /// </param>
         [ExcludeFromCodeCoverage]
-        protected virtual void Dispose(bool disposing)
+        protected override void DisposeResources(bool disposing)
         {
             if (!disposing)
             {
