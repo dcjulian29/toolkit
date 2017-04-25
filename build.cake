@@ -90,7 +90,7 @@ Task("Compile")
             .SetConfiguration(configuration)
             .WithProperty("OutDir", outputDirectory)
             .WithProperty("TreatWarningsAsErrors", "True")
-            .UseToolVersion(MSBuildToolVersion.VS2015)
+            .UseToolVersion(MSBuildToolVersion.VS2017)
             .SetNodeReuse(false));
     });
 
