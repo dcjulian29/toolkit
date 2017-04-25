@@ -154,6 +154,7 @@
     <Content Include="DirectoryServices\LDAP Search Filters.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
