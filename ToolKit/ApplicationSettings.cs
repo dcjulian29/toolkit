@@ -10,14 +10,14 @@ namespace ToolKit
     /// This class holds and persists the settings used by an application as XML file.
     /// </summary>
     /// <typeparam name="T">
-    ///   A type that is inheriting from this class. 
-    ///   Example: MySettings : ApplicationSettings&lt;MySettings&gt;
+    /// A type that is inheriting from this class.
+    /// Example: MySettings : ApplicationSettings&lt;MySettings&gt;
     /// </typeparam>
     [XmlRoot("settings")]
     public abstract class ApplicationSettings<T>
     {
         private static ILog _log = LogManager.GetLogger<ApplicationSettings<T>>();
-        
+
         /// <summary>
         /// Loads the application settings.
         /// </summary>
@@ -25,9 +25,9 @@ namespace ToolKit
         /// <returns>a de-serialized object containing the application settings.</returns>
         public T Load(string fileName)
         {
-            // Check to make sure that the fileName is not a relative file and/or path name
-            // This will become important when the calling process is a Windows Service
-            // or other type of hosting process...
+            // Check to make sure that the fileName is not a relative file and/or path name This will
+            // become important when the calling process is a Windows Service or other type of
+            // hosting process...
             if (!File.Exists(fileName))
             {
                 var fullPath = Assembly.GetAssembly(typeof(T)).Location;
