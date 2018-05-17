@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
+using System.DirectoryServices.ActiveDirectory;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -21,7 +23,9 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         private static ILog _log = LogManager.GetLogger<DirectoryObject>();
 
         private string _distinguishedName;
+
         private XmlDocument _properties;
+
         private int _propertiesCount;
 
         /// <summary>
@@ -58,7 +62,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             _distinguishedName = String.Empty;
             if (String.IsNullOrEmpty(distinguishedName))
             {
-                throw new ArgumentNullException("distinguishedName");
+                throw new ArgumentNullException(nameof(distinguishedName));
             }
 
             Initialize(DistinguishedName.Parse(distinguishedName));
@@ -74,7 +78,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             _distinguishedName = String.Empty;
             if (distinguishedName == null)
             {
-                throw new ArgumentNullException("distinguishedName");
+                throw new ArgumentNullException(nameof(distinguishedName));
             }
 
             Initialize(distinguishedName);
@@ -90,7 +94,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             _distinguishedName = String.Empty;
             if (result == null)
             {
-                throw new ArgumentNullException("result");
+                throw new ArgumentNullException(nameof(result));
             }
 
             Initialize(DistinguishedName.Parse(result.Path));
@@ -106,23 +110,32 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             _distinguishedName = String.Empty;
             if (entry == null)
             {
-                throw new ArgumentNullException("entry");
+                throw new ArgumentNullException(nameof(entry));
             }
 
             Initialize(DistinguishedName.Parse(entry.Path));
         }
 
         /// <summary>
-        /// Gets The Number of Properties
+        /// Gets the NetBIOS Domain of an Active Directory Distinguished Name.
         /// </summary>
-        /// <value>The number of properties in this object.</value>
-        public int NumberOfProperties
+        /// <value>The NetBIOS Domain.</value>
+        public string NetBiosDomain
         {
             get
             {
-                return _propertiesCount;
+                var domainRoot = DistinguishedName.Parse(_distinguishedName).DomainRoot;
+
+                return !String.IsNullOrEmpty(domainRoot)
+                    ? ResolveNetBios().ToUpper(CultureInfo.InvariantCulture) : null;
             }
         }
+
+        /// <summary>
+        /// Gets The Number of Properties
+        /// </summary>
+        /// <value>The number of properties in this object.</value>
+        public int NumberOfProperties => _propertiesCount;
 
         /// <summary>
         /// Determines if the specified distinguished name exists.
@@ -153,7 +166,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </returns>
         public static bool IsComputer(DistinguishedName distinguishedName)
         {
-            return distinguishedName.Exists() && IsComputer(new DirectoryEntry(distinguishedName.GcPath));
+            return Exists(distinguishedName.GcPath) && IsComputer(new DirectoryEntry(distinguishedName.GcPath));
         }
 
         /// <summary>
@@ -197,7 +210,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </returns>
         public static bool IsContact(DistinguishedName distinguishedName)
         {
-            return distinguishedName.Exists() && IsContact(new DirectoryEntry(distinguishedName.GcPath));
+            return Exists(distinguishedName.GcPath)
+                   && IsContact(new DirectoryEntry(distinguishedName.GcPath));
         }
 
         /// <summary>
@@ -236,12 +250,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Determines whether the specified distinguished name is a group object.
         /// </summary>
         /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
-        /// <returns>
-        /// <c>true</c> if the specified distinguished name is a group; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the specified distinguished name is a group; otherwise, <c>false</c>.</returns>
         public static bool IsGroup(DistinguishedName distinguishedName)
         {
-            return distinguishedName.Exists() && IsGroup(new DirectoryEntry(distinguishedName.GcPath));
+            return Exists(distinguishedName.GcPath) && IsGroup(new DirectoryEntry(distinguishedName.GcPath));
         }
 
         /// <summary>
@@ -258,9 +270,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Determines whether the specified distinguished name is a group object.
         /// </summary>
         /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
-        /// <returns>
-        /// <c>true</c> if the specified distinguished name is a group; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the specified distinguished name is a group; otherwise, <c>false</c>.</returns>
         public static bool IsGroup(string distinguishedName)
         {
             return IsGroup(DistinguishedName.Parse(distinguishedName));
@@ -283,7 +293,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if the specified distinguished name is a user; otherwise, <c>false</c>.</returns>
         public static bool IsUser(DistinguishedName distinguishedName)
         {
-            return distinguishedName.Exists() && IsUser(new DirectoryEntry(distinguishedName.GcPath));
+            return Exists(distinguishedName.GcPath) && IsUser(new DirectoryEntry(distinguishedName.GcPath));
         }
 
         /// <summary>
@@ -321,7 +331,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="newLocation">The distinguished name of the new parent container.</param>
         public void Move(DistinguishedName newLocation)
         {
-            if (!newLocation.Exists())
+            if (!Exists(newLocation.GcPath))
             {
                 throw new ArgumentException("Destination does not exists!");
             }
@@ -363,14 +373,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             foreach (string key in collection.PropertyNames)
             {
-                if (collection[key].Count == 1)
-                {
-                    extracted.Add(key, collection[key][0]);
-                }
-                else
-                {
-                    extracted.Add(key, collection[key].Cast<object>().ToArray());
-                }
+                extracted.Add(key, collection[key].Count == 1
+                    ? collection[key][0] : collection[key].Cast<object>().ToArray());
             }
 
             Initialize(extracted);
@@ -390,26 +394,20 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             foreach (var item in collection)
             {
-                if (item.Value is object[])
+                if (item.Value is object[] objects)
                 {
-                    foreach (var property in (object[])item.Value)
+                    foreach (var property in objects)
                     {
                         var element = CreateXmlElement(item.Key, property);
 
-                        if (topNode != null)
-                        {
-                            topNode.AppendChild(element);
-                        }
+                        topNode?.AppendChild(element);
                     }
                 }
                 else
                 {
                     var element = CreateXmlElement(item.Key, item.Value);
 
-                    if (topNode != null)
-                    {
-                        topNode.AppendChild(element);
-                    }
+                    topNode?.AppendChild(element);
                 }
             }
 
@@ -517,7 +515,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 if (list != null)
                 {
                     objectClass = list.Cast<XmlNode>()
-                        .Aggregate(objectClass, (current, node) => current + String.Format("{0} ", node.InnerText));
+                        .Aggregate(objectClass, (current, node) => current + $"{node.InnerText} ");
                 }
             }
             catch (Exception ex)
@@ -544,7 +542,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 _log.Debug(m => m("ldapPath: {0}", distinguishedName.LdapPath));
             }
 
-            // Create a Search Result object to take advantaged of the COM marshalling of properties.
+            // Create a Search Result object to take advantaged of the COM marshaling of properties.
             using (var entry = new DirectoryEntry(distinguishedName.LdapPath))
             {
                 using (var search = new DirectorySearcher(entry, "cn=*"))
@@ -576,7 +574,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             }
 
             var objectClass = propertyCollection["objectclass"].Cast<object>()
-                .Aggregate(String.Empty, (current, property) => current + String.Format("{0} ", property.ToString()));
+                .Aggregate(String.Empty, (current, property) => current + $"{property.ToString()} ");
 
             return objectClass.Contains(objectType);
         }
@@ -605,14 +603,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 }
                 else
                 {
-                    if (value is string)
-                    {
-                        element.InnerText = XmlEncoder.Encode(value.ToString());
-                    }
-                    else
-                    {
-                        element.InnerText = value.ToString();
-                    }
+                    element.InnerText = value is string ? XmlEncoder.Encode(value.ToString()) : value.ToString();
                 }
             }
 
@@ -622,6 +613,47 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             }
 
             return element;
+        }
+
+        private string ResolveNetBios()
+        {
+            // This Value would only exist for an Active Directory Distinguished Name.
+            string netBiosName = null;
+            var dn = DistinguishedName.Parse(_distinguishedName);
+
+            var context = new DirectoryContext(DirectoryContextType.Domain, dn.DnsDomain);
+            var forest = Domain.GetDomain(context).Forest;
+
+            using (var root = forest.RootDomain.GetDirectoryEntry())
+            {
+                var path = root.Path.Substring(7);
+                var slash = path.IndexOf("/", StringComparison.Ordinal);
+                path = String.Format("LDAP://{0}", path.Insert(slash + 1, "CN=Partitions, CN=Configuration,"));
+
+                // find domain NetBIOS name
+                var entry = new DirectoryEntry(path);
+
+                SearchResultCollection results;
+                using (var search = new DirectorySearcher(entry))
+                {
+                    search.Filter = "(&(objectClass=top)(nETBIOSName=*))";
+                    search.PropertiesToLoad.Add("nETBIOSName");
+                    search.PropertiesToLoad.Add("nCName");
+
+                    results = search.FindAll();
+                }
+
+                foreach (SearchResult result in results)
+                {
+                    var contextName = (string)result.Properties["nCName"][0];
+                    if (String.Compare(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        netBiosName = (string)result.Properties["netBIOSName"][0];
+                    }
+                }
+            }
+
+            return netBiosName;
         }
     }
 }
