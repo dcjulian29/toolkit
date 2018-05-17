@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common.Logging;
+using ToolKit.DirectoryServices;
+using ToolKit.DirectoryServices.ActiveDirectory;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 
 namespace ToolKit.DirectoryServices
@@ -50,7 +52,7 @@ namespace ToolKit.DirectoryServices
                 {
                     userFlags.SetFlag(ADS_USER_FLAG.ACCOUNTDISABLE);
 
-                    var entry = user.ToDirectoryEntry();
+                    var entry = (user as User)?.ToDirectoryEntry();
                     entry.Properties["userAccessControl"].Value = userFlags;
                     entry.CommitChanges();
                     entry.Close();
@@ -71,7 +73,7 @@ namespace ToolKit.DirectoryServices
                 {
                     userFlags.ClearFlag(ADS_USER_FLAG.ACCOUNTDISABLE);
 
-                    var entry = user.ToDirectoryEntry();
+                    var entry = (user as User)?.ToDirectoryEntry();
                     entry.Properties["userAccessControl"].Value = userFlags;
                     entry.CommitChanges();
                     entry.Close();
