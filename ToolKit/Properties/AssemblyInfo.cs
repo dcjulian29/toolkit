@@ -2,9 +2,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("ToolKit")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyProduct("ToolKit")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
