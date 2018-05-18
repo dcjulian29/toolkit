@@ -40,12 +40,12 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Gets the default private key as stored in the *.config file
         /// </summary>
-        public RsaPrivateKey DefaultPrivateKey => RsaPrivateKey.LoadFromConfig();
+        public RsaPrivateKey DefaultPrivateKey => RsaPrivateKey.LoadFromEnvironment();
 
         /// <summary>
         /// Gets the default public key as stored in the *.config file.
         /// </summary>
-        public RsaPublicKey DefaultPublicKey => RsaPublicKey.LoadFromConfig();
+        public RsaPublicKey DefaultPublicKey => RsaPublicKey.LoadFromEnvironment();
 
         /// <summary>
         /// Gets or sets the name of the key container used to store this key on disk; this is an
@@ -110,7 +110,7 @@ namespace ToolKit.Cryptography
         /// <returns>The decrypted data.</returns>
         public EncryptionData Decrypt(EncryptionData encryptedData)
         {
-            return Decrypt(encryptedData, RsaPrivateKey.LoadFromConfig());
+            return Decrypt(encryptedData, RsaPrivateKey.LoadFromEnvironment());
         }
 
         /// <summary>

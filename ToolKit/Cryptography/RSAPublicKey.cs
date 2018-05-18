@@ -106,12 +106,12 @@ namespace ToolKit.Cryptography
         /// Load public key from app.config or web.config file
         /// </summary>
         /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
-        public static RsaPublicKey LoadFromConfig()
+        public static RsaPublicKey LoadFromEnvironment()
         {
             var key = new RsaPublicKey
             {
-                Modulus = ReadConfigKey(KeyModulus),
-                Exponent = ReadConfigKey(KeyExponent)
+                Modulus = ReadKeyFromEnvironment(KeyModulus),
+                Exponent = ReadKeyFromEnvironment(KeyExponent)
             };
 
             return key;
@@ -203,16 +203,16 @@ namespace ToolKit.Cryptography
             return sb.ToString();
         }
 
-        private static string ReadConfigKey(string key)
+        private static string ReadKeyFromEnvironment(string key)
         {
-            var s = Convert.ToString(ConfigurationManager.AppSettings.Get(key));
+            var s = Environment.GetEnvironmentVariable(key);
 
             if (!String.IsNullOrEmpty(s))
             {
                 return s;
             }
 
-            throw new ConfigurationErrorsException($"key <{key}> is missing from .config file");
+            throw new ApplicationException($"key <{key}> is missing from the Envioronment");
         }
 
         private static string ReadXmlElement(string xml, string element)
