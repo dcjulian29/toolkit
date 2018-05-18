@@ -1,103 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{F8774DC0-A6A7-4A4D-A126-9D7637A01EBF}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>ToolKit.Data.NHibernate</RootNamespace>
-        <AssemblyName>ToolKit.Data.NHibernate</AssemblyName>
-        <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <TargetFrameworkProfile />
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <DocumentationFile>
-        </DocumentationFile>
-        <RunCodeAnalysis>false</RunCodeAnalysis>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <DocumentationFile>bin\Release\ToolKit.Data.NHibernate.XML</DocumentationFile>
-        <RunCodeAnalysis>false</RunCodeAnalysis>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-            <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-            <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="FluentNHibernate, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\packages\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
-        </Reference>
-        <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
-        </Reference>
-        <Reference Include="NHibernate">
-            <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Configuration" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="GlobalSuppressions.cs" />
-        <Compile Include="NHibernateUnitOfWork.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="SessionConstraints.cs" />
-        <Compile Include="SessionExtensions.cs" />
-        <Compile Include="SessionFactories\JetSessionFactory.cs" />
-        <Compile Include="SessionFactories\MsSqlSessionFactory.cs" />
-        <Compile Include="SessionFactories\MsSqlCeSessionFactory.cs" />
-        <Compile Include="SessionFactories\MySqlSessionFactory.cs" />
-        <Compile Include="SessionFactories\OracleSessionFactory.cs" />
-        <Compile Include="SessionFactories\SessionFactoryBase.cs" />
-        <Compile Include="SessionFactories\SqLiteSessionFactory.cs" />
-        <Compile Include="SessionManager.cs" />
-        <Compile Include="SessionPool.cs" />
-        <Compile Include="UserTypes\BoolAsByte.cs" />
-        <Compile Include="UserTypes\BoolAsNumber.cs" />
-        <Compile Include="UserTypes\NullableDateTime.cs" />
-        <Compile Include="UserTypes\SymmetricEncryptedString.cs" />
-        <Compile Include="UserTypes\TrimString.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\ToolKit\ToolKit.csproj">
-            <Project>{64bde149-2f82-4a95-aa15-3e295560a2c4}</Project>
-            <Name>ToolKit</Name>
-        </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include=".editorconfig" />
-        <None Include="packages.config" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F8774DC0-A6A7-4A4D-A126-9D7637A01EBF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToolKit.Data.NHibernate</RootNamespace>
+    <AssemblyName>ToolKit.Data.NHibernate</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ToolKit.Data.NHibernate.XML</DocumentationFile>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="NHibernateUnitOfWork.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionConstraints.cs" />
+    <Compile Include="SessionExtensions.cs" />
+    <Compile Include="SessionFactories\JetSessionFactory.cs" />
+    <Compile Include="SessionFactories\MsSqlSessionFactory.cs" />
+    <Compile Include="SessionFactories\MsSqlCeSessionFactory.cs" />
+    <Compile Include="SessionFactories\MySqlSessionFactory.cs" />
+    <Compile Include="SessionFactories\OracleSessionFactory.cs" />
+    <Compile Include="SessionFactories\SessionFactoryBase.cs" />
+    <Compile Include="SessionFactories\SqLiteSessionFactory.cs" />
+    <Compile Include="SessionManager.cs" />
+    <Compile Include="SessionPool.cs" />
+    <Compile Include="UserTypes\BoolAsByte.cs" />
+    <Compile Include="UserTypes\BoolAsNumber.cs" />
+    <Compile Include="UserTypes\NullableDateTime.cs" />
+    <Compile Include="UserTypes\SymmetricEncryptedString.cs" />
+    <Compile Include="UserTypes\TrimString.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ToolKit\ToolKit.csproj">
+      <Project>{64bde149-2f82-4a95-aa15-3e295560a2c4}</Project>
+      <Name>ToolKit</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild" Condition="!Exists('..\build\CommonAssemblyInfo.cs')">
     <MakeDir Directories="..\build" Condition="!Exists('..\build')" />
