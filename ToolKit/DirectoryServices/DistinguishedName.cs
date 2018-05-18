@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DirectoryServices;
-using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -25,7 +23,7 @@ namespace ToolKit.DirectoryServices
     public class DistinguishedName
     {
         private static ILog _log = LogManager.GetLogger<DistinguishedName>();
-        
+
         private List<NameValue> components = new List<NameValue>();
 
         /// <summary>
@@ -34,8 +32,8 @@ namespace ToolKit.DirectoryServices
         /// <param name="distinguishedName">The distinguished name.</param>
         public DistinguishedName(string distinguishedName)
         {
-            this.LdapServer = String.Empty;
-            this.Process(distinguishedName);
+            LdapServer = String.Empty;
+            Process(distinguishedName);
         }
 
         /// <summary>
@@ -44,18 +42,17 @@ namespace ToolKit.DirectoryServices
         /// <value>The name of the object in canonical format.</value>
         /// <remarks>
         /// Active Directory Canonical Name . By default, the Windows user interfaces display object
-        /// names that use the canonical name, which lists the relative distinguished names from
-        /// the root downward and without the RFC 1779 naming attribute descriptors; it uses the
-        /// DNS domain name (the form of the name where the domain labels are separated by periods).
-        /// If the name of an organizational unit contains a forward slash character (/), the system
+        /// names that use the canonical name, which lists the relative distinguished names from the
+        /// root downward and without the RFC 1779 naming attribute descriptors; it uses the DNS
+        /// domain name (the form of the name where the domain labels are separated by periods). If
+        /// the name of an organizational unit contains a forward slash character (/), the system
         /// requires an escape character in the form of a backslash (\) to distinguish between
         /// forward slashes that separate elements of the canonical name and the forward slash that
-        /// is part of the organizational unit name. The canonical name that appears in
-        /// Active Directory Users and Computers properties pages displays the escape character
-        /// immediately preceding the forward slash in the name of the organizational unit.
-        /// For example, if the name of an organizational unit
-        /// is Promotions/Northeast and the name of the domain is example.com, the canonical name
-        /// is displayed as example.com/Promotions\/Northeast.
+        /// is part of the organizational unit name. The canonical name that appears in Active
+        /// Directory Users and Computers properties pages displays the escape character immediately
+        /// preceding the forward slash in the name of the organizational unit. For example, if the
+        /// name of an organizational unit is Promotions/Northeast and the name of the domain is
+        /// example.com, the canonical name is displayed as example.com/Promotions\/Northeast.
         /// </remarks>
         public string CanonicalName
         {
@@ -95,6 +92,25 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
+        /// Gets the DNS domain equivalent based on the DC components of the DN.
+        /// </summary>
+        /// <value>A string representing the DNS domain.</value>
+        public string DnsDomain
+        {
+            get
+            {
+                var sb = new StringBuilder();
+
+                foreach (var rdn in components.Where(rdn => rdn.Name.ToUpper(CultureInfo.InvariantCulture) == "DC"))
+                {
+                    sb.AppendFormat("{0}.", rdn.Value);
+                }
+
+                return sb.ToString().TrimEnd('.').ToLower(CultureInfo.InvariantCulture);
+            }
+        }
+
+        /// <summary>
         /// Gets the domain root of the Distinguished Name
         /// </summary>
         /// <value>The domain root of the Distinguished Name.</value>
@@ -113,25 +129,6 @@ namespace ToolKit.DirectoryServices
                 }
 
                 return sb.ToString().TrimEnd(',');
-            }
-        }
-
-        /// <summary>
-        /// Gets the DNS domain equivalent based on the DC components of the DN.
-        /// </summary>
-        /// <value>A string representing the DNS domain.</value>
-        public string DnsDomain
-        {
-            get
-            {
-                var sb = new StringBuilder();
-
-                foreach (var rdn in components.Where(rdn => rdn.Name.ToUpper(CultureInfo.InvariantCulture) == "DC"))
-                {
-                    sb.AppendFormat("{0}.", rdn.Value);
-                }
-
-                return sb.ToString().TrimEnd('.').ToLower(CultureInfo.InvariantCulture);
             }
         }
 
@@ -176,21 +173,20 @@ namespace ToolKit.DirectoryServices
                 else
                 {
                     return String.Format(
-                        "LDAP://{0}{1}{2}{3}{4}", 
-                        LdapServer.Length > 0 ? LdapServer : DnsDomain, 
-                        ServerPort > 0 ? ":" : String.Empty, 
-                        ServerPort > 0 ? Convert.ToString(ServerPort) : String.Empty, 
-                        LdapServer.Length > 0 || DnsDomain.Length > 0 ? "/" : String.Empty, 
+                        "LDAP://{0}{1}{2}{3}{4}",
+                        LdapServer.Length > 0 ? LdapServer : DnsDomain,
+                        ServerPort > 0 ? ":" : String.Empty,
+                        ServerPort > 0 ? Convert.ToString(ServerPort) : String.Empty,
+                        LdapServer.Length > 0 || DnsDomain.Length > 0 ? "/" : String.Empty,
                         ToString());
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the LDAP server. The "HostName" can be a computer name, an IP address,
-        /// or a domain name. A server name can also be specified in the binding string. If
-        /// an LDAP server is not specified, one is deduced by the presence of DC values in
-        /// the distinguished name.
+        /// Gets or sets the LDAP server. The "HostName" can be a computer name, an IP address, or a
+        /// domain name. A server name can also be specified in the binding string. If an LDAP server
+        /// is not specified, one is deduced by the presence of DC values in the distinguished name.
         /// Most LDAP providers follow a model that requires a server name to be specified.
         /// </summary>
         /// <value>The LDAP server.</value>
@@ -198,18 +194,6 @@ namespace ToolKit.DirectoryServices
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Gets the NetBIOS Domain of an Active Directory Distinguished Name.
-        /// </summary>
-        /// <value>The NetBIOS Domain.</value>
-        public string NetBiosDomain
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(DomainRoot) ? ResolveNetBios().ToUpper(CultureInfo.InvariantCulture) : null;
-            }
         }
 
         /// <summary>
@@ -240,11 +224,10 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
-        /// Gets or sets the server port number. The "PortNumber" specifies the port to be
-        /// used for the connection. If no port number is specified, the LDAP provider
-        /// uses the default port number. The default port number is 389 if not using an
-        /// SSL connection or 636 if using an SSL connection. Unless a port number is specified,
-        /// the port number is not used.
+        /// Gets or sets the server port number. The "PortNumber" specifies the port to be used for
+        /// the connection. If no port number is specified, the LDAP provider uses the default port
+        /// number. The default port number is 389 if not using an SSL connection or 636 if using an
+        /// SSL connection. Unless a port number is specified, the port number is not used.
         /// </summary>
         /// <value>The server port number. Returns 0 is the port is not specified</value>
         public int ServerPort
@@ -254,27 +237,11 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
-        /// Checks to see whether two DN objects are equal.
-        /// </summary>
-        /// <param name="dn1">The first DistinguishedName instance</param>
-        /// <param name="dn2">The second DistinguishedName instance</param>
-        /// <returns>
-        ///   <c>true</c> if the two instance are equal; otherwise, <c>false</c>.
-        /// </returns>
-        /// <returns>true if the two objects are equal; false otherwise</returns>
-        public static bool operator ==(DistinguishedName dn1, DistinguishedName dn2)
-        {
-            return object.ReferenceEquals(dn1, null) ? object.ReferenceEquals(dn2, null) : dn1.Equals(dn2);
-        }
-
-        /// <summary>
         /// Checks to see whether two DN objects are not equal.
         /// </summary>
         /// <param name="dn1">The first DistinguishedName instance</param>
         /// <param name="dn2">The second DistinguishedName instance</param>
-        /// <returns>
-        ///   <c>true</c> if the two instance are equal; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the two instance are equal; otherwise, <c>false</c>.</returns>
         /// <returns>true if the two objects are not equal; false otherwise</returns>
         public static bool operator !=(DistinguishedName dn1, DistinguishedName dn2)
         {
@@ -282,15 +249,15 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
-        /// Determines if the specified distinguished name exists.
+        /// Checks to see whether two DN objects are equal.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished Name of the object.</param>
-        /// <returns>
-        ///   <c>True</c> if the object exists, otherwise <c>False</c>
-        /// </returns>
-        public static bool Exists(string distinguishedName)
+        /// <param name="dn1">The first DistinguishedName instance</param>
+        /// <param name="dn2">The second DistinguishedName instance</param>
+        /// <returns><c>true</c> if the two instance are equal; otherwise, <c>false</c>.</returns>
+        /// <returns>true if the two objects are equal; false otherwise</returns>
+        public static bool operator ==(DistinguishedName dn1, DistinguishedName dn2)
         {
-            return DirectoryEntry.Exists(DistinguishedName.Parse(distinguishedName).LdapPath);
+            return object.ReferenceEquals(dn1, null) ? object.ReferenceEquals(dn2, null) : dn1.Equals(dn2);
         }
 
         /// <summary>
@@ -304,17 +271,6 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
-        /// Determines if the this distinguished name exists.
-        /// </summary>
-        /// <returns>
-        ///   <c>True</c> if the object exists, otherwise <c>False</c>
-        /// </returns>
-        public bool Exists()
-        {
-            return Exists(ToString());
-        }
-
-        /// <summary>
         /// Returns a Child distinguished name based on the child's relative distinguished name.
         /// </summary>
         /// <param name="childDistinguishedName">The child's relative distinguished nameValue.</param>
@@ -325,12 +281,22 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
+        /// Returns a Distinguished Name that represents the container of the object. If the object
+        /// is a container, then the entire Distinguished Name is returned...
+        /// </summary>
+        /// <returns>A DistinguishedName object</returns>
+        public DistinguishedName Container()
+        {
+            return new DistinguishedName(ToString().Replace(String.Format("CN={0},", CommonName), String.Empty));
+        }
+
+        /// <summary>
         /// Determines whether the child distinguished name is part of this distinguished name.
         /// </summary>
         /// <param name="childDistinguishedName">The child distinguished name instance</param>
         /// <returns>
-        ///   <c>true</c> if the child distinguished name is part of this distinguished
-        ///   name; otherwise, <c>false</c>.
+        /// <c>true</c> if the child distinguished name is part of this distinguished name;
+        /// otherwise, <c>false</c>.
         /// </returns>
         public bool Contains(DistinguishedName childDistinguishedName)
         {
@@ -362,8 +328,8 @@ namespace ToolKit.DirectoryServices
         /// </summary>
         /// <param name="childDistinguishedName">The child distinguished name string</param>
         /// <returns>
-        ///   <c>true</c> if the child distinguished name is part of this distinguished
-        ///   name; otherwise, <c>false</c>.
+        /// <c>true</c> if the child distinguished name is part of this distinguished name;
+        /// otherwise, <c>false</c>.
         /// </returns>
         public bool Contains(string childDistinguishedName)
         {
@@ -371,23 +337,12 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
-        /// Returns a Distinguished Name that represents the container of the object. If the
-        /// object is a container, then the entire Distinguished Name is returned...
-        /// </summary>
-        /// <returns>A DistinguishedName object</returns>
-        public DistinguishedName Container()
-        {
-            return new DistinguishedName(ToString().Replace(String.Format("CN={0},", CommonName), String.Empty));
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="T:System.Object"/> is equal to the
-        /// current instance.
+        /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current instance.
         /// </summary>
         /// <param name="obj">The <see cref="T:System.Object"/> to compare.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="T:System.Object"/> is equal to the current
-        ///   instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="T:System.Object"/> is equal to the current
+        /// instance; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="T:System.NullReferenceException">
         /// The <paramref name="obj"/> parameter is null.
@@ -408,17 +363,14 @@ namespace ToolKit.DirectoryServices
         /// <summary>
         /// Serves as a hash function for this instance.
         /// </summary>
-        /// <returns>
-        /// A hash code for the current instance.
-        /// </returns>
+        /// <returns>A hash code for the current instance.</returns>
         public override int GetHashCode()
         {
             return ToString().ToLower(CultureInfo.InvariantCulture).GetHashCode();
         }
 
         /// <summary>
-        /// Returns a <see cref="T:System.String"/> that represents the current
-        /// Distinguished Name instance.
+        /// Returns a <see cref="T:System.String"/> that represents the current Distinguished Name instance.
         /// </summary>
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current Distinguished Name instance.
@@ -457,37 +409,35 @@ namespace ToolKit.DirectoryServices
 
         private void Process(string distinguishedName)
         {
-            // Any of the attributes defined in the directory schema may be used to make up a DN.
-            // The order of the component attribute value pairs is important.
-            // The DN contains one component for each level of the directory hierarchy from the
-            // root down to the level where the entry resides.
+            // Any of the attributes defined in the directory schema may be used to make up a DN. The
+            // order of the component attribute value pairs is important. The DN contains one
+            // component for each level of the directory hierarchy from the root down to the level
+            // where the entry resides.
 
             // LDAP DNs begin with the most specific attribute, and continue with progressively
             // broader attributes, often ending with a country attribute or domain components.
 
-            // Each component of the DN is referred to as the Relative Distinguished Name (RDN).
-            // An RDN consist of an attribute=value pair
+            // Each component of the DN is referred to as the Relative Distinguished Name (RDN). An
+            // RDN consist of an attribute=value pair
 
-            // Some characters have special meaning in a DN. For example, = (equals) separates
-            // an attribute name and value, and , (comma) separates attribute=value pairs.
-            // The special characters are , (comma), = (equals), + (plus), < (less than),
-            // > (greater than), # (number sign), ; (semicolon), \ (backslash),
-            // and " (quotation mark, ASCII 34).
+            // Some characters have special meaning in a DN. For example, = (equals) separates an
+            // attribute name and value, and , (comma) separates attribute=value pairs. The special
+            // characters are , (comma), = (equals), + (plus), < (less than), > (greater than), #
+            // (number sign), ; (semicolon), \ (backslash), and " (quotation mark, ASCII 34).
 
-            // A special character can be escaped (by a backslash: '\' ASCII 92) in an
-            // attribute value to remove the special meaning. or by replacing the character
-            // to be escaped by a backslash and two hex digits, which form a single byte in
-            // the code of the character.
+            // A special character can be escaped (by a backslash: '\' ASCII 92) in an attribute
+            // value to remove the special meaning. or by replacing the character to be escaped by a
+            // backslash and two hex digits, which form a single byte in the code of the character.
 
-            // When the entire attribute value is surrounded by "" (quotation marks) (ASCII 34),
-            // all characters are taken as is, except for the \ (backslash). The \ (backslash)
-            // can be used to escape a backslash (ASCII 92) or quotation marks (ASCII 34),
-            // any of the special characters previously mentioned, or hex pairs.
+            // When the entire attribute value is surrounded by "" (quotation marks) (ASCII 34), all
+            // characters are taken as is, except for the \ (backslash). The \ (backslash) can be
+            // used to escape a backslash (ASCII 92) or quotation marks (ASCII 34), any of the
+            // special characters previously mentioned, or hex pairs.
 
             // To escape a single backslash, use \\
 
-            // The formal syntax for a Distinguished Name (DN) is based on RFC 2253.
-            // The Backus Naur Form (BNF) syntax (http://en.wikipedia.org/wiki/Backus-Naur_form):
+            // The formal syntax for a Distinguished Name (DN) is based on RFC 2253. The Backus Naur
+            // Form (BNF) syntax (http://en.wikipedia.org/wiki/Backus-Naur_form):
 
             // <name> ::= <name-component> ( <spaced-separator> )
             //          | <name-component> <spaced-separator> <name>
@@ -511,15 +461,14 @@ namespace ToolKit.DirectoryServices
             //   <hexchar> ::= 0-9, a-f, A-F
 
             // A semicolon (;) character can be used to separate RDNs in a distinguished name,
-            // although the comma (,) character is the typical notation. White-space characters
-            // might be present on either side of the comma or semicolon. These white-space
-            // characters are ignored, and the semicolon is replaced with a comma.
+            // although the comma (,) character is the typical notation. White-space characters might
+            // be present on either side of the comma or semicolon. These white-space characters are
+            // ignored, and the semicolon is replaced with a comma.
 
-            // In addition, space (' ' ASCII 32) characters may be present either before or
-            // after a '+' or '='. These space characters are ignored when parsing.
+            // In addition, space (' ' ASCII 32) characters may be present either before or after a
+            // '+' or '='. These space characters are ignored when parsing.
 
-            // Based on:
-            // http://publib.boulder.ibm.com/infocenter/iseries/v5r3/topic/rzahy/rzahyunderdn.htm
+            // Based on: http://publib.boulder.ibm.com/infocenter/iseries/v5r3/topic/rzahy/rzahyunderdn.htm
 
             // Now, Let's process the DistinguishedName and extract the components...
             _log.Debug("DN: " + distinguishedName);
@@ -650,6 +599,7 @@ namespace ToolKit.DirectoryServices
                     switch (parseState)
                     {
                         default:
+
                             // Ignore any spaces at the beginning of the string
                             try
                             {
@@ -690,7 +640,8 @@ namespace ToolKit.DirectoryServices
                             }
                             else
                             {
-                                // Is this a digit? "OID." is optional so if this is a number, then it must be an OID
+                                // Is this a digit? "OID." is optional so if this is a number, then
+                                // it must be an OID
                                 if (IsNumber(rdn[position]))
                                 {
                                     parseState = "AttributeOID";
@@ -816,7 +767,8 @@ namespace ToolKit.DirectoryServices
                             }
                             catch (IndexOutOfRangeException)
                             {
-                                // It is okay to have an empty value, so catch the exception and store an empty value.
+                                // It is okay to have an empty value, so catch the exception and
+                                // store an empty value.
                                 attributeValue = String.Empty;
                             }
 
@@ -835,7 +787,8 @@ namespace ToolKit.DirectoryServices
                                                 {
                                                     if (IsHex(rdn[position + 1]) && IsHex(rdn[position + 2]))
                                                     {
-                                                        // Let's convert the hexadecimal to it's character and store
+                                                        // Let's convert the hexadecimal to it's
+                                                        // character and store
                                                         position++; // Discard Escape character
                                                         byte ch = Convert.ToByte(rdn.Substring(position, 2), 16);
                                                         attributeValue += Convert.ToString(ch);
@@ -915,8 +868,8 @@ namespace ToolKit.DirectoryServices
                                         {
                                             try
                                             {
-                                                // Check to see if this is a hexadecimal escape sequence
-                                                // or a regular escape sequence.
+                                                // Check to see if this is a hexadecimal escape
+                                                // sequence or a regular escape sequence.
                                                 if (!(IsHex(rdn[position + 1]) && IsHex(rdn[position + 2])))
                                                 {
                                                     if (!(IsLdapDnSpecial(rdn[position]) || rdn[position] == ' '))
@@ -962,9 +915,9 @@ namespace ToolKit.DirectoryServices
                             {
                                 if (rdn[position] == '+')
                                 {
-                                    // if we've found a plus sign, that means that there's another name/value
-                                    // pair after it.  We'll store what we've found, advance to the next character,
-                                    // and let the loop cycle again...
+                                    // if we've found a plus sign, that means that there's another
+                                    // name/value pair after it. We'll store what we've found,
+                                    // advance to the next character, and let the loop cycle again...
                                     attributeValue += "+"; // Put this in the value so that we can recreate it later
                                     position++;
 
@@ -1001,45 +954,6 @@ namespace ToolKit.DirectoryServices
                     Value = attributeValue
                 });
             }
-        }
-
-        private string ResolveNetBios()
-        {
-            // This Value would only exist for an Active Directory Distinguished Name.
-            string netBiosName = null;
-            var context = new DirectoryContext(DirectoryContextType.Domain, this.DnsDomain);
-            var forest = Domain.GetDomain(context).Forest;
-
-            using (var root = forest.RootDomain.GetDirectoryEntry())
-            {
-                var path = root.Path.Substring(7);
-                var slash = path.IndexOf("/", StringComparison.Ordinal);
-                path = String.Format("LDAP://{0}", path.Insert(slash + 1, "CN=Partitions, CN=Configuration,"));
-
-                // find domain NetBIOS name
-                var entry = new DirectoryEntry(path);
-
-                SearchResultCollection results;
-                using (var search = new DirectorySearcher(entry))
-                {
-                    search.Filter = "(&(objectClass=top)(nETBIOSName=*))";
-                    search.PropertiesToLoad.Add("nETBIOSName");
-                    search.PropertiesToLoad.Add("nCName");
-
-                    results = search.FindAll();
-                }
-
-                foreach (SearchResult result in results)
-                {
-                    var contextName = (string)result.Properties["nCName"][0];
-                    if (String.Compare(contextName, DomainRoot, StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        netBiosName = (string)result.Properties["netBIOSName"][0];
-                    }
-                }
-            }
-
-            return netBiosName;
         }
 
         /// <summary>
