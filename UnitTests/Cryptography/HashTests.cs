@@ -150,36 +150,6 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void RIPEMD160_Should_CalculateCorrectHash()
-        {
-            // Arrange
-            var hash = new Hash(Hash.Provider.RIPEMD160);
-            var expected = "1E256A8357E60C53A11384D36642C7204B0112E8";
-
-            // Act
-            var data = hash.Calculate(new EncryptionData(TargetString));
-            var actual = data.Hex;
-
-            // Assert
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
-        public void RIPEMD160_Should_CalculateCorrectHash_When_Salted()
-        {
-            // Arrange
-            var hash = new Hash(Hash.Provider.RIPEMD160);
-            var expected = "026E4232D42F9366FFC2B66CC5280B3298579759";
-
-            // Act
-            var data = hash.Calculate(new EncryptionData(TargetString), new EncryptionData("Salty!"));
-            var actual = data.Hex;
-
-            // Assert
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
         public void SHA1_Should_CalculateCorrectHash()
         {
             // Arrange

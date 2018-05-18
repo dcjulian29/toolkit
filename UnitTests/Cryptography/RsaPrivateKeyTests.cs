@@ -100,23 +100,13 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void LoadFromConfig_Should_ThrowExceptionWhenConfigAppSettingsEmpty()
+        public void LoadFromEnvironment_Should_ThrowExceptionWhenEnvironmentDoesNotContainValues()
         {
-            // Arrange
-            var guid = $"{Directory.GetCurrentDirectory()}\\{Guid.NewGuid().ToString()}";
-            var dll = $"{Directory.GetCurrentDirectory()}\\Unittests.dll";
-            File.Delete(guid);
-            File.Move($"{dll}.config", guid);
-            ConfigurationManager.RefreshSection("appSettings");
-
-            // Act & Assert
-            Assert.Throws<ConfigurationErrorsException>(() =>
+            // Arrange & Act & Assert
+            Assert.Throws<ApplicationException>(() =>
             {
-                var key = RsaPrivateKey.LoadFromConfig();
+                var key = RsaPrivateKey.LoadFromEnvironment();
             });
-
-            File.Move(guid, $"{dll}.config");
-            ConfigurationManager.RefreshSection("appSettings");
         }
 
         [Fact]

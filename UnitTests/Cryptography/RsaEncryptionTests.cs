@@ -45,8 +45,10 @@ namespace UnitTests.Cryptography
         public void Decrypt_Should_ReturnExpectedResult_When_KeyIsStoredInConfig()
         {
             // Arrange
-            var publicKey = RsaPublicKey.LoadFromConfig();
-            var privateKey = RsaPrivateKey.LoadFromConfig();
+            AddKeysToEnvironment();
+
+            var publicKey = RsaPublicKey.LoadFromEnvironment();
+            var privateKey = RsaPrivateKey.LoadFromEnvironment();
 
             var e1 = new RsaEncryption();
             var e2 = new RsaEncryption();
@@ -57,6 +59,8 @@ namespace UnitTests.Cryptography
 
             // Assert
             Assert.Equal(decryptedData.Text, secret);
+
+            RemoveKeysToEnvironment();
         }
 
         [Fact]
@@ -108,6 +112,7 @@ namespace UnitTests.Cryptography
         public void Decrypt_Should_ReturnExpectedResult_When_UsingDefaultKeys()
         {
             // Arrange
+            AddKeysToEnvironment();
             var e1 = new RsaEncryption();
             var e2 = new RsaEncryption();
 
@@ -117,6 +122,8 @@ namespace UnitTests.Cryptography
 
             // Assert
             Assert.Equal(decryptedData.Text, secret);
+
+            RemoveKeysToEnvironment();
         }
 
         [Fact]
@@ -161,6 +168,7 @@ namespace UnitTests.Cryptography
         public void DefaultPrivateKey_Should_ReturnExpectedResult()
         {
             // Arrange
+            AddKeysToEnvironment();
             var expected = "AQAB";
 
             // Act
@@ -168,12 +176,15 @@ namespace UnitTests.Cryptography
 
             // Assert
             Assert.Equal(expected, key.DefaultPublicKey.Exponent);
+
+            RemoveKeysToEnvironment();
         }
 
         [Fact]
         public void DefaultPublicKey_Should_ReturnExpectedResult()
         {
             // Arrange
+            AddKeysToEnvironment();
             var expected = "ksvo/EqBn9XRzvH826npSQdCYv1G5gyEnzQeC4qPidEm"
                          + "Ub6Yan12cWYlt4CsK5umYGwWmRSL20Ufc+gnZQo6Pw==";
 
@@ -182,6 +193,8 @@ namespace UnitTests.Cryptography
 
             // Assert
             Assert.Equal(expected, key.DefaultPrivateKey.PrimeExponentP);
+
+            RemoveKeysToEnvironment();
         }
 
         [Fact]
@@ -352,6 +365,36 @@ namespace UnitTests.Cryptography
 
             // Assert
             Assert.True(actual);
+        }
+
+        private void AddKeysToEnvironment()
+        {
+            // Private Key
+            Environment.SetEnvironmentVariable("PublicKey.Modulus", "3uWxbWSnlL2ntr/gcJ0NQeiWRfzj/72zIDuBW/TmegeodMdPUvI5vXur0fKp6RbSU112oPf9o7hoAF8bdR9YOiJg6axZYKh+BxEH6pUPLbrtn1dPCUgTxlMeo0IhKvih1Q90Bz+ZxCp/V8Hcf86p+4LPeb1o9EOa01zd0yUwvkE=");
+            Environment.SetEnvironmentVariable("PublicKey.Exponent", "AQAB");
+
+            // Public Key
+            Environment.SetEnvironmentVariable("PrivateKey.P", "76iHZusdN1TYrTqf1gExNMMWbiHS7zSB/bi/xeUR0F3fjvnvsayn6s5ShM0jxYHVVkRyVoH16PwLW6Tt2gpdYw==");
+            Environment.SetEnvironmentVariable("PrivateKey.Q", "7hiVRmx0z1KERw+Zy86MmlvuODUsn2kuM06kLsSHbznSkYl5lekH9RFxFemNkGGMBg8OT5+EVtWAOdto8KTJCw==");
+            Environment.SetEnvironmentVariable("PrivateKey.DP", "ksvo/EqBn9XRzvH826npSQdCYv1G5gyEnzQeC4qPidEmUb6Yan12cWYlt4CsK5umYGwWmRSL20Ufc+gnZQo6Pw==");
+            Environment.SetEnvironmentVariable("PrivateKey.DQ", "QliLUCJsslDWF08blhUqTOENEpCOrKUMgLOLQJT3AGFmcbOTM9jJpNqFXovELNVhxVZwsHNM1z2LC5Q+O8BPXQ==");
+            Environment.SetEnvironmentVariable("PrivateKey.InverseQ", "pjEtLwYB4yeDpdORNFxhFVXWZCqoky86bmAnrrG4+FvwkH/2dNe65Wmp62JvZ7dwgPBIA+uA/LF+C1LXcXe9Aw==");
+            Environment.SetEnvironmentVariable("PrivateKey.D", "EmuZBhlTYA9sVMX2nlfcSJ4YDSChFvluXDOOtTK/+UW4vi3aeFhcPTSDNo5/TCv+pbULoLHd3DHZJm61rjAw8jV5n09Trufg/Z3ybzUrAOzT3iTR2rvg7mNS2IBmaTyJgemNKQDeFW81UOELVszUXNjhVex+k67Ma4omR6iTHSE=");
+        }
+
+        private void RemoveKeysToEnvironment()
+        {
+            // Private Key
+            Environment.SetEnvironmentVariable("PublicKey.Modulus", null);
+            Environment.SetEnvironmentVariable("PublicKey.Exponent", null);
+
+            // Public Key
+            Environment.SetEnvironmentVariable("PrivateKey.P", null);
+            Environment.SetEnvironmentVariable("PrivateKey.Q", null);
+            Environment.SetEnvironmentVariable("PrivateKey.DP", null);
+            Environment.SetEnvironmentVariable("PrivateKey.DQ", null);
+            Environment.SetEnvironmentVariable("PrivateKey.InverseQ", null);
+            Environment.SetEnvironmentVariable("PrivateKey.D", null);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -10,10 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnitTests</RootNamespace>
     <AssemblyName>UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -112,7 +113,6 @@
     <Compile Include="Cryptography\EncryptionDataTests.cs" />
     <Compile Include="Cryptography\HashTests.cs" />
     <Compile Include="Cryptography\MD5Tests.cs" />
-    <Compile Include="Cryptography\RIPEMD160Tests.cs" />
     <Compile Include="Cryptography\SHA1Tests.cs" />
     <Compile Include="Cryptography\SHA256Tests.cs" />
     <Compile Include="Cryptography\SHA384Tests.cs" />
@@ -149,13 +149,29 @@
     <Compile Include="Xml\XmlEncoderTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ToolKit-Windows\ToolKit-Windows.csproj">
+      <Project>{7ee52ff9-cbdd-46bd-b982-5d2837334565}</Project>
+      <Name>ToolKit-Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToolKit.Data.EntityFramework\ToolKit.Data.EntityFramework.csproj">
       <Project>{4f9f8c27-961f-4fa9-bd7c-0fa9cec68521}</Project>
       <Name>ToolKit.Data.EntityFramework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj">
+      <Project>{45e88f4d-9e50-40f2-93ef-07439952f6fc}</Project>
+      <Name>ToolKit.Data.MongoDb</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.csproj">
       <Project>{f8774dc0-a6a7-4a4d-a126-9d7637a01ebf}</Project>
       <Name>ToolKit.Data.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolKit.WebApi\ToolKit.WebApi.csproj">
+      <Project>{e55dc745-8585-4454-a21e-2cbb20a4bb68}</Project>
+      <Name>ToolKit.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolKit.Wpf\ToolKit.Wpf.csproj">
+      <Project>{fd0183d0-face-4753-8626-d60f7815b834}</Project>
+      <Name>ToolKit.Wpf</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToolKit\ToolKit.csproj">
       <Project>{64BDE149-2F82-4A95-AA15-3E295560A2C4}</Project>
