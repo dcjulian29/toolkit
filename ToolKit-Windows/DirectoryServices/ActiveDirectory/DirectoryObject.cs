@@ -341,10 +341,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 using (var n = new DirectoryEntry(newLocation.LdapPath))
                 {
                     o.MoveTo(n, n.Name);
-                    n.Close();
                 }
-
-                o.Close();
             }
         }
 

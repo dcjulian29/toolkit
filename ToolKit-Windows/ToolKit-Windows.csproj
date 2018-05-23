@@ -58,6 +58,7 @@
     <Compile Include="DirectoryServices\IUser.cs" />
     <Compile Include="DirectoryServices\LdapQuery.cs" />
     <Compile Include="DirectoryServices\Users.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Sid.cs" />
   </ItemGroup>
