@@ -128,7 +128,7 @@ namespace UnitTests.Data
         {
             // Arrange
             var entity = new Patient();
-            
+
             // Act
 
             // Assert
@@ -145,7 +145,7 @@ namespace UnitTests.Data
             entity.Id = "patient/-1";
 
             // Assert
-            Assert.IsType(typeof(String), entity.Id);
+            Assert.IsType<string>(entity.Id);
         }
 
         [Fact]
@@ -224,19 +224,6 @@ namespace UnitTests.Data
         }
 
         [Fact]
-        public void GetHashCode_Should_GenerateSameHashCode_When_EntitiesAreTransient()
-        {
-            // Arrange
-            var entity1 = new Patient();
-            var entity2 = new Patient();
-
-            // Act
-
-            // Assert
-            Assert.Equal(entity1.GetHashCode(), entity2.GetHashCode());
-        }
-
-        [Fact]
         public void GetHashCode_Should_GenerateDifferentHashCodes_When_EntitiesIdIsDifferent()
         {
             // Arrange
@@ -249,6 +236,19 @@ namespace UnitTests.Data
 
             // Assert
             Assert.NotEqual(entity1.GetHashCode(), entity2.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCode_Should_GenerateSameHashCode_When_EntitiesAreTransient()
+        {
+            // Arrange
+            var entity1 = new Patient();
+            var entity2 = new Patient();
+
+            // Act
+
+            // Assert
+            Assert.Equal(entity1.GetHashCode(), entity2.GetHashCode());
         }
 
         [Fact]

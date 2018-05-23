@@ -19,7 +19,7 @@ namespace UnitTests.Data
             // Act
 
             // Assert
-            Assert.IsType(typeof(Int32), entity.Id);
+            Assert.IsType<int>(entity.Id);
         }
 
         internal class Car : Entity

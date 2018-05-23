@@ -13,20 +13,6 @@ namespace UnitTests.Extensions
     public class EnumerableExtensionsTests
     {
         [Fact]
-        public void Each_Should_IterateOverEachItem()
-        {
-            // Arrange
-            IEnumerable<char> enumerable = new[] { 'a', 'b', 'c' };
-            var sb = new StringBuilder();
-
-            // Act
-            enumerable.Each(c => sb.Append(c));
-
-            // Assert
-            Assert.Equal(sb.ToString(), "abc");
-        }
-
-        [Fact]
         public void Each_Should_ExecuteAction()
         {
             // Arrange
@@ -41,7 +27,21 @@ namespace UnitTests.Extensions
             });
 
             // Assert
-            Assert.Equal(sb.ToString(), "121212");
+            Assert.Equal("121212", sb.ToString());
+        }
+
+        [Fact]
+        public void Each_Should_IterateOverEachItem()
+        {
+            // Arrange
+            IEnumerable<char> enumerable = new[] { 'a', 'b', 'c' };
+            var sb = new StringBuilder();
+
+            // Act
+            enumerable.Each(c => sb.Append(c));
+
+            // Assert
+            Assert.Equal("abc", sb.ToString());
         }
     }
 }

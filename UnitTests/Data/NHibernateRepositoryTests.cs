@@ -100,7 +100,7 @@ namespace UnitTests.Data
             }
 
             // Assert
-            Assert.Equal(patientCount, 1);
+            Assert.Equal(1, patientCount);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace UnitTests.Data
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patientCount, 3);
+            Assert.Equal(3, patientCount);
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace UnitTests.Data
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patientCount, 2);
+            Assert.Equal(2, patientCount);
         }
 
         [Fact]
@@ -174,7 +174,7 @@ namespace UnitTests.Data
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patient.Name, "Bar");
+            Assert.Equal("Bar", patient.Name);
         }
 
         [Fact]
