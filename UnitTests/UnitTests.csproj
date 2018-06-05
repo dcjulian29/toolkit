@@ -135,6 +135,7 @@
     <Compile Include="Data\NHibernateRepositoryTests.cs" />
     <Compile Include="Data\NHibernateSymmetricEncryptedStringTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
+    <Compile Include="Cryptography\DiffieHellmanTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFiltersTest.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\AdDateTimeTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ComputerTests.cs" />

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit", "ToolKit\ToolKit.csproj", "{D2C4EB24-603B-41C2-B7EA-BEEB1D9C8782}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Wpf", "ToolKit.Wpf\ToolKit.Wpf.csproj", "{FD0183D0-FACE-4753-8626-D60F7815B834}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.MongoDb", "ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj", "{45E88F4D-9E50-40F2-93EF-07439952F6FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.InMemory", "ToolKit.Data.InMemory\ToolKit.Data.InMemory.csproj", "{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,6 @@ Global
 		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063} = {22195FBD-5D67-4673-A782-93BA5223B533}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9F9C9CB4-925E-4648-B768-AAC9840E1FA7}
+		SolutionGuid = {5F858A8A-9462-4611-8FAF-96692EE6EC14}
 	EndGlobalSection
 EndGlobal
