@@ -41,7 +41,9 @@ namespace UnitTests.Data
         ~NHibernateSymmetricEncryptedStringTests()
         {
             // SQLite doesn't always unlock DB file when test ends, Let's force it.
+#pragma warning disable S1215 // "GC.Collect" should not be called
             GC.Collect();
+#pragma warning restore S1215 // "GC.Collect" should not be called
         }
 
         [Theory]
