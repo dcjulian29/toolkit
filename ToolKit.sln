@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{22195FBD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.NHibernate", "ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.csproj", "{F8774DC0-A6A7-4A4D-A126-9D7637A01EBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.Data.NHibernate", "ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.csproj", "{F8774DC0-A6A7-4A4D-A126-9D7637A01EBF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.EntityFramework", "ToolKit.Data.EntityFramework\ToolKit.Data.EntityFramework.csproj", "{4F9F8C27-961F-4FA9-BD7C-0FA9CEC68521}"
 EndProject
@@ -19,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.WebApi", "ToolKit.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Wpf", "ToolKit.Wpf\ToolKit.Wpf.csproj", "{FD0183D0-FACE-4753-8626-D60F7815B834}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.MongoDb", "ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj", "{45E88F4D-9E50-40F2-93EF-07439952F6FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.Data.MongoDb", "ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj", "{45E88F4D-9E50-40F2-93EF-07439952F6FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolkit.Data.EFCore", "Toolkit.Data.EFCore\Toolkit.Data.EFCore.csproj", "{E9AD798F-9937-49D3-B11B-F4933105C802}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.InMemory", "ToolKit.Data.InMemory\ToolKit.Data.InMemory.csproj", "{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}"
 EndProject
@@ -61,10 +63,10 @@ Global
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9AD798F-9937-49D3-B11B-F4933105C802}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9AD798F-9937-49D3-B11B-F4933105C802}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9AD798F-9937-49D3-B11B-F4933105C802}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9AD798F-9937-49D3-B11B-F4933105C802}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
