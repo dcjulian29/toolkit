@@ -206,6 +206,7 @@
     <Compile Include="ConsoleArgumentsTest.cs" />
     <Compile Include="Cryptography\DataProtectionApiTests.cs" />
     <Compile Include="Cryptography\DerivedKeyTests.cs" />
+    <Compile Include="Cryptography\DiffieHellmanTests.cs" />
     <Compile Include="Cryptography\PasswordGeneratorTests.cs" />
     <Compile Include="Cryptography\RsaEncryptionTests.cs" />
     <Compile Include="Cryptography\RsaPrivateKeyTests.cs" />

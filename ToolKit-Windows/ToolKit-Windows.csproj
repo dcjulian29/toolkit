@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cryptography\DiffieHellman.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\Computer.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\Contact.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\DirectoryObject.cs" />
