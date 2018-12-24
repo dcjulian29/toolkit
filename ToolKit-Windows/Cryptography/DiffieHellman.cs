@@ -53,8 +53,12 @@ namespace ToolKit.Cryptography
             _encryptor.Key = derivedKey;
             _encryptor.IV = iv.Bytes;
 
-            using (var stream = new MemoryStream())
+            MemoryStream stream = null;
+
+            try
             {
+                stream = new MemoryStream();
+
                 using (var decryption = _encryptor.CreateDecryptor())
                 {
                     using (var cryptStream = new CryptoStream(stream, decryption, CryptoStreamMode.Write))
@@ -64,9 +68,13 @@ namespace ToolKit.Cryptography
                         decryptedMessage.Bytes = stream.ToArray();
                     }
                 }
-
-                return decryptedMessage;
             }
+            finally
+            {
+                stream?.Dispose();
+            }
+
+            return decryptedMessage;
         }
 
         /// <summary>
@@ -87,8 +95,12 @@ namespace ToolKit.Cryptography
 
             _encryptor.Key = derivedKey;
 
-            using (var stream = new MemoryStream())
+            MemoryStream stream = null;
+
+            try
             {
+                stream = new MemoryStream();
+
                 using (var encryption = _encryptor.CreateEncryptor())
                 {
                     using (var cryptStream = new CryptoStream(stream, encryption, CryptoStreamMode.Write))
@@ -98,7 +110,13 @@ namespace ToolKit.Cryptography
                     }
 
                     encryptedMessage.Bytes = stream.ToArray();
+
+                    stream = null;
                 }
+            }
+            finally
+            {
+                stream?.Dispose();
             }
 
             return encryptedMessage;
