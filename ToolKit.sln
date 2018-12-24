@@ -21,9 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Wpf", "ToolKit.Wpf\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.Data.MongoDb", "ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj", "{45E88F4D-9E50-40F2-93EF-07439952F6FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolkit.Data.EFCore", "Toolkit.Data.EFCore\Toolkit.Data.EFCore.csproj", "{E9AD798F-9937-49D3-B11B-F4933105C802}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.InMemory", "ToolKit.Data.InMemory\ToolKit.Data.InMemory.csproj", "{D2CA5D00-E4FD-4035-AD7C-E0A8A4449C0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolkit.Data.EFCore", "Toolkit.Data.EFCore\Toolkit.Data.EFCore.csproj", "{E9AD798F-9937-49D3-B11B-F4933105C802}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
