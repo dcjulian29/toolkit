@@ -277,10 +277,6 @@
       <Project>{e55dc745-8585-4454-a21e-2cbb20a4bb68}</Project>
       <Name>ToolKit.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToolKit.Wpf\ToolKit.Wpf.csproj">
-      <Project>{fd0183d0-face-4753-8626-d60f7815b834}</Project>
-      <Name>ToolKit.Wpf</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ToolKit\ToolKit.csproj">
       <Project>{64BDE149-2F82-4A95-AA15-3E295560A2C4}</Project>
       <Name>ToolKit</Name>
