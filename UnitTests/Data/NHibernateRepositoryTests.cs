@@ -19,31 +19,6 @@ namespace UnitTests.Data
         Justification = "Test Suites do not need XML Documentation.")]
     public class NHibernateRepositoryTests
     {
-        private static ISessionFactory _sessionFactory;
-
-        public NHibernateRepositoryTests()
-        {
-            if (_sessionFactory == null)
-            {
-                if (File.Exists("NHibernateRepositoryTests.db"))
-                {
-                    File.Delete("NHibernateRepositoryTests.db");
-                }
-
-                _sessionFactory = Fluently.Configure()
-                    .Database(SQLiteConfiguration.Standard.UsingFile("NHibernateRepositoryTests.db"))
-                    .Mappings(m => m.FluentMappings.AddFromAssemblyOf<NHibernateRepositoryTests>())
-                    .ExposeConfiguration(cfg => new SchemaExport(cfg).Create(false, true))
-                    .BuildSessionFactory();
-            }
-        }
-
-        ~NHibernateRepositoryTests()
-        {
-            // SQLite doesn't always unlock DB file when test ends, Let's force it.
-            GC.Collect();
-        }
-
         public enum Gender
         {
             /// <summary>
@@ -61,17 +36,16 @@ namespace UnitTests.Data
         public void Contains_Should_ReturnTrue_When_EntityIsInRepository()
         {
             // Arrange
-            InitializeDatabase();
             Patient detachedPatient;
             var patientPresent = false;
 
             // Act
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            using (var repository = new PatientRepository())
             {
                 detachedPatient = repository.FindFirst(p => p.DateAdded > p.AdmitDate);
             }
 
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            using (var repository = new PatientRepository())
             {
                 patientPresent = repository.Contains(detachedPatient);
             }
@@ -84,31 +58,29 @@ namespace UnitTests.Data
         public void Delete_Should_RemoveEntitiesFromDatabase()
         {
             // Arrange
-            InitializeDatabase();
             var patientCount = 0;
 
             // Act
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            using (var repository = new PatientRepository())
             {
                 var patients = repository.FindBy(p => p.DateAdded > p.AdmitDate);
                 repository.Delete(patients);
             }
 
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            using (var repository = new PatientRepository())
             {
                 patientCount = repository.FindAll().Count();
             }
 
             // Assert
-            Assert.Equal(patientCount, 1);
+            Assert.Equal(1, patientCount);
         }
 
         [Fact]
         public void FindAll_Should_ReturnAllEntities()
         {
             // Arrange
-            InitializeDatabase();
-            var repository = new PatientRepository(_sessionFactory.OpenSession());
+            var repository = new PatientRepository();
 
             // Act
             var patients = repository.FindAll();
@@ -116,15 +88,14 @@ namespace UnitTests.Data
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patientCount, 3);
+            Assert.Equal(3, patientCount);
         }
 
         [Fact]
         public void FindBy_Should_ReturnCorrectEntities_When_QueriedByLinq()
         {
             // Arrange
-            InitializeDatabase();
-            var repository = new PatientRepository(_sessionFactory.OpenSession());
+            var repository = new PatientRepository(true);
 
             // Act
             var patients = repository.FindBy(p => p.DateAdded > p.AdmitDate);
@@ -132,19 +103,18 @@ namespace UnitTests.Data
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patientCount, 2);
+            Assert.Equal(2, patientCount);
         }
 
         [Fact]
         public void FindById_Should_ReturnEntityAfterBeingSaved()
         {
             // Arrange
-            InitializeDatabase();
             var entity = new Patient();
             Patient entityFromDatabase;
 
             // Act
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            using (var repository = new PatientRepository())
             {
                 entity.Name = "Test";
                 entity.Sex = Gender.Female;
@@ -153,7 +123,7 @@ namespace UnitTests.Data
                 repository.Save(entity);
             }
 
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            using (var repository = new PatientRepository())
             {
                 entityFromDatabase = repository.FindById(entity.Id);
             }
@@ -166,27 +136,25 @@ namespace UnitTests.Data
         public void FindFirst_Should_ReturnFirstEntity_When_MultipleEntitiesAreReturnByQuery()
         {
             // Arrange
-            InitializeDatabase();
-            var repository = new PatientRepository(_sessionFactory.OpenSession());
+            var repository = new PatientRepository(true);
 
             // Act
             var patient = repository.FindFirst(p => p.DateAdded > p.AdmitDate);
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patient.Name, "Bar");
+            Assert.Equal("Bar", patient.Name);
         }
 
         [Fact]
         public void Save_Should_ReturnUpdatedEntityFromDb_When_EntityIsChangedAndSaved()
         {
             // Arrange
-            InitializeDatabase();
             Patient entityFromDatabase;
             var recordId = 0;
 
             // Act
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            using (var repository = new PatientRepository())
             {
                 var entity = repository.FindBy(q => q.Name == "Foo").First();
 
@@ -196,7 +164,7 @@ namespace UnitTests.Data
                 repository.Save(entity);
             }
 
-            using (var repository = new PatientRepository(_sessionFactory.OpenSession()))
+            using (var repository = new PatientRepository())
             {
                 entityFromDatabase = repository.FindById(recordId);
             }
@@ -205,14 +173,104 @@ namespace UnitTests.Data
             Assert.Equal("John Smith", entityFromDatabase.Name);
         }
 
-        // Create a blank database for unit test.
-        private void InitializeDatabase()
+        public class Patient : Entity
         {
-            using (var session = _sessionFactory.OpenSession())
-            {
-                _sessionFactory.OpenSession().CreateSQLQuery("DELETE FROM Patient").ExecuteUpdate();
+            public virtual DateTime AdmitDate { get; set; }
 
-                // Add some entities to database
+            public virtual DateTime DateAdded { get; set; }
+
+            public virtual string Name { get; set; }
+
+            public virtual Gender Sex { get; set; }
+        }
+
+        public class PatientMap : ClassMap<Patient>
+        {
+            public PatientMap()
+            {
+                Id(x => x.Id);
+
+                Map(x => x.Name)
+                  .Length(16)
+                  .Not.Nullable();
+                Map(x => x.Sex);
+                Map(x => x.DateAdded);
+                Map(x => x.AdmitDate);
+            }
+        }
+
+        public class PatientRepository : Repository<Patient, int>
+        {
+            private static bool _databaseCreated = false;
+            private readonly ISession _session;
+
+            public PatientRepository(bool initializeDatabase = false)
+            {
+                ISessionFactory sessionFactory;
+
+                if (_databaseCreated)
+                {
+                    sessionFactory = Fluently.Configure()
+                        .Database(SQLiteConfiguration.Standard.UsingFile("NHibernateRepositoryTests.db"))
+                        .Mappings(m => m.FluentMappings.AddFromAssemblyOf<NHibernateRepositoryTests>())
+                        .ExposeConfiguration(cfg => new SchemaExport(cfg).Create(false, false))
+                        .BuildSessionFactory();
+
+                    if (initializeDatabase)
+                    {
+                        using (_session = sessionFactory.OpenSession())
+                        {
+                            InitializeDatabase(_session);
+                        }
+                    }
+
+                    if ((_session == null) || (!_session.IsOpen))
+                    {
+                        _session = sessionFactory.OpenSession();
+                    }
+                }
+                else
+                {
+                    if (File.Exists("NHibernateRepositoryTests.db"))
+                    {
+                        File.Delete("NHibernateRepositoryTests.db");
+                    }
+
+                    sessionFactory = Fluently.Configure()
+                        .Database(SQLiteConfiguration.Standard.UsingFile("NHibernateRepositoryTests.db"))
+                        .Mappings(m => m.FluentMappings.AddFromAssemblyOf<NHibernateRepositoryTests>())
+                        .ExposeConfiguration(cfg => new SchemaExport(cfg).Create(false, true))
+                        .BuildSessionFactory();
+
+                    _databaseCreated = true;
+
+                    using (_session = sessionFactory.OpenSession())
+                    {
+                        InitializeDatabase(_session);
+                    }
+
+                    _session = sessionFactory.OpenSession();
+                }
+
+                Context = new NHibernateUnitOfWork(_session);
+            }
+
+            ~PatientRepository()
+            {
+                // SQLite doesn't always unlock DB file when test ends, Let's force it.
+                _session.Flush();
+                _session.Disconnect();
+                _session.Close();
+
+#pragma warning disable S1215 // "GC.Collect" should not be called
+                GC.Collect();
+#pragma warning restore S1215 // "GC.Collect" should not be called
+            }
+
+            private void InitializeDatabase(ISession session)
+            {
+                session.CreateSQLQuery("DELETE FROM Patient").ExecuteUpdate();
+
                 using (var transaction = session.BeginTransaction())
                 {
                     var foo = new Patient
@@ -247,40 +305,7 @@ namespace UnitTests.Data
                 }
 
                 session.Flush();
-            }
-        }
-
-        public class Patient : Entity
-        {
-            public virtual DateTime AdmitDate { get; set; }
-
-            public virtual DateTime DateAdded { get; set; }
-
-            public virtual string Name { get; set; }
-
-            public virtual Gender Sex { get; set; }
-        }
-
-        public class PatientMap : ClassMap<Patient>
-        {
-            public PatientMap()
-            {
-                Id(x => x.Id);
-
-                Map(x => x.Name)
-                  .Length(16)
-                  .Not.Nullable();
-                Map(x => x.Sex);
-                Map(x => x.DateAdded);
-                Map(x => x.AdmitDate);
-            }
-        }
-
-        public class PatientRepository : Repository<Patient, int>
-        {
-            public PatientRepository(ISession session)
-            {
-                Context = new NHibernateUnitOfWork(session);
+                session.Close();
             }
         }
     }

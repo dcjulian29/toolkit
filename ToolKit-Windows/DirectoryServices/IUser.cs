@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DirectoryServices;
 
 namespace ToolKit.DirectoryServices
 {
@@ -356,11 +355,5 @@ namespace ToolKit.DirectoryServices
         /// </summary>
         /// <returns><c>true</c> if this user is an service account; otherwise, <c>false</c>.</returns>
         bool IsServiceAccount();
-
-        /// <summary>
-        /// Converts this User instance to a DirectoryEntry.
-        /// </summary>
-        /// <returns>This user as a DirectoryEntry</returns>
-        DirectoryEntry ToDirectoryEntry();
     }
 }

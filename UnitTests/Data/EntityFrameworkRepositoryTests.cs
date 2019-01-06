@@ -77,7 +77,9 @@ namespace UnitTests.Data
         ~EntityFrameworkRepositoryTests()
         {
             // SQLite doesn't always unlock DB file when test ends, Let's force it.
+#pragma warning disable S1215 // "GC.Collect" should not be called
             GC.Collect();
+#pragma warning restore S1215 // "GC.Collect" should not be called
         }
 
         public enum Gender
@@ -136,7 +138,7 @@ namespace UnitTests.Data
             }
 
             // Assert
-            Assert.Equal(patientCount, 1);
+            Assert.Equal(1, patientCount);
         }
 
         [Fact]
@@ -168,7 +170,7 @@ namespace UnitTests.Data
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patientCount, 2);
+            Assert.Equal(2, patientCount);
         }
 
         [Fact]
@@ -210,7 +212,7 @@ namespace UnitTests.Data
             repository.Dispose();
 
             // Assert
-            Assert.Equal(patient.Name, "Bar");
+            Assert.Equal("Bar", patient.Name);
         }
 
         [Fact]

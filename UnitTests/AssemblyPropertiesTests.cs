@@ -10,7 +10,7 @@ namespace UnitTests
         Justification = "Test Suites do not need XML Documentation.")]
     public class AssemblyPropertiesTests
     {
-        private string _toolkitLibraryPath = AppDomain.CurrentDomain.BaseDirectory + "\\toolkit.dll";
+        private string _toolkitLibraryPath = AppDomain.CurrentDomain.BaseDirectory + "\\ToolKit-Windows.dll";
 
         [Fact]
         public void BuildVersion_Should_ReturnTheVersionOfTheSpecifiedAssembly_When_AnAssemblyIsProvided()
@@ -167,7 +167,7 @@ namespace UnitTests
             var actual = AssemblyProperties.Name(_toolkitLibraryPath);
 
             // Assert
-            Assert.Equal("ToolKit", actual);
+            Assert.Equal("ToolKit-Windows", actual);
         }
 
         [Fact]

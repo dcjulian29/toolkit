@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using ToolKit.Cryptography;
@@ -149,21 +148,11 @@ namespace UnitTests.Cryptography
         [Fact]
         public void LoadFromConfig_Should_ThrowExceptionWhenConfigAppSettingsEmpty()
         {
-            // Arrange
-            var guid = $"{Directory.GetCurrentDirectory()}\\{Guid.NewGuid().ToString()}";
-            var dll = $"{Directory.GetCurrentDirectory()}\\Unittests.dll";
-            File.Delete(guid);
-            File.Move($"{dll}.config", guid);
-            ConfigurationManager.RefreshSection("appSettings");
-
-            // Act & Assert
-            Assert.Throws<ConfigurationErrorsException>(() =>
+            // Arrange & Act & Assert
+            Assert.Throws<ApplicationException>(() =>
             {
-                var key = RsaPublicKey.LoadFromConfig();
+                var key = RsaPublicKey.LoadFromEnvironment();
             });
-
-            File.Move(guid, $"{dll}.config");
-            ConfigurationManager.RefreshSection("appSettings");
         }
 
         [Fact]

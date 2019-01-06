@@ -28,6 +28,24 @@ StartProcess ("git", new ProcessSettings {
 List<String> result = new List<string>(stdout);
 var version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
 
+TaskSetup(setupContext =>
+{
+    if (TeamCity.IsRunningOnTeamCity)
+    {
+        TeamCity.WriteStartBuildBlock(setupContext.Task.Description ?? setupContext.Task.Name);
+        TeamCity.WriteStartProgress(setupContext.Task.Description ?? setupContext.Task.Name);
+    }
+});
+
+TaskTeardown(teardownContext =>
+{
+    if (TeamCity.IsRunningOnTeamCity)
+    {
+        TeamCity.WriteEndBuildBlock(teardownContext.Task.Description ?? teardownContext.Task.Name);
+        TeamCity.WriteEndProgress(teardownContext.Task.Description ?? teardownContext.Task.Name);
+    }
+});
+
 Task("Default")
     .IsDependentOn("Compile");
 
@@ -90,7 +108,7 @@ Task("Compile")
             .SetConfiguration(configuration)
             .WithProperty("OutDir", outputDirectory)
             .WithProperty("TreatWarningsAsErrors", "True")
-            .UseToolVersion(MSBuildToolVersion.VS2015)
+            .UseToolVersion(MSBuildToolVersion.VS2017)
             .SetNodeReuse(false));
     });
 

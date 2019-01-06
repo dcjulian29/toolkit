@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Odbc;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ToolKit.Network
 {
@@ -18,12 +16,8 @@ namespace ToolKit.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="IpV4Network"/> class.
         /// </summary>
-        /// <param name="address">
-        /// The IPV4 address.
-        /// </param>
-        /// <param name="mask">
-        /// The subnet mask in IPV4 format.
-        /// </param>
+        /// <param name="address">The IPV4 address.</param>
+        /// <param name="mask">The subnet mask in IPV4 format.</param>
         public IpV4Network(IpV4Address address, IpV4Address mask)
         {
             _address = address;
@@ -33,12 +27,8 @@ namespace ToolKit.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="IpV4Network"/> class.
         /// </summary>
-        /// <param name="address">
-        /// The IPV4 address.
-        /// </param>
-        /// <param name="mask">
-        /// The subnet mask in IPV4 format.
-        /// </param>
+        /// <param name="address">The IPV4 address.</param>
+        /// <param name="mask">The subnet mask in IPV4 format.</param>
         public IpV4Network(IpV4Address address, int mask)
         {
             _address = address;
@@ -77,7 +67,7 @@ namespace ToolKit.Network
         }
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="IpV4Network"/> class from being created. 
+        /// Prevents a default instance of the <see cref="IpV4Network"/> class from being created.
         /// </summary>
         private IpV4Network()
         {
@@ -129,37 +119,6 @@ namespace ToolKit.Network
         }
 
         /// <summary>
-        /// Gets the Network Mask.
-        /// </summary>
-        public IpV4Address Netmask
-        {
-            get
-            {
-                return _mask;
-            }
-        }
-
-        /// <summary>
-        /// Gets the Internet Protocol (IP) V4 Network Id Address..
-        /// </summary>
-        public IpV4Address NetworkId
-        {
-            get
-            {
-                var retval = new StringBuilder();
-                var address = ConvertToOctets(_address);
-                var mask = ConvertToOctets(_mask);
-
-                for (int i = 0; i < 4; i++)
-                {
-                    retval.AppendFormat("{0}.", address[i] & mask[i]);
-                }
-
-                return new IpV4Address(retval.ToString(0, retval.Length - 1));
-            }
-        }
-
-        /// <summary>
         /// Gets the Maximum Host IPV4 Address for the Network
         /// </summary>
         public IpV4Address MaximumAddress
@@ -192,6 +151,37 @@ namespace ToolKit.Network
                     Convert.ToInt32(octets[1]),
                     Convert.ToInt32(octets[2]),
                     Convert.ToInt32(octets[3]) + 1);
+            }
+        }
+
+        /// <summary>
+        /// Gets the Network Mask.
+        /// </summary>
+        public IpV4Address Netmask
+        {
+            get
+            {
+                return _mask;
+            }
+        }
+
+        /// <summary>
+        /// Gets the Internet Protocol (IP) V4 Network Id Address..
+        /// </summary>
+        public IpV4Address NetworkId
+        {
+            get
+            {
+                var retval = new StringBuilder();
+                var address = ConvertToOctets(_address);
+                var mask = ConvertToOctets(_mask);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    retval.AppendFormat("{0}.", address[i] & mask[i]);
+                }
+
+                return new IpV4Address(retval.ToString(0, retval.Length - 1));
             }
         }
 

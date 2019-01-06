@@ -277,7 +277,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return DN.Parse(DistinguishedName).NetBiosDomain;
+                return base.NetBiosDomain;
             }
         }
 

@@ -12,8 +12,7 @@ namespace ToolKit.Cryptography
     /// </summary>
     /// <remarks>
     /// This code was originally based of some code that a colleague of mine wrote but has been
-    /// changed to remove proprietary infomration from the algorythem. I f you are instested in the
-    /// original algorithem go cehck out the original sorce code at hattp://codeplexx.everything else...
+    /// changed to remove proprietary information from the algorithm.
     /// </remarks>
     public class PasswordGenerator
     {
@@ -25,8 +24,8 @@ namespace ToolKit.Cryptography
 
         private static ILog _log = LogManager.GetLogger<PasswordGenerator>();
 
+        private char[] _passwordCharacterArray;
         private Random _randomGenerator;
-        private char[] passwordCharacterArray = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PasswordGenerator"/> class.
@@ -63,15 +62,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeExtended
         {
-            get
-            {
-                return PasswordOptions.HasFlag(PasswordComplexity.UseExtendedCharacters);
-            }
+            get => PasswordOptions.HasFlag(PasswordComplexity.UseExtendedCharacters);
 
-            set
-            {
-                SetPasswordOption(PasswordComplexity.UseExtendedCharacters, value);
-            }
+            set => SetPasswordOption(PasswordComplexity.UseExtendedCharacters, value);
         }
 
         /// <summary>
@@ -79,15 +72,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeLowerCase
         {
-            get
-            {
-                return PasswordOptions.HasFlag(PasswordComplexity.UseLowerCharacters);
-            }
+            get => PasswordOptions.HasFlag(PasswordComplexity.UseLowerCharacters);
 
-            set
-            {
-                SetPasswordOption(PasswordComplexity.UseLowerCharacters, value);
-            }
+            set => SetPasswordOption(PasswordComplexity.UseLowerCharacters, value);
         }
 
         /// <summary>
@@ -95,15 +82,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeNumbers
         {
-            get
-            {
-                return PasswordOptions.HasFlag(PasswordComplexity.UseNumbers);
-            }
+            get => PasswordOptions.HasFlag(PasswordComplexity.UseNumbers);
 
-            set
-            {
-                SetPasswordOption(PasswordComplexity.UseNumbers, value);
-            }
+            set => SetPasswordOption(PasswordComplexity.UseNumbers, value);
         }
 
         /// <summary>
@@ -111,15 +92,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeSymbols
         {
-            get
-            {
-                return PasswordOptions.HasFlag(PasswordComplexity.UseSymbols);
-            }
+            get => PasswordOptions.HasFlag(PasswordComplexity.UseSymbols);
 
-            set
-            {
-                SetPasswordOption(PasswordComplexity.UseSymbols, value);
-            }
+            set => SetPasswordOption(PasswordComplexity.UseSymbols, value);
         }
 
         /// <summary>
@@ -127,15 +102,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeUpperCase
         {
-            get
-            {
-                return PasswordOptions.HasFlag(PasswordComplexity.UseUpperCharacters);
-            }
+            get => PasswordOptions.HasFlag(PasswordComplexity.UseUpperCharacters);
 
-            set
-            {
-                SetPasswordOption(PasswordComplexity.UseUpperCharacters, value);
-            }
+            set => SetPasswordOption(PasswordComplexity.UseUpperCharacters, value);
         }
 
         /// <summary>
@@ -148,15 +117,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool ProhibitConsecutiveCharacters
         {
-            get
-            {
-                return PasswordOptions.HasFlag(PasswordComplexity.NoConsecutiveCharacters);
-            }
+            get => PasswordOptions.HasFlag(PasswordComplexity.NoConsecutiveCharacters);
 
-            set
-            {
-                SetPasswordOption(PasswordComplexity.NoConsecutiveCharacters, value);
-            }
+            set => SetPasswordOption(PasswordComplexity.NoConsecutiveCharacters, value);
         }
 
         /// <summary>
@@ -164,15 +127,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool ProhibitRepeatingCharacters
         {
-            get
-            {
-                return PasswordOptions.HasFlag(PasswordComplexity.NoRepeatingCharacters);
-            }
+            get => PasswordOptions.HasFlag(PasswordComplexity.NoRepeatingCharacters);
 
-            set
-            {
-                SetPasswordOption(PasswordComplexity.NoRepeatingCharacters, value);
-            }
+            set => SetPasswordOption(PasswordComplexity.NoRepeatingCharacters, value);
         }
 
         /// <summary>
@@ -193,9 +150,9 @@ namespace ToolKit.Cryptography
         /// <returns>String representing the new password</returns>
         public string Generate(int length)
         {
-            passwordCharacterArray = BuildCharacterSet();
+            _passwordCharacterArray = BuildCharacterSet();
 
-            if (ProhibitRepeatingCharacters && length > passwordCharacterArray.Length)
+            if (ProhibitRepeatingCharacters && length > _passwordCharacterArray.Length)
             {
                 throw new InvalidOperationException("Cannot build password; Not Enough Unique Characters Available");
             }
@@ -206,15 +163,15 @@ namespace ToolKit.Cryptography
             var startTime = DateTime.UtcNow;
             char nextCharacter;
 
-            var lastCharacter = nextCharacter = '\n';
+            var lastCharacter = '\n';
 
             for (var i = 0; i < length; i++)
             {
-                var charResult = true;
+                bool charResult;
                 do
                 {
                     var randomCharPosition = GetRandomNumber();
-                    nextCharacter = passwordCharacterArray[randomCharPosition];
+                    nextCharacter = _passwordCharacterArray[randomCharPosition];
 
                     charResult = true;
 
@@ -265,6 +222,8 @@ namespace ToolKit.Cryptography
             password.Each(c => securePassword.AppendChar(c));
 
             securePassword.MakeReadOnly();
+
+            // ReSharper disable once RedundantAssignment
             password = null;
 
             return securePassword;
@@ -283,7 +242,7 @@ namespace ToolKit.Cryptography
 
         private char[] BuildCharacterSet()
         {
-            System.Text.StringBuilder charSet = new StringBuilder();
+            var charSet = new StringBuilder();
             if (IncludeLowerCase)
             {
                 charSet.Append(LowerCaseCharacters);
@@ -314,8 +273,8 @@ namespace ToolKit.Cryptography
 
         private int GetRandomNumber()
         {
-            var charArrayLength = (uint)passwordCharacterArray.Length;
-            var randomNumberArray = new Byte[4];
+            var charArrayLength = (uint)_passwordCharacterArray.Length;
+            var randomNumberArray = new byte[4];
 
             _randomGenerator.NextBytes(randomNumberArray);
 

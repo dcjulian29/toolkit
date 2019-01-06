@@ -126,21 +126,21 @@ namespace ToolKit.Cryptography
         /// Load private key from app.config or web.config file
         /// </summary>
         /// <returns>an AsymmetricPrivateKey instance containing the private key, or null.</returns>
-        public static RsaPrivateKey LoadFromConfig()
+        public static RsaPrivateKey LoadFromEnvironment()
         {
             var key = new RsaPrivateKey
             {
                 // Public Key parts
-                Modulus = ReadConfigKey(KeyModulus),
-                Exponent = ReadConfigKey(KeyExponent),
+                Modulus = ReadKeyFromEnvironment(KeyModulus),
+                Exponent = ReadKeyFromEnvironment(KeyExponent),
 
                 // Private Key parts
-                PrimeP = ReadConfigKey(KeyPrimeP),
-                PrimeQ = ReadConfigKey(KeyPrimeQ),
-                PrimeExponentP = ReadConfigKey(KeyPrimeExponentP),
-                PrimeExponentQ = ReadConfigKey(KeyPrimeExponentQ),
-                Coefficient = ReadConfigKey(KeyCoefficient),
-                PrivateExponent = ReadConfigKey(KeyPrivateExponent)
+                PrimeP = ReadKeyFromEnvironment(KeyPrimeP),
+                PrimeQ = ReadKeyFromEnvironment(KeyPrimeQ),
+                PrimeExponentP = ReadKeyFromEnvironment(KeyPrimeExponentP),
+                PrimeExponentQ = ReadKeyFromEnvironment(KeyPrimeExponentQ),
+                Coefficient = ReadKeyFromEnvironment(KeyCoefficient),
+                PrivateExponent = ReadKeyFromEnvironment(KeyPrivateExponent)
             };
 
             return key;
@@ -259,16 +259,16 @@ namespace ToolKit.Cryptography
             return sb.ToString();
         }
 
-        private static string ReadConfigKey(string key, bool required = true)
+        private static string ReadKeyFromEnvironment(string key, bool required = true)
         {
-            var s = Convert.ToString(ConfigurationManager.AppSettings.Get(key));
+            var s = Environment.GetEnvironmentVariable(key);
 
             if (!String.IsNullOrEmpty(s))
             {
                 return s;
             }
 
-            throw new ConfigurationErrorsException($"key <{key}> is missing from .config file");
+            throw new ApplicationException($"key <{key}> is missing from Missing from the Environment.");
         }
 
         private static string ReadXmlElement(string xml, string element)

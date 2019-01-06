@@ -38,11 +38,6 @@ namespace ToolKit.Cryptography
                     _hashAlgorithm = new MD5CryptoServiceProvider();
                     break;
 
-                case Provider.RIPEMD160:
-                    _log.Debug("Using RIPEMD160 provider...");
-                    _hashAlgorithm = new RIPEMD160Managed();
-                    break;
-
                 case Provider.SHA1:
                     _log.Debug("Using SHA1 provider...");
                     _hashAlgorithm = new SHA1Managed();
@@ -93,13 +88,6 @@ namespace ToolKit.Cryptography
             /// </summary>
             // ReSharper disable once InconsistentNaming
             MD5,
-
-            /// <summary>
-            /// A 160-bit cryptographic hash function. It is intended for use as a replacement for
-            /// the 128-bit hash functions MD4, MD5, and RIPEMD.
-            /// </summary>
-            // ReSharper disable once InconsistentNaming
-            RIPEMD160,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-1 variant, 160-bit

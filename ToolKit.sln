@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit", "ToolKit\ToolKit.csproj", "{64BDE149-2F82-4A95-AA15-3E295560A2C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit", "ToolKit\ToolKit.csproj", "{D2C4EB24-603B-41C2-B7EA-BEEB1D9C8782}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit-Windows", "ToolKit-Windows\ToolKit-Windows.csproj", "{7EE52FF9-CBDD-46BD-B982-5D2837334565}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{22195FBD-5D67-4673-A782-93BA5223B533}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.NHibernate", "ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.csproj", "{F8774DC0-A6A7-4A4D-A126-9D7637A01EBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.Data.NHibernate", "ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.csproj", "{F8774DC0-A6A7-4A4D-A126-9D7637A01EBF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.EntityFramework", "ToolKit.Data.EntityFramework\ToolKit.Data.EntityFramework.csproj", "{4F9F8C27-961F-4FA9-BD7C-0FA9CEC68521}"
 EndProject
@@ -17,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.WebApi", "ToolKit.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Wpf", "ToolKit.Wpf\ToolKit.Wpf.csproj", "{FD0183D0-FACE-4753-8626-D60F7815B834}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.MongoDb", "ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj", "{45E88F4D-9E50-40F2-93EF-07439952F6FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.Data.MongoDb", "ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj", "{45E88F4D-9E50-40F2-93EF-07439952F6FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolkit.Data.EFCore", "Toolkit.Data.EFCore\Toolkit.Data.EFCore.csproj", "{E9AD798F-9937-49D3-B11B-F4933105C802}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +29,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{64BDE149-2F82-4A95-AA15-3E295560A2C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64BDE149-2F82-4A95-AA15-3E295560A2C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64BDE149-2F82-4A95-AA15-3E295560A2C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64BDE149-2F82-4A95-AA15-3E295560A2C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2C4EB24-603B-41C2-B7EA-BEEB1D9C8782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2C4EB24-603B-41C2-B7EA-BEEB1D9C8782}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2C4EB24-603B-41C2-B7EA-BEEB1D9C8782}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2C4EB24-603B-41C2-B7EA-BEEB1D9C8782}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EE52FF9-CBDD-46BD-B982-5D2837334565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EE52FF9-CBDD-46BD-B982-5D2837334565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EE52FF9-CBDD-46BD-B982-5D2837334565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EE52FF9-CBDD-46BD-B982-5D2837334565}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,11 +61,18 @@ Global
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45E88F4D-9E50-40F2-93EF-07439952F6FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9AD798F-9937-49D3-B11B-F4933105C802}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9AD798F-9937-49D3-B11B-F4933105C802}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9AD798F-9937-49D3-B11B-F4933105C802}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9AD798F-9937-49D3-B11B-F4933105C802}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063} = {22195FBD-5D67-4673-A782-93BA5223B533}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F858A8A-9462-4611-8FAF-96692EE6EC14}
 	EndGlobalSection
 EndGlobal
