@@ -19,10 +19,8 @@ namespace ToolKit.Cryptography
         Justification = "Encryption tend to have names not in standard dictionaries...")]
     public class SymmetricEncryption
     {
-        private static ILog _log = LogManager.GetLogger<SymmetricEncryption>();
-
-        private int _bufferSize = 2048;
-        private SymmetricAlgorithm _crypto;
+        private readonly int _bufferSize = 2048;
+        private readonly SymmetricAlgorithm _crypto;
         private EncryptionData _initializationVector;
         private EncryptionData _key;
 
@@ -35,14 +33,6 @@ namespace ToolKit.Cryptography
         {
             switch (provider)
             {
-                case Provider.DES:
-                    _crypto = new DESCryptoServiceProvider();
-                    break;
-
-                case Provider.RC2:
-                    _crypto = new RC2CryptoServiceProvider();
-                    break;
-
                 case Provider.Rijndael:
                     _crypto = new RijndaelManaged();
                     break;
@@ -52,7 +42,6 @@ namespace ToolKit.Cryptography
                     break;
 
                 default:
-                    _log.Error(m => m("Invalid Provider Provided!"));
                     throw new ArgumentException("Invalid Provider Provided!");
             }
 
@@ -79,19 +68,6 @@ namespace ToolKit.Cryptography
         public enum Provider
         {
             /// <summary>
-            /// The Data Encryption Standard provider supports a 64 bit key only
-            /// </summary>
-            // ReSharper disable once InconsistentNaming
-            DES,
-
-            /// <summary>
-            /// The Rivest Cipher 2 provider supports keys ranging from 40 to 128 bits, default is
-            /// 128 bits
-            /// </summary>
-            // ReSharper disable once InconsistentNaming
-            RC2,
-
-            /// <summary>
             /// The Rijndael (also known as AES) provider supports keys of 128, 192, or 256 bits with
             /// a default of 256 bits
             /// </summary>
@@ -117,10 +93,7 @@ namespace ToolKit.Cryptography
         /// </remark>
         public EncryptionData InitializationVector
         {
-            get
-            {
-                return _initializationVector;
-            }
+            get => _initializationVector;
 
             set
             {
@@ -135,10 +108,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         public EncryptionData Key
         {
-            get
-            {
-                return _key;
-            }
+            get => _key;
 
             set
             {
@@ -154,10 +124,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         public int KeySizeBits
         {
-            get
-            {
-                return _crypto.KeySize;
-            }
+            get => _crypto.KeySize;
 
             set
             {
@@ -172,10 +139,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         public int KeySizeBytes
         {
-            get
-            {
-                return _crypto.KeySize / 8;
-            }
+            get => _crypto.KeySize / 8;
 
             set
             {
