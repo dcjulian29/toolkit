@@ -24,8 +24,8 @@ namespace ToolKit.Cryptography
 
         private static ILog _log = LogManager.GetLogger<PasswordGenerator>();
 
+        private readonly Random _randomGenerator;
         private char[] _passwordCharacterArray;
-        private Random _randomGenerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PasswordGenerator"/> class.
@@ -41,8 +41,9 @@ namespace ToolKit.Cryptography
                               PasswordComplexity.NoConsecutiveCharacters;
         }
 
+        /// <inheritdoc/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="PasswordGenerator"/> class.
+        /// Initializes a new instance of the <see cref="T:ToolKit.Cryptography.PasswordGenerator"/> class.
         /// </summary>
         /// <param name="seed">The seed to use when generating the password.</param>
         /// <param name="options">PasswordGenerator Generation Options</param>
@@ -194,17 +195,17 @@ namespace ToolKit.Cryptography
                     {
                         iterations++;
                     }
-                } while (charResult == false);
+                } while (!charResult);
 
                 newPassword.Append(nextCharacter);
                 usedCharacters.Add(nextCharacter);
                 lastCharacter = nextCharacter;
             }
 
-            _log.Debug(m => m("Total time was: {0} Seconds", DateTime.UtcNow.Subtract(startTime).TotalSeconds));
-            _log.Debug(m => m("It took {0} iterations to generate the password", iterations));
-            _log.Debug(m => m("New PasswordGenerator (Length of {0}) is: {1}", length, newPassword.Length));
-            _log.Debug(m => m("The PasswordGenerator has {0} unique characters", usedCharacters.Count));
+            _log.Debug($"Total time was: {DateTime.UtcNow.Subtract(startTime).TotalSeconds} Seconds");
+            _log.Debug($"It took {iterations} iterations to generate the password");
+            _log.Debug($"New PasswordGenerator (Length of {length}) is: {newPassword.Length}");
+            _log.Debug($"The PasswordGenerator has {usedCharacters.Count} unique characters");
 
             return newPassword.ToString();
         }
@@ -223,8 +224,16 @@ namespace ToolKit.Cryptography
 
             securePassword.MakeReadOnly();
 
-            // ReSharper disable once RedundantAssignment
-            password = null;
+            unsafe
+            {
+                fixed (char* c = password)
+                {
+                    for (var i = 0; i < password.Length; i++)
+                    {
+                        c[i] = '\0';
+                    }
+                }
+            }
 
             return securePassword;
         }
@@ -276,7 +285,9 @@ namespace ToolKit.Cryptography
             var charArrayLength = (uint)_passwordCharacterArray.Length;
             var randomNumberArray = new byte[4];
 
+#pragma warning disable SG0005 // Weak random generator
             _randomGenerator.NextBytes(randomNumberArray);
+#pragma warning restore SG0005 // Weak random generator
 
             var unsignedRandom = BitConverter.ToUInt32(randomNumberArray, 0);
 
