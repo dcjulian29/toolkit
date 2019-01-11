@@ -17,8 +17,8 @@ namespace ToolKit.Cryptography
     {
         private static ILog _log = LogManager.GetLogger<Hash>();
 
-        private HashAlgorithm _hashAlgorithm;
-        private EncryptionData _hashData = new EncryptionData();
+        private readonly HashAlgorithm _hashAlgorithm;
+        private readonly EncryptionData _hashData = new EncryptionData();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Hash"/> class.
@@ -59,7 +59,7 @@ namespace ToolKit.Cryptography
                     break;
 
                 default:
-                    _log.Error(m => m("Invalid Provider Provided!"));
+                    _log.Error("Invalid Provider Provided!");
                     throw new ArgumentException("Invalid Provider Provided!");
             }
         }
@@ -169,9 +169,8 @@ namespace ToolKit.Cryptography
         /// </summary>
         private sealed class Crc32Algorithm : HashAlgorithm
         {
-            private static uint _defaultPolynomial = 0xEDB88320;
+            private static readonly uint _defaultPolynomial = 0xEDB88320;
             private uint _hash;
-            private uint _seed;
             private uint[] _table;
 
             /// <summary>
@@ -182,6 +181,7 @@ namespace ToolKit.Cryptography
                 Initialize();
             }
 
+            /// <inheritdoc/>
             /// <summary>
             /// Initializes an implementation of the <see
             /// cref="T:System.Security.Cryptography.HashAlgorithm"/> class.
@@ -207,9 +207,10 @@ namespace ToolKit.Cryptography
                     _table[i] = entry;
                 }
 
-                _seed = 0xFFFFFFFF;
-                _hash = _seed;
+                _hash = 0xFFFFFFFF;
             }
+
+#pragma warning disable S927 // parameter names should match base declaration and other partial definitions
 
             /// <summary>
             /// Called by the base class to implement the hash algorithm.
@@ -218,6 +219,7 @@ namespace ToolKit.Cryptography
             /// <param name="start">The start index of the buffer.</param>
             /// <param name="length">The length of the buffer.</param>
             protected override void HashCore(byte[] buffer, int start, int length)
+#pragma warning restore S927 // parameter names should match base declaration and other partial definitions
             {
                 _hash = CalculateHash(_table, _hash, buffer, start, length);
             }

@@ -51,7 +51,7 @@ namespace ToolKit.Cryptography
         /// Gets or sets the name of the key container used to store this key on disk; this is an
         /// unavoidable side effect of the underlying Microsoft CryptoAPI.
         /// </summary>
-        public string KeyContainerName { get; set; } = "ToolKit.AsymmetricEncryption.DefaultContainerName";
+        public string KeyContainerName { get; } = "ToolKit.AsymmetricEncryption.DefaultContainerName";
 
         /// <summary>
         /// Gets the current key size, in bits.
@@ -169,7 +169,7 @@ namespace ToolKit.Cryptography
             }
             catch (CryptographicException ex)
             {
-                _log.Error(m => m(ex.Message), ex);
+                _log.Error(ex.Message, ex);
 
                 var sb = new StringBuilder();
 
@@ -185,7 +185,7 @@ namespace ToolKit.Cryptography
             }
             catch (Exception ex)
             {
-                _log.Error(m => m(ex.ToString()), ex);
+                _log.Error(ex.ToString(), ex);
 
                 throw;
             }
