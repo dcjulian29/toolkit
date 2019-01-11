@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 using Common.Logging;
@@ -10,12 +11,10 @@ namespace ToolKit.Cryptography
     /// </summary>
     public class DataProtectionApi
     {
-        private static ILog _log = LogManager.GetLogger<DataProtectionApi>();
-
         private EncryptionData _entropy;
 
         [Flags]
-        private enum CryptProtectFlags
+        private enum CryptProtect
         {
             UiForbidden = 0x1,
             LocalMachine = 0x4
@@ -27,17 +26,12 @@ namespace ToolKit.Cryptography
         /// <value>The key used in the encryption and decryption.</value>
         public EncryptionData Key
         {
-            get
-            {
-                return _entropy ?? (_entropy =
-                           new EncryptionData(
-                               SHA256Hash.Create().ComputeToBytes(Encoding.Unicode.GetBytes(Environment.MachineName))));
-            }
+            get =>
+                _entropy ?? (_entropy =
+                    new EncryptionData(
+                        SHA256Hash.Create().ComputeToBytes(Encoding.Unicode.GetBytes(Environment.MachineName))));
 
-            set
-            {
-                _entropy = value;
-            }
+            set => _entropy = value;
         }
 
         /// <summary>
@@ -51,10 +45,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         /// <param name="cipherText">A string containing the encrypted data.</param>
         /// <returns>A string containing the decrypted data</returns>
-        public string Decrypt(string cipherText)
-        {
-            return Encoding.Unicode.GetString(Decrypt(Convert.FromBase64String(cipherText)));
-        }
+        public string Decrypt(string cipherText) => Encoding.Unicode.GetString(Decrypt(Convert.FromBase64String(cipherText)));
 
         /// <summary>
         /// Decrypts the specified data
@@ -71,28 +62,21 @@ namespace ToolKit.Cryptography
 
             try
             {
-                var flags = CryptProtectFlags.UiForbidden;
+                var flags = CryptProtect.UiForbidden;
 
-                if (!CryptUnprotectData(
+                CryptUnprotectData(
                     ref cipherTextBlob,
                     ref description,
                     ref entropyBlob,
                     IntPtr.Zero,
                     IntPtr.Zero,
                     flags,
-                    ref plainTextBlob))
-                {
-                    throw new COMException("CryptUnprotectData failed. ", Marshal.GetLastWin32Error());
-                }
+                    ref plainTextBlob);
 
                 var plainTextBytes = new byte[plainTextBlob.DataLength];
 
                 Marshal.Copy(plainTextBlob.DataBuffer, plainTextBytes, 0, plainTextBlob.DataLength);
                 return plainTextBytes;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("The Data Protection API was unable to decrypt data.", ex);
             }
             finally
             {
@@ -118,10 +102,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         /// <param name="plainText">A string containing the data to protect.</param>
         /// <returns>A string containing the encrypted data</returns>
-        public string Encrypt(string plainText)
-        {
-            return Convert.ToBase64String(Encrypt(Encoding.Unicode.GetBytes(plainText)));
-        }
+        public string Encrypt(string plainText) => Convert.ToBase64String(Encrypt(Encoding.Unicode.GetBytes(plainText)));
 
         /// <summary>
         /// Encrypts the specified data
@@ -133,39 +114,32 @@ namespace ToolKit.Cryptography
             var description = String.Empty;
 
             var plainTextBlob = new DataBlob(plainTextBytes);
-            var cipherTextBlob = new DataBlob();
+            var cipherTextBlob = new DataBlob(null);
             var entropyBlob = new DataBlob(Key.Bytes);
 
             try
             {
-                var flags = CryptProtectFlags.UiForbidden;
+                var flags = CryptProtect.UiForbidden;
 
                 if (KeyType == DataProtectionKeyType.MachineKey)
                 {
-                    flags |= CryptProtectFlags.LocalMachine;
+                    flags |= CryptProtect.LocalMachine;
                 }
 
-                if (!CryptProtectData(
+                CryptProtectData(
                     ref plainTextBlob,
                     description,
                     ref entropyBlob,
                     IntPtr.Zero,
                     IntPtr.Zero,
                     flags,
-                    ref cipherTextBlob))
-                {
-                    throw new COMException("CryptProtectData failed." + Marshal.GetLastWin32Error());
-                }
+                    ref cipherTextBlob);
 
                 var cipherTextBytes = new byte[cipherTextBlob.DataLength];
 
                 Marshal.Copy(cipherTextBlob.DataBuffer, cipherTextBytes, 0, cipherTextBlob.DataLength);
 
                 return cipherTextBytes;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("The Data Protection API was unable to encrypt data.", ex);
             }
             finally
             {
@@ -186,6 +160,7 @@ namespace ToolKit.Cryptography
             }
         }
 
+        [ExcludeFromCodeCoverage]
         [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern bool CryptProtectData(
             ref DataBlob plainText,
@@ -193,9 +168,10 @@ namespace ToolKit.Cryptography
             ref DataBlob entropy,
             IntPtr reserved,
             IntPtr prompt,
-            CryptProtectFlags flags,
+            CryptProtect flags,
             ref DataBlob cipherText);
 
+        [ExcludeFromCodeCoverage]
         [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern bool CryptUnprotectData(
             ref DataBlob cipherText,
@@ -203,7 +179,7 @@ namespace ToolKit.Cryptography
             ref DataBlob entropy,
             IntPtr reserved,
             IntPtr prompt,
-            CryptProtectFlags flags,
+            CryptProtect flags,
             ref DataBlob plainText);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -212,7 +188,7 @@ namespace ToolKit.Cryptography
             internal int DataLength;
             internal IntPtr DataBuffer;
 
-            public DataBlob(byte[] data)
+            public DataBlob(byte[] data = null)
             {
                 if (data == null)
                 {
@@ -220,11 +196,6 @@ namespace ToolKit.Cryptography
                 }
 
                 DataBuffer = Marshal.AllocHGlobal(data.Length);
-
-                if (DataBuffer == IntPtr.Zero)
-                {
-                    throw new Exception("Unable to allocate data buffer for BLOB structure.");
-                }
 
                 DataLength = data.Length;
 
