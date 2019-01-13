@@ -6,7 +6,7 @@
     <authors>Julian Easterling</authors>
     <owners>Julian Easterling</owners>
     <projectUrl>https://github.com/dcjulian29/toolkit</projectUrl>
-    <licenseUrl>https://github.com/dcjulian29/toolkit/blob/master/LICENSE.txt</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library that contains common EntityFramework-based data classes.</description>
     <tags>toolkit entityframework</tags>
