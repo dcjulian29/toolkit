@@ -211,7 +211,7 @@ Task("TeamCity")
 Task("Package")
     .Does(() =>
     {
-        var configuration = "Release";
+        configuration = "Release";
 
         RunTarget("Test");
 
