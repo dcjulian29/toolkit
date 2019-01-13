@@ -8,7 +8,7 @@ if (TeamCity.IsRunningOnTeamCity) {
     target = "teamcity";
 }
 
-var configuration = Argument("configuration", "Release");
+var configuration = Argument("configuration", "Debug");
 
 var projectName = "toolkit";
 
@@ -209,9 +209,12 @@ Task("TeamCity")
     });
 
 Task("Package")
-    .IsDependentOn("Test")
     .Does(() =>
     {
+        var configuration = "Release";
+
+        RunTarget("Test");
+
         var nuGetPackSettings = new NuGetPackSettings {
             Version = version,
             OutputDirectory = buildDirectory
