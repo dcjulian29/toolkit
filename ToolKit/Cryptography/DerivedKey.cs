@@ -11,8 +11,6 @@ namespace ToolKit.Cryptography
     /// </summary>
     public class DerivedKey : DisposableObject
     {
-        private static ILog _log = LogManager.GetLogger<DerivedKey>();
-
         private Rfc2898DeriveBytes _provider;
 
         /// <summary>

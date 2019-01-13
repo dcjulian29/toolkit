@@ -137,6 +137,19 @@ namespace UnitTests.Xml
         }
 
         [Fact]
+        public void Decode_Should_ReturnInputString_When_InputStringDoesNotContainEntity()
+        {
+            // Arrange
+            var expected = "&NotAnEntity";
+
+            // Act
+            var actual = XmlEncoder.Decode(expected);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringContainsAnAmpersand()
         {
             // Arrange
