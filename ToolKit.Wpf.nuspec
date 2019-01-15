@@ -11,7 +11,7 @@
     <description>A library that contains common WPF classes.</description>
     <tags>toolkit wpf</tags>
     <dependencies>
-      <dependency id="ToolKit" version="2019.1.13.1" />
+      <dependency id="ToolKit" version="2019.1.15.1" />
     </dependencies>
   </metadata>
     <files>

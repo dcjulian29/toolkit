@@ -13,7 +13,7 @@
     <dependencies>
       <dependency id="NHibernate" version="5.1.2" />
       <dependency id="FluentNHibernate" version="2.1.2" />
-      <dependency id="ToolKit" version="2019.1.13.1" />
+      <dependency id="ToolKit" version="2019.1.15.1" />
     </dependencies>
   </metadata>
     <files>

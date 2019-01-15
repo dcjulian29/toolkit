@@ -13,7 +13,7 @@
     <dependencies>
       <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.6" />
       <dependency id="Newtonsoft.Json" version="11.0.2" />
-      <dependency id="ToolKit" version="2019.1.13.1" />
+      <dependency id="ToolKit" version="2019.1.15.1" />
     </dependencies>
   </metadata>
     <files>
