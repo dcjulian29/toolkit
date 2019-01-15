@@ -1,23 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Features>IOperation</Features>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\code\toolkit\ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.xml</DocumentationFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="FluentNHibernate" Version="2.1.2" />
-    <PackageReference Include="NHibernate" Version="5.1.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ToolKit\ToolKit.csproj">
-      <Project>{64bde149-2f82-4a95-aa15-3e295560a2c4}</Project>
-      <Name>ToolKit</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Features>IOperation</Features>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DocumentationFile>..\build\ToolKit.Data.NHibernate.xml</DocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Common.Logging" Version="3.4.1" />
+        <PackageReference Include="FluentNHibernate" Version="2.1.2" />
+        <PackageReference Include="NHibernate" Version="5.1.2" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)'=='Release'">
+        <Compile Include="../build/commonassemblyinfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ToolKit\ToolKit.csproj">
+            <Project>{64bde149-2f82-4a95-aa15-3e295560a2c4}</Project>
+            <Name>ToolKit</Name>
+        </ProjectReference>
+    </ItemGroup>
 </Project>
