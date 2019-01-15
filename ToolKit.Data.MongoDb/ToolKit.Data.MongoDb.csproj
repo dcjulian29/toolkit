@@ -1,26 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="mongocsharpdriver" Version="2.6.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.6.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ToolKit\ToolKit.csproj">
-      <Project>{64BDE149-2F82-4A95-AA15-3E295560A2C4}</Project>
-      <Name>ToolKit</Name>
-    </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Driver.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Features>IOperation</Features>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DocumentationFile>..\build\ToolKit.Data.MongoDb.xml</DocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Common.Logging" Version="3.4.1" />
+        <PackageReference Include="mongocsharpdriver" Version="2.6.1" />
+        <PackageReference Include="MongoDB.Driver" Version="2.6.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="MongoDB.Driver">
+            <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Driver.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)'=='Release'">
+        <Compile Include="../build/commonassemblyinfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ToolKit\ToolKit.csproj">
+            <Project>{64BDE149-2F82-4A95-AA15-3E295560A2C4}</Project>
+            <Name>ToolKit</Name>
+        </ProjectReference>
+    </ItemGroup>
 </Project>

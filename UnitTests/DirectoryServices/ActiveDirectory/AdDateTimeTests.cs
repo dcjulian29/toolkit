@@ -49,6 +49,24 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         }
 
         [Fact]
+        public void ToDateTime_Should_ReturnMaxDate_When_ProvidedWithLargeIntegerThatIsAllOnes()
+        {
+            // Arrange
+            var expected = DateTime.MaxValue;
+            var date = new LargeInteger()
+            {
+                HighPart = 2147483647,
+                LowPart = -1
+            };
+
+            // Act
+            var actual = AdDateTime.ToDateTime(date);
+
+            // Assert
+            Assert.Equal(expected.ToString("s"), actual.ToString("s"));
+        }
+
+        [Fact]
         public void ToLdapDateTimeShould_ReturnExpectedResult()
         {
             // Arrange

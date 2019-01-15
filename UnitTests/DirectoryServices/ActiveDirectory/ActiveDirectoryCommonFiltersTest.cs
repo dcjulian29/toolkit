@@ -4,6 +4,7 @@ using ToolKit.DirectoryServices;
 using ToolKit.DirectoryServices.ActiveDirectory;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace UnitTests.DirectoryServices.ActiveDirectory
 {
@@ -81,6 +82,21 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
 
             // Assert
             Assert.Equal(expected, filter.ToString());
+        }
+
+        [Fact]
+        public void Constructor_Should_ThrowInvalidOperationException_When_ProvideNullValue()
+        {
+            // Arrange
+            var invalid = (ADS_USER_FLAG)99;
+
+            // Act and Assert
+
+            Assert.Throws<InvalidOperationException>(
+                () =>
+            {
+                var uac = ActiveDirectoryCommonFilters.UserAccessControl(invalid);
+            });
         }
 
         [Fact]

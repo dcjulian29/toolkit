@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using ToolKit.Cryptography;
 using Xunit;
@@ -11,7 +12,7 @@ namespace UnitTests.Cryptography
          Justification = "Test Suites do not need XML Documentation.")]
     public class DataProtectionApiTests
     {
-        private string _original = "This is the text to encrypt";
+        private readonly string _original = "This is the text to encrypt";
 
         [Fact]
         public void DecryptWithBytes_Should_ReturnCorrectDecryptedResult()

@@ -9,9 +9,9 @@ namespace ToolKit.Xml
     /// This class contains two static methods to encode and decode text to be compatible with being
     /// put into an XML document
     /// </summary>
-    public class XmlEncoder
+    public static class XmlEncoder
     {
-        private static ILog _log = LogManager.GetLogger<XmlEncoder>();
+        private static ILog _log = LogManager.GetLogger(typeof(XmlEncoder));
 
         /// <summary>
         /// Decodes a string to remove XML entity markups
@@ -67,12 +67,12 @@ namespace ToolKit.Xml
                         if ((entity[0] == 'x') || (entity[0] == 'X'))
                         {
                             // It's encoded in hexadecimal
-                            ch = (char)int.Parse(entity.Substring(2), NumberStyles.AllowHexSpecifier);
+                            ch = (char)Int32.Parse(entity.Substring(2), NumberStyles.AllowHexSpecifier);
                         }
                         else
                         {
                             // It's encoded in decimal
-                            ch = (char)int.Parse(entity);
+                            ch = (char)Int32.Parse(entity);
                         }
                     }
                     catch (FormatException fex)
@@ -88,9 +88,9 @@ namespace ToolKit.Xml
                 }
                 else
                 {
-                    // It's not an Entity Number but instead an Entity Name... Keep in mind that
-                    // this is not the entire list of named entities. This Decode method is designed
-                    // to decode only what was encoded with this class...
+                    // It's not an Entity Number but instead an Entity Name... Keep in mind that this
+                    // is not the entire list of named entities. This Decode method is designed to
+                    // decode only what was encoded with this class...
                     switch (entity)
                     {
                         case "&amp;":
@@ -141,7 +141,7 @@ namespace ToolKit.Xml
         {
             var sb = new StringBuilder();
 
-            foreach (var item in inputText.ToCharArray())
+            foreach (var item in inputText)
             {
                 if ((item > 31) && (item < 127))
                 {

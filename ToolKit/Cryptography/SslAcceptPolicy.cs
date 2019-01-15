@@ -32,7 +32,11 @@ namespace ToolKit.Cryptography
             }
 
             OriginalPolicy = ServicePointManager.ServerCertificateValidationCallback;
+
+#pragma warning disable SG0004 // Certificate Validation has been disabled
             ServicePointManager.ServerCertificateValidationCallback = AcceptCertificatePolicy.Validate;
+#pragma warning restore SG0004 // Certificate Validation has been disabled
+
             Enabled = true;
         }
 
@@ -41,12 +45,17 @@ namespace ToolKit.Cryptography
         /// </summary>
         public static void Reset()
         {
-            if (Enabled)
+            if (!Enabled)
             {
-                ServicePointManager.ServerCertificateValidationCallback = OriginalPolicy;
-                OriginalPolicy = null;
-                Enabled = false;
+                return;
             }
+
+#pragma warning disable SG0004
+            ServicePointManager.ServerCertificateValidationCallback = OriginalPolicy;
+#pragma warning restore SG0004
+
+            OriginalPolicy = null;
+            Enabled = false;
         }
 
         /// <summary>
@@ -60,8 +69,7 @@ namespace ToolKit.Cryptography
                 X509Chain chain,
                 SslPolicyErrors sslPolicyErrors)
             {
-                _log.Debug(m =>
-                        m("Accepting Certificate: {0}\nFrom: {2}", certificate.Subject, certificate.Issuer));
+                _log.Debug($"Accepting Certificate: {certificate.Subject}\nFrom: {certificate.Issuer}");
 
                 return true;
             }

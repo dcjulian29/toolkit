@@ -9,10 +9,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
     /// number of 100-nanosecond intervals that have elapsed since 12:00 midnight, January 1, 1601
     /// A.D. (C.E.) Coordinated Universal Time (UTC).
     /// </summary>
-    public class AdDateTime
+    public static class AdDateTime
     {
-        private static ILog _log = LogManager.GetLogger<AdDateTime>();
-
         /// <summary>
         /// Converts a DateTime object into an IADsLargeInteger object
         /// </summary>
@@ -22,9 +20,11 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             var int64Value = dateTime.ToFileTimeUtc();
 
-            IADsLargeInteger largeIntValue = new LargeInteger();
-            largeIntValue.HighPart = (int)(int64Value >> 32);
-            largeIntValue.LowPart = (int)(int64Value & 0xFFFFFFFF);
+            IADsLargeInteger largeIntValue = new LargeInteger
+            {
+                HighPart = (int)(int64Value >> 32),
+                LowPart = (int)(int64Value & 0xFFFFFFFF)
+            };
 
             return largeIntValue;
         }

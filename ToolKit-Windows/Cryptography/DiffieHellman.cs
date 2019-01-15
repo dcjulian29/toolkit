@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -13,6 +14,7 @@ namespace ToolKit.Cryptography
         private readonly ECDiffieHellmanCng _dh;
         private readonly Aes _encryptor;
 
+        /// <inheritdoc/>
         public DiffieHellman()
         {
             _encryptor = new AesCryptoServiceProvider()
@@ -29,8 +31,14 @@ namespace ToolKit.Cryptography
             PublicKey = new EncryptionData(_dh.PublicKey.ToByteArray());
         }
 
+        /// <summary>
+        /// Gets the initialization vector to use.
+        /// </summary>
         public EncryptionData IV => new EncryptionData(_encryptor.IV);
 
+        /// <summary>
+        /// Gets the public key of the remote system.
+        /// </summary>
         public EncryptionData PublicKey { get; }
 
         /// <summary>
@@ -40,6 +48,7 @@ namespace ToolKit.Cryptography
         /// <param name="encrypted">The encrypted data.</param>
         /// <param name="iv">The initialization vector of the other side.</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public EncryptionData Decrypt(EncryptionData publicKey, EncryptionData encrypted, EncryptionData iv)
         {
             var decryptedMessage = new EncryptionData
@@ -83,6 +92,7 @@ namespace ToolKit.Cryptography
         /// <param name="publicKey">The public key.</param>
         /// <param name="secretMessage">The secret.</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public EncryptionData Encrypt(EncryptionData publicKey, EncryptionData secretMessage)
         {
             var encryptedMessage = new EncryptionData()
@@ -129,6 +139,7 @@ namespace ToolKit.Cryptography
         /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
         /// unmanaged resources.
         /// </param>
+        [ExcludeFromCodeCoverage]
         protected override void DisposeResources(bool disposing)
         {
             if (!disposing)
