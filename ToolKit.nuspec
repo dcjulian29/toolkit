@@ -6,7 +6,7 @@
     <authors>Julian Easterling</authors>
     <owners>Julian Easterling</owners>
     <projectUrl>https://github.com/dcjulian29/toolkit</projectUrl>
-    <licenseUrl>https://github.com/dcjulian29/toolkit/blob/master/LICENSE.txt</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library of reusable classes and abstractions to make writing code easier.</description>
     <tags>toolkit</tags>
