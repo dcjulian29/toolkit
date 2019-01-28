@@ -114,3 +114,7 @@ tools
 # Visual Studio Settings Directories
 .vs
 .vscode
+
+# SonarQube Directories
+.scannerwork/
+.sonarqube/
