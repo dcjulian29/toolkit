@@ -161,6 +161,7 @@ Task("Coverage")
             new OpenCoverSettings() { Register = "user" }
                 .WithFilter(@"+[*]*")
                 .WithFilter(@"-[UnitTests]*")
+                .WithFilter(@"-[xunit.*]*")
                 .ExcludeByAttribute("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")
                 .ExcludeByFile(@"*\\*Designer.cs;*\\*.g.cs;*.*.g.i.cs"));
 
