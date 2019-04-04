@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using ToolKit.Cryptography;
 using Xunit;
 
@@ -159,6 +158,100 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
+        public void EqualOperator_Should_ReturnTrue_When_ValuesAreSame()
+        {
+            // Arrange
+            var encrypt1 = new EncryptionData("password");
+            var encrypt2 = new EncryptionData("password");
+
+            // Act
+            var actual = encrypt1 == encrypt2;
+
+            // Assert
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void Equals_Should_ReturnFalse_When_OtherObjectIsDifferentType()
+        {
+            // Arrange
+            var encrypt = new EncryptionData();
+            var other = new CRC32();
+
+            // Act
+            var actual = encrypt.Equals(other);
+
+            // Assert
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_Should_ReturnFalse_When_OtherObjectIsNull()
+        {
+            // Arrange
+            var encrypt1 = new EncryptionData("password");
+
+            // Act
+            var actual = encrypt1.Equals(null);
+
+            // Assert
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_Should_ReturnTrue_When_ObjectIsSame()
+        {
+            // Arrange
+            var encrypt1 = new EncryptionData("password");
+
+            // Act
+            var actual = encrypt1.Equals(encrypt1);
+
+            // Assert
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void Equals_Should_ReturnTrue_When_ValuesAreSame()
+        {
+            // Arrange
+            var encrypt1 = new EncryptionData("password");
+            var encrypt2 = new EncryptionData("password");
+
+            // Act
+            var actual = encrypt1.Equals(encrypt2);
+
+            // Assert
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void GetHashCode_Should_ReturnExpectedResult()
+        {
+            // Arrange
+            var encrypt = new EncryptionData("password");
+
+            // Act
+            var actual = encrypt.GetHashCode();
+
+            // Assert
+            Assert.True(actual == 4548);
+        }
+
+        [Fact]
+        public void GetHashCode_Should_ReturnExpectedResult_When_EncryptionDataIsNull()
+        {
+            // Arrange
+            EncryptionData encrypt = new EncryptionData();
+
+            // Act
+            var actual = encrypt.GetHashCode();
+
+            // Assert
+            Assert.True(actual == 0);
+        }
+
+        [Fact]
         public void Hex_Should_ReturnCorrectResult()
         {
             // Arrange
@@ -176,7 +269,7 @@ namespace UnitTests.Cryptography
         public void IsEmpty_Should_ReturnTrue_When_ByteLengthZero()
         {
             // Arrange
-            var data = new EncryptionData(String.Empty);
+            var data = new EncryptionData(string.Empty);
 
             // Act
             var actual = data.IsEmpty;
@@ -281,6 +374,20 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
+        public void NotEqualOperator_Should_ReturnTrueWhenValuesAreDifferent()
+        {
+            // Arrange
+            var encrypt1 = new EncryptionData("password1");
+            var encrypt2 = new EncryptionData("password2");
+
+            // Act
+            var actual = encrypt1 != encrypt2;
+
+            // Assert
+            Assert.True(actual);
+        }
+
+        [Fact]
         public void Text_Should_ReturnEmptyString_When_ObjectEmpty()
         {
             // Arrange
@@ -290,7 +397,7 @@ namespace UnitTests.Cryptography
             var actual = data.Text;
 
             // Assert
-            Assert.Equal(String.Empty, actual);
+            Assert.Equal(string.Empty, actual);
         }
 
         [Fact]

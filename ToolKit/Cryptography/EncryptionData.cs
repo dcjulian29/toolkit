@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 
 namespace ToolKit.Cryptography
@@ -216,7 +217,7 @@ namespace ToolKit.Cryptography
                 return false;
             }
 
-            return ReferenceEquals(this, other) || Equals(_byteData, other._byteData);
+            return ReferenceEquals(this, other) || _byteData.SequenceEqual(other.Bytes);
         }
 
         /// <inheritdoc/>
