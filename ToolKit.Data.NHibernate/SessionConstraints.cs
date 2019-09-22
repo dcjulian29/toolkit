@@ -18,7 +18,7 @@ namespace ToolKit.Data.NHibernate
         /// <param name="session">The NHibernate Session.</param>
         public SessionConstraint(ISession session)
         {
-            this._session = session;
+            _session = session;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace ToolKit.Data.NHibernate
         {
             get
             {
-                this._nextBooleanValue = !this._nextBooleanValue;
+                _nextBooleanValue = !_nextBooleanValue;
 
                 return this;
             }
@@ -40,9 +40,9 @@ namespace ToolKit.Data.NHibernate
         /// <returns><c>true</c> if this session is closed; otherwise, <c>false</c>.</returns>
         public bool Closed()
         {
-            var sessionIsClosed = !this._session.IsConnected && !this._session.IsOpen;
+            var sessionIsClosed = !_session.IsConnected && !_session.IsOpen;
 
-            return this._nextBooleanValue ? sessionIsClosed : !sessionIsClosed;
+            return _nextBooleanValue ? sessionIsClosed : !sessionIsClosed;
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace ToolKit.Data.NHibernate
         /// <returns><c>true</c> if the session is in an active transaction; otherwise, <c>false</c>.</returns>
         public bool InTransaction()
         {
-            var sessionInTransaction = this._session.Transaction != null && this._session.Transaction.IsActive;
+            var sessionInTransaction = _session.Transaction != null && _session.Transaction.IsActive;
 
-            return this._nextBooleanValue ? sessionInTransaction : !sessionInTransaction;
+            return _nextBooleanValue ? sessionInTransaction : !sessionInTransaction;
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace ToolKit.Data.NHibernate
         /// <returns><c>true</c> if this session is null; otherwise, <c>false</c>.</returns>
         public bool Null()
         {
-            var sessionIsNull = this._session == null;
+            var sessionIsNull = _session == null;
 
-            return this._nextBooleanValue ? sessionIsNull : !sessionIsNull;
+            return _nextBooleanValue ? sessionIsNull : !sessionIsNull;
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace ToolKit.Data.NHibernate
         /// <returns><c>true</c> if the session is null or closed; otherwise, <c>false</c>.</returns>
         public bool NullOrClosed()
         {
-            var sessionIsNullOrClosed = this.Null() || this.Closed();
+            var sessionIsNullOrClosed = Null() || Closed();
 
-            return this._nextBooleanValue ? sessionIsNullOrClosed : !sessionIsNullOrClosed;
+            return _nextBooleanValue ? sessionIsNullOrClosed : !sessionIsNullOrClosed;
         }
     }
 }
