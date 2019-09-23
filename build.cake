@@ -122,7 +122,6 @@ Task("Compile")
     {
         var settings = new MSBuildSettings {
             Configuration = configuration,
-            ToolVersion = MSBuildToolVersion.VS2017,
             NodeReuse = false,
             WarningsAsError = true
         }
