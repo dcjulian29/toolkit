@@ -55,6 +55,13 @@ TaskTeardown(teardownContext =>
     }
 });
 
+var msbuildSettings = new MSBuildSettings {
+    Configuration = configuration,
+    ToolVersion = MSBuildToolVersion.VS2019,
+    NodeReuse = false,
+    WarningsAsError = false
+}.WithProperty("OutDir", outputDirectory);
+
 Task("Default")
     .IsDependentOn("Compile");
 
@@ -62,9 +69,7 @@ Task("Clean")
     .Does(() =>
     {
         CleanDirectories(buildDirectory);
-        MSBuild(solutionFile, new MSBuildSettings {
-            Configuration = configuration,
-            }.WithTarget("Clean"));
+        MSBuild(solutionFile, msbuildSettings.WithTarget("Clean"));
     });
 
 Task("Init")
@@ -120,14 +125,7 @@ Task("Compile")
     .IsDependentOn("Version")
     .Does(() =>
     {
-        var settings = new MSBuildSettings {
-            Configuration = configuration,
-            NodeReuse = false,
-            WarningsAsError = true
-        }
-        .WithProperty("OutDir", outputDirectory);
-
-        MSBuild(solutionFile, settings);
+        MSBuild(solutionFile, msbuildSettings.WithTarget("ReBuild"));
     });
 
 Task("Test")
