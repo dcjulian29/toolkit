@@ -14,7 +14,7 @@ var projectName = "toolkit";
 
 var baseDirectory = MakeAbsolute(Directory("."));
 
-var buildDirectory = baseDirectory + "\\build";
+var buildDirectory = baseDirectory + "\\.build";
 var outputDirectory = buildDirectory + "\\output";
 var packageDirectory = baseDirectory + "\\packages";
 
