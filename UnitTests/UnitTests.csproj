@@ -202,6 +202,7 @@
     <Compile Include="AssemblyPropertiesTests.cs" />
     <Compile Include="Base64EncodingTests.cs" />
     <Compile Include="ConsoleArgumentsTest.cs" />
+    <Compile Include="Cryptography\ASymmetricEncryptionTests.cs" />
     <Compile Include="Cryptography\CryptoRandomNumberTests.cs" />
     <Compile Include="Cryptography\DataProtectionApiTests.cs" />
     <Compile Include="Cryptography\DerivedKeyTests.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="Cryptography\SHA256Tests.cs" />
     <Compile Include="Cryptography\SHA384Tests.cs" />
     <Compile Include="Cryptography\SHA512Tests.cs" />
+    <Compile Include="Cryptography\SymmetricEncryptionTests.cs" />
     <Compile Include="Data\EFCoreRepositoryTests.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
@@ -285,6 +287,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ASymmetricEncryption.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ASymmetricEncryptionWrong.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <Content Include="gettysburg.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
