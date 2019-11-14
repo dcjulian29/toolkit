@@ -28,12 +28,21 @@ StartProcess ("git", new ProcessSettings {
 List<String> result = new List<string>(stdout);
 var version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
 
+var msbuildSettings = new MSBuildSettings {
+    Configuration = configuration,
+    ToolVersion = MSBuildToolVersion.VS2019,
+    NodeReuse = false,
+    WarningsAsError = false
+}.WithProperty("OutDir", outputDirectory);
+
 Setup(setupContext =>
 {
     if (setupContext.TargetTask.Name == "Package")
     {
         Information("Switching to Release Configuration for packaging...");
         configuration = "Release";
+
+        msbuildSettings.Configuration = "Release";
     }
 });
 
@@ -54,13 +63,6 @@ TaskTeardown(teardownContext =>
         TeamCity.WriteEndProgress(teardownContext.Task.Description ?? teardownContext.Task.Name);
     }
 });
-
-var msbuildSettings = new MSBuildSettings {
-    Configuration = configuration,
-    ToolVersion = MSBuildToolVersion.VS2019,
-    NodeReuse = false,
-    WarningsAsError = false
-}.WithProperty("OutDir", outputDirectory);
 
 Task("Default")
     .IsDependentOn("Compile");
