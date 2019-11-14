@@ -17,6 +17,6 @@
         <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-        <Compile Include="../build/commonassemblyinfo.cs" />
+        <Compile Include="../.build/commonassemblyinfo.cs" />
     </ItemGroup>
 </Project>

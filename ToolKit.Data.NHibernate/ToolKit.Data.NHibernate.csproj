@@ -17,7 +17,7 @@
         <PackageReference Include="NHibernate" Version="5.1.2" />
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-        <Compile Include="../build/commonassemblyinfo.cs" />
+        <Compile Include="../.build/commonassemblyinfo.cs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj">
