@@ -5,7 +5,11 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DocumentationFile>..\build\ToolKit.Data.NHibernate.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\ToolKit.Data.NHibernate.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DebugType>full</DebugType>
+      <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Common.Logging" Version="3.4.1" />
@@ -13,7 +17,7 @@
         <PackageReference Include="NHibernate" Version="5.1.2" />
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-        <Compile Include="../build/commonassemblyinfo.cs" />
+        <Compile Include="../.build/commonassemblyinfo.cs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj">

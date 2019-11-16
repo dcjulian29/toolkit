@@ -6,13 +6,17 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DocumentationFile>..\build\ToolKit.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\ToolKit.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DebugType>full</DebugType>
+      <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Common.Logging" Version="3.4.1" />
         <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-        <Compile Include="../build/commonassemblyinfo.cs" />
+        <Compile Include="../.build/commonassemblyinfo.cs" />
     </ItemGroup>
 </Project>

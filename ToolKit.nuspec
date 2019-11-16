@@ -11,15 +11,20 @@
     <description>A library of reusable classes and abstractions to make writing code easier.</description>
     <tags>toolkit</tags>
     <dependencies>
-      <dependency id="Common.Logging" version="3.4.1" />
+      <group targetFramework="netstandard2.0">
+        <dependency id="Common.Logging" version="3.4.1" />
+      </group>
+      <group targetFramework="net47">
+        <dependency id="Common.Logging" version="3.4.1" />
+      </group>
     </dependencies>
   </metadata>
     <files>
-        <file src="build\output\ToolKit.dll" target="lib\netstandard2.0" />
-        <file src="build\output\ToolKit.pdb" target="lib\netstandard2.0" />
-        <file src="build\output\ToolKit.xml" target="lib\netstandard2.0" />
-        <file src="build\output\ToolKit-Windows.dll" target="lib\net47" />
-        <file src="build\output\ToolKit-Windows.pdb" target="lib\net47" />
-        <file src="build\output\ToolKit-Windows.xml" target="lib\net47" />
+        <file src=".build\output\ToolKit.dll" target="lib\netstandard2.0" />
+        <file src=".build\output\ToolKit.pdb" target="lib\netstandard2.0" />
+        <file src=".build\output\ToolKit.xml" target="lib\netstandard2.0" />
+        <file src=".build\output\ToolKit-Windows.dll" target="lib\net47" />
+        <file src=".build\output\ToolKit-Windows.pdb" target="lib\net47" />
+        <file src=".build\output\ToolKit-Windows.xml" target="lib\net47" />
     </files>
 </package>

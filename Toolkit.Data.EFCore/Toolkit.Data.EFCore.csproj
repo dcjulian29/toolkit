@@ -5,7 +5,11 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DocumentationFile>C:\code\toolkit\Toolkit.Data.EFCore\Toolkit.Data.EFCore.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\Toolkit.Data.EFCore.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DebugType>full</DebugType>
+      <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
@@ -14,7 +18,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-        <Compile Include="../build/commonassemblyinfo.cs" />
+        <Compile Include="../.build/commonassemblyinfo.cs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj" />

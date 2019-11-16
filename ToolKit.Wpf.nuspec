@@ -11,12 +11,14 @@
     <description>A library that contains common WPF classes.</description>
     <tags>toolkit wpf</tags>
     <dependencies>
-      <dependency id="ToolKit" version="2019.1.15.1" />
+      <group targetFramework="net47">
+        <dependency id="ToolKit" version="2019.1.15.1" />
+      </group>
     </dependencies>
   </metadata>
     <files>
-        <file src="build\output\ToolKit.Wpf.dll" target="lib\net47" />
-        <file src="build\output\ToolKit.Wpf.pdb" target="lib\net47" />
-        <file src="build\output\ToolKit.Wpf.xml" target="lib\net47" />
+        <file src=".build\output\ToolKit.Wpf.dll" target="lib\net47" />
+        <file src=".build\output\ToolKit.Wpf.pdb" target="lib\net47" />
+        <file src=".build\output\ToolKit.Wpf.xml" target="lib\net47" />
     </files>
 </package>

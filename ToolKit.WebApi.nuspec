@@ -11,14 +11,16 @@
     <description>A library that contains common Web API classes. This library is based on the v 5.2.6 version of Web API on the full framework.</description>
     <tags>toolkit webapi web</tags>
     <dependencies>
-      <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.6" />
-      <dependency id="Newtonsoft.Json" version="11.0.2" />
-      <dependency id="ToolKit" version="2019.1.15.1" />
+      <group targetFramework="net47">
+        <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.6" />
+        <dependency id="Newtonsoft.Json" version="11.0.2" />
+        <dependency id="ToolKit" version="2019.1.15.1" />
+      </group>
     </dependencies>
   </metadata>
     <files>
-        <file src="build\output\ToolKit.WebApi.dll" target="lib\net47" />
-        <file src="build\output\ToolKit.WebApi.pdb" target="lib\net47" />
-        <file src="build\output\ToolKit.WebApi.xml" target="lib\net47" />
+        <file src=".build\output\ToolKit.WebApi.dll" target="lib\net47" />
+        <file src=".build\output\ToolKit.WebApi.pdb" target="lib\net47" />
+        <file src=".build\output\ToolKit.WebApi.xml" target="lib\net47" />
     </files>
 </package>

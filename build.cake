@@ -14,7 +14,7 @@ var projectName = "toolkit";
 
 var baseDirectory = MakeAbsolute(Directory("."));
 
-var buildDirectory = baseDirectory + "\\build";
+var buildDirectory = baseDirectory + "\\.build";
 var outputDirectory = buildDirectory + "\\output";
 var packageDirectory = baseDirectory + "\\packages";
 
@@ -28,12 +28,21 @@ StartProcess ("git", new ProcessSettings {
 List<String> result = new List<string>(stdout);
 var version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
 
+var msbuildSettings = new MSBuildSettings {
+    Configuration = configuration,
+    ToolVersion = MSBuildToolVersion.VS2019,
+    NodeReuse = false,
+    WarningsAsError = false
+}.WithProperty("OutDir", outputDirectory);
+
 Setup(setupContext =>
 {
     if (setupContext.TargetTask.Name == "Package")
     {
         Information("Switching to Release Configuration for packaging...");
         configuration = "Release";
+
+        msbuildSettings.Configuration = "Release";
     }
 });
 
@@ -62,9 +71,7 @@ Task("Clean")
     .Does(() =>
     {
         CleanDirectories(buildDirectory);
-        MSBuild(solutionFile, new MSBuildSettings {
-            Configuration = configuration,
-            }.WithTarget("Clean"));
+        MSBuild(solutionFile, msbuildSettings.WithTarget("Clean"));
     });
 
 Task("Init")
@@ -120,15 +127,7 @@ Task("Compile")
     .IsDependentOn("Version")
     .Does(() =>
     {
-        var settings = new MSBuildSettings {
-            Configuration = configuration,
-            ToolVersion = MSBuildToolVersion.VS2017,
-            NodeReuse = false,
-            WarningsAsError = true
-        }
-        .WithProperty("OutDir", outputDirectory);
-
-        MSBuild(solutionFile, settings);
+        MSBuild(solutionFile, msbuildSettings.WithTarget("ReBuild"));
     });
 
 Task("Test")
@@ -161,6 +160,7 @@ Task("Coverage")
             new OpenCoverSettings() { Register = "user" }
                 .WithFilter(@"+[*]*")
                 .WithFilter(@"-[UnitTests]*")
+                .WithFilter(@"-[xunit.*]*")
                 .ExcludeByAttribute("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")
                 .ExcludeByFile(@"*\\*Designer.cs;*\\*.g.cs;*.*.g.i.cs"));
 
