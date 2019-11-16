@@ -4,10 +4,6 @@
 
 var target = Argument("target", "Default");
 
-if (TeamCity.IsRunningOnTeamCity) {
-    target = "teamcity";
-}
-
 var configuration = Argument("configuration", "Debug");
 
 var projectName = "toolkit";
