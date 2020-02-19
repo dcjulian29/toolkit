@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using Common.Logging;
 using NHibernate;
 using NHibernate.Engine;
 using NHibernate.SqlTypes;
@@ -30,8 +29,8 @@ namespace ToolKit.Data.NHibernate.UserTypes
 
         /// <inheritdoc/>
         /// <summary>
-        /// Gets the SQL types for the columns mapped by this type. In this case just a SQL Type will
-        /// be returned: <seealso cref="F:System.Data.DbType.String"/>
+        /// Gets the SQL types for the columns mapped by this type. In this case just a SQL Type
+        /// will be returned: <seealso cref="F:System.Data.DbType.String"/>
         /// </summary>
         public SqlType[] SqlTypes
         {
@@ -83,12 +82,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <returns><c>true</c> if objects are equals; otherwise, <c>false</c></returns>
         public new bool Equals(object x, object y)
         {
-            if (x == null || y == null)
-            {
-                return false;
-            }
-
-            return x.Equals(y);
+            return x != null && y != null && x.Equals(y);
         }
 
         /// <summary>
@@ -115,8 +109,8 @@ namespace ToolKit.Data.NHibernate.UserTypes
         }
 
         /// <summary>
-        /// Write an instance of the mapped class to a prepared statement. Handle possibility of null
-        /// values. A multi-column type should be written to parameters starting from index.
+        /// Write an instance of the mapped class to a prepared statement. Handle possibility of
+        /// null values. A multi-column type should be written to parameters starting from index.
         /// </summary>
         /// <param name="cmd">a Database Command</param>
         /// <param name="value">the object to write</param>
@@ -139,8 +133,8 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// During merge, replace the existing (target) value in the entity we are merging to with a
         /// new (original) value from the detached entity we are merging. For immutable objects, or
         /// null values, it is safe to simply return the first parameter. For mutable objects, it is
-        /// safe to return a copy of the first parameter. For objects with component values, it might
-        /// make sense to recursively replace component values.
+        /// safe to return a copy of the first parameter. For objects with component values, it
+        /// might make sense to recursively replace component values.
         /// </summary>
         /// <param name="original">the value from the detached entity being merged</param>
         /// <param name="target">the value in the managed entity</param>
