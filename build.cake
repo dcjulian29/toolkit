@@ -41,6 +41,28 @@ StartProcess ("git", new ProcessSettings {
 result = new List<string>(stdout);
 var packageId = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
 
+var branch = "unknown";
+if (AppVeyor.IsRunningOnAppVeyor) {
+    branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
+
+    if (branch != "master") {
+        AppVeyor.UpdateBuildVersion($"{version}-{branch}.{packageId}");
+    } else {
+        AppVeyor.UpdateBuildVersion(version);
+    }
+} else {
+    StartProcess ("git", new ProcessSettings {
+        Arguments = "symbolic-ref --short HEAD",
+        RedirectStandardOutput = true,
+    }, out stdout);
+    result = new List<string>(stdout);
+    branch = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
+}
+
+if (branch != "master") {
+    version = $"{version}-{branch}.{packageId}";
+}
+
 var msbuildSettings = new MSBuildSettings {
     Configuration = configuration,
     ToolVersion = MSBuildToolVersion.VS2019,
@@ -99,34 +121,22 @@ Task("Version")
     .IsDependentOn("Init")
     .Does(() =>
     {
-        if (configuration == "Release")
-        {
-            Information("This is a 'Release' build, marking this build as version: " + version);
+        Information("Marking this build as version: " + version);
 
-            CreateAssemblyInfo(buildDirectory + @"\CommonAssemblyInfo.cs", new AssemblyInfoSettings {
-                Version = version,
-                FileVersion = version,
-                InformationalVersion = version,
-                Copyright = String.Format("(c) Julian Easterling {0}", DateTime.Now.Year),
-                Company = String.Empty,
-                Configuration = configuration
-            });
-        }
-        else
-        {
-            Information("This is not a 'Release' build, skipping creating common version file...");
+        var assemblyVersion = "0.0.0";;
+
+        if (branch == "master") {
+            assemblyVersion = version;
         }
 
-        if (AppVeyor.IsRunningOnAppVeyor)
-        {
-            var branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
-
-            if (branch != "master") {
-                AppVeyor.UpdateBuildVersion($"{version}-{branch}.{packageId}");
-            } else {
-                AppVeyor.UpdateBuildVersion(version);
-            }
-        }
+        CreateAssemblyInfo(buildDirectory + @"\CommonAssemblyInfo.cs", new AssemblyInfoSettings {
+            Version = assemblyVersion,
+            FileVersion = assemblyVersion,
+            InformationalVersion = version,
+            Copyright = String.Format("(c) Julian Easterling {0}", DateTime.Now.Year),
+            Company = String.Empty,
+            Configuration = configuration
+        });
     });
 
 Task("PackageClean")
