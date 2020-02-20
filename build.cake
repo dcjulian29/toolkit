@@ -8,6 +8,10 @@ if ((target == "Default") && (TeamCity.IsRunningOnTeamCity)) {
     target = "TeamCity";
 }
 
+if ((target == "Default") && (AppVeyor.IsRunningOnAppVeyor)) {
+    target = "AppVeyor";
+}
+
 var configuration = Argument("configuration", "Debug");
 
 var projectName = "toolkit";
@@ -102,6 +106,11 @@ Task("Version")
         else
         {
             Information("This is not a 'Release' build, skipping creating common version file...");
+        }
+
+        if (AppVeyor.IsRunningOnAppVeyor)
+        {
+            AppVeyor.UpdateBuildVersion(version);
         }
     });
 
@@ -241,6 +250,18 @@ Task("Package")
         var nuspecFiles = GetFiles(baseDirectory + "\\*.nuspec");
 
         NuGetPack(nuspecFiles, nuGetPackSettings);
+    });
+
+Task("AppVeyor")
+    .IsDependentOn("Package")
+    .WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
+    .Does(() =>
+    {
+        CopyFiles($"{packagesDir}/*.nupkg", MakeAbsolute(Directory("./")), false);
+
+        GetFiles($"./*.nupkg")
+            .ToList()
+            .ForEach(f => AppVeyor.UploadArtifact(f, new AppVeyorUploadArtifactsSettings { DeploymentName = "packages" }));
     });
 
 RunTarget(target);
