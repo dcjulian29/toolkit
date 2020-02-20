@@ -1,7 +1,9 @@
-﻿namespace ToolKit.Data
+using System;
+
+namespace ToolKit.Data
 {
     public interface IDatabase
     {
-        void InitializeDatabase();
+        void InitializeDatabase(Action initialization);
     }
 }

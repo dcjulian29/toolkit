@@ -1,3 +1,5 @@
+using System;
+
 namespace ToolKit.Data
 {
     /// <summary>
@@ -5,7 +7,7 @@ namespace ToolKit.Data
     /// </summary>
     public abstract class DatabaseBase : IDatabase
     {
-        protected static readonly IDatabase _instance;
+        protected static IDatabase _instance;
 
         /// <summary>
         /// Gets the database instance.
@@ -20,8 +22,6 @@ namespace ToolKit.Data
         /// <summary>
         /// This method will Initializes the database in a class that inherits from this base class.
         /// </summary>
-        public virtual void InitializeDatabase()
-        {
-        }
+        public abstract void InitializeDatabase(Action initialization);
     }
 }
