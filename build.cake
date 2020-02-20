@@ -119,7 +119,7 @@ Task("Version")
 
         if (AppVeyor.IsRunningOnAppVeyor)
         {
-            branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
+            var branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 
             if (branch != "master") {
                 AppVeyor.UpdateBuildVersion($"{version}-{branch}.{packageId}");
