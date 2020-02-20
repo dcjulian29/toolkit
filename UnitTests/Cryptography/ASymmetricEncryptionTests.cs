@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -359,7 +359,7 @@ namespace UnitTests.Cryptography
             var encryptedPassword = encrypt.EncryptedPassword;
 
             // Assert
-            Assert.False(encryptedPassword.Bytes.Length == 256);
+            Assert.True(encryptedPassword.Bytes.Length == 256);
         }
 
         [Fact]
