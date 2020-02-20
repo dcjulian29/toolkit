@@ -35,14 +35,7 @@ List<String> result = new List<string>(stdout);
 var version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
 
 StartProcess ("git", new ProcessSettings {
-    Arguments = "symbolic-ref --short HEAD",
-    RedirectStandardOutput = true,
-}, out stdout);
-result = new List<string>(stdout);
-var branch = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
-
-StartProcess ("git", new ProcessSettings {
-    Arguments = "rev-parse --short=12 HEAD",
+    Arguments = "rev-parse --short=8 HEAD",
     RedirectStandardOutput = true,
 }, out stdout);
 result = new List<string>(stdout);
@@ -126,8 +119,9 @@ Task("Version")
 
         if (AppVeyor.IsRunningOnAppVeyor)
         {
-            if (branch != "master") {
+            branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH")
 
+            if (branch != "master") {
                 AppVeyor.UpdateBuildVersion($"{version}-{branch}.{packageId}");
             } else {
                 AppVeyor.UpdateBuildVersion(version);
