@@ -4,15 +4,17 @@
 
 var target = Argument("target", "Default");
 
+var configuration = Argument("configuration", "Debug");
+
 if ((target == "Default") && (TeamCity.IsRunningOnTeamCity)) {
     target = "TeamCity";
+    configuration = "Release";
 }
 
 if ((target == "Default") && (AppVeyor.IsRunningOnAppVeyor)) {
     target = "AppVeyor";
+    configuration = "Release";
 }
-
-var configuration = Argument("configuration", "Debug");
 
 var projectName = "toolkit";
 
@@ -31,6 +33,20 @@ StartProcess ("git", new ProcessSettings {
 }, out stdout);
 List<String> result = new List<string>(stdout);
 var version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
+
+StartProcess ("git", new ProcessSettings {
+    Arguments = "symbolic-ref --short HEAD",
+    RedirectStandardOutput = true,
+}, out stdout);
+result = new List<string>(stdout);
+var branch = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
+
+StartProcess ("git", new ProcessSettings {
+    Arguments = "rev-parse --short=12 HEAD",
+    RedirectStandardOutput = true,
+}, out stdout);
+result = new List<string>(stdout);
+var packageId = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
 
 var msbuildSettings = new MSBuildSettings {
     Configuration = configuration,
@@ -110,7 +126,12 @@ Task("Version")
 
         if (AppVeyor.IsRunningOnAppVeyor)
         {
-            AppVeyor.UpdateBuildVersion(version);
+            if (branch != "master") {
+
+                AppVeyor.UpdateBuildVersion($"{version}-{branch}.{packageId}");
+            } else {
+                AppVeyor.UpdateBuildVersion(version);
+            }
         }
     });
 
