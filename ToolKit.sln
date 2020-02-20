@@ -26,6 +26,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4F0C8257-9E3C-416F-95BA-EDA9D4164EFF}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		appveyor.yml = appveyor.yml
 		build.cake = build.cake
 		README.md = README.md
 		ToolKit.Data.EFCore.nuspec = ToolKit.Data.EFCore.nuspec
