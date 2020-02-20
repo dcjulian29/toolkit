@@ -1,6 +1,6 @@
 image: Visual Studio 2019
 
-environment_variables:
+environment:
   CAKE_SETTINGS_SKIPPACKAGEVERSIONCHECK: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
