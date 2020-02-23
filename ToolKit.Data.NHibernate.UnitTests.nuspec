@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ToolKit.Data.NHibernate.UnitTests</id>
+    <version>0.0.0</version>
+    <authors>Julian Easterling</authors>
+    <owners>Julian Easterling</owners>
+    <projectUrl>https://github.com/dcjulian29/toolkit</projectUrl>
+    <license type="expression">Apache-2.0</license>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A library that contains common NHibernate-based data classes related to UnitTests.</description>
+    <tags>toolkit nhibernate</tags>
+    <dependencies>
+      <group targetFramework="netstandard2.0">
+        <dependency id="ToolKit.Data.NHibernate" version="2020.2.23.1" />
+      </group>
+    </dependencies>
+  </metadata>
+    <files>
+        <file src=".build\output\ToolKit.Data.NHibernate.UnitTests.dll" target="lib\netstandard2.0" />
+        <file src=".build\output\ToolKit.Data.NHibernate.UnitTests.pdb" target="lib\netstandard2.0" />
+        <file src=".build\output\ToolKit.Data.NHibernate.UnitTests.xml" target="lib\netstandard2.0" />
+    </files>
+</package>
