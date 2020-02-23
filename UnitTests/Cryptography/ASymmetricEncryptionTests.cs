@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -212,25 +212,6 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void Encrypt_Should_ReturnTheSamePasswordAsEncryptedPassword()
-        {
-            // Arrange
-            var encrypt = new ASymmetricEncryption(_publicKey);
-            var encryptedPassword = new byte[256];
-            var payloadPassword = new byte[256];
-
-            Buffer.BlockCopy(encrypt.EncryptedPassword.Bytes, 0, encryptedPassword, 0, 256);
-
-            // Act
-            var encryptedBytes = encrypt.Encrypt(_targetData);
-
-            Buffer.BlockCopy(encryptedBytes.Bytes, 0, payloadPassword, 0, 256);
-
-            // Assert
-            Assert.True(payloadPassword.SequenceEqual(encryptedPassword));
-        }
-
-        [Fact]
         public void Encrypt_Should_ReturnA32BytePassword()
         {
             // Arrange
@@ -247,6 +228,36 @@ namespace UnitTests.Cryptography
 
             // Assert
             Assert.True(password.Bytes.Length == 32);
+        }
+
+        [Fact]
+        public void Encrypt_Should_ReturnEncryptedData()
+        {
+            // Arrange
+            var e1 = new ASymmetricEncryption(_publicKey);
+
+            // Act
+            var encrypted = e1.Encrypt(_targetData);
+
+            // Assert
+            Assert.False(encrypted.IsEmpty);
+        }
+
+        [Fact]
+        public void Encrypt_Should_ReturnEncryptedData_When_UsingStream()
+        {
+            // Arrange
+            var e1 = new ASymmetricEncryption(_publicKey);
+            EncryptionData encrypted;
+
+            // Act
+            using (var sr = new StreamReader("sample.doc"))
+            {
+                encrypted = e1.Encrypt(sr.BaseStream);
+            }
+
+            // Assert
+            Assert.False(encrypted.IsEmpty);
         }
 
         [Fact]
@@ -288,33 +299,22 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void Encrypt_Should_ReturnEncryptedData()
+        public void Encrypt_Should_ReturnTheSamePasswordAsEncryptedPassword()
         {
             // Arrange
-            var e1 = new ASymmetricEncryption(_publicKey);
+            var encrypt = new ASymmetricEncryption(_publicKey);
+            var encryptedPassword = new byte[256];
+            var payloadPassword = new byte[256];
+
+            Buffer.BlockCopy(encrypt.EncryptedPassword.Bytes, 0, encryptedPassword, 0, 256);
 
             // Act
-            var encrypted = e1.Encrypt(_targetData);
+            var encryptedBytes = encrypt.Encrypt(_targetData);
+
+            Buffer.BlockCopy(encryptedBytes.Bytes, 0, payloadPassword, 0, 256);
 
             // Assert
-            Assert.False(encrypted.IsEmpty);
-        }
-
-        [Fact]
-        public void Encrypt_Should_ReturnEncryptedData_When_UsingStream()
-        {
-            // Arrange
-            var e1 = new ASymmetricEncryption(_publicKey);
-            EncryptionData encrypted;
-
-            // Act
-            using (var sr = new StreamReader("sample.doc"))
-            {
-                encrypted = e1.Encrypt(sr.BaseStream);
-            }
-
-            // Assert
-            Assert.False(encrypted.IsEmpty);
+            Assert.True(payloadPassword.SequenceEqual(encryptedPassword));
         }
 
         [Fact]

@@ -221,13 +221,16 @@
     <Compile Include="Cryptography\SHA384Tests.cs" />
     <Compile Include="Cryptography\SHA512Tests.cs" />
     <Compile Include="Cryptography\SymmetricEncryptionTests.cs" />
+    <Compile Include="Data\DatabaseBaseTests.cs" />
     <Compile Include="Data\EFCoreRepositoryTests.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
+    <Compile Include="Data\NHibernateDatabaseBaseTests.cs" />
     <Compile Include="Data\NHibernateRepositoryTests.cs" />
     <Compile Include="Data\NHibernateSymmetricEncryptedStringTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
+    <Compile Include="Data\UnitTestDatabaseTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFiltersTest.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\AdDateTimeTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ComputerTests.cs" />
@@ -268,6 +271,10 @@
     <ProjectReference Include="..\ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj">
       <Project>{45e88f4d-9e50-40f2-93ef-07439952f6fc}</Project>
       <Name>ToolKit.Data.MongoDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolKit.Data.NHibernate.UnitTests\ToolKit.Data.NHibernate.UnitTests.csproj">
+      <Project>{0a5debec-0947-44d3-b65a-14df94fc779b}</Project>
+      <Name>ToolKit.Data.NHibernate.UnitTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.csproj">
       <Project>{f8774dc0-a6a7-4a4d-a126-9d7637a01ebf}</Project>
