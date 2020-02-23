@@ -34,6 +34,11 @@ namespace ToolKit.Data.NHibernate
         }
 
         /// <summary>
+        /// Gets the database instance.
+        /// </summary>
+        public static new NHibernateDatabaseBase Instance => _instance as NHibernateDatabaseBase;
+
+        /// <summary>
         /// Gets the assembly containing mappings.
         /// </summary>
         public Assembly AssemblyContainingMappings { get; }
@@ -74,31 +79,27 @@ namespace ToolKit.Data.NHibernate
             if (Cache.Contains(sessionName))
             {
                 _log.Debug(m => m("Returning Existing session: {0}", sessionName));
-
-                return Cache[sessionName] as ISessionFactory;
             }
-
-            lock (_cacheLock)
+            else
             {
-                if (Cache.Contains(sessionName))
+                lock (_cacheLock)
                 {
-                    _log.Debug(m => m("Returning Existing session: {0}", sessionName));
+                    if (!Cache.Contains(sessionName))
+                    {
+                        _log.Debug(m => m("Creating a new session: {0}", sessionName));
 
-                    return Cache[sessionName] as ISessionFactory;
+                        var sessionFactory = Fluently.Configure()
+                            .Database(DatabaseConfigurer)
+                            .Mappings(m => m.FluentMappings.AddFromAssembly(AssemblyContainingMappings))
+                            .ExposeConfiguration(BuildSchema)
+                            .BuildSessionFactory();
+
+                        Cache.Set(sessionName, sessionFactory, _cachePolicy);
+                    }
                 }
-
-                _log.Debug(m => m("Creating a new session: {0}", sessionName));
-
-                var sessionFactory = Fluently.Configure()
-                    .Database(DatabaseConfigurer)
-                    .Mappings(m => m.FluentMappings.AddFromAssembly(AssemblyContainingMappings))
-                    .ExposeConfiguration(BuildSchema)
-                    .BuildSessionFactory();
-
-                Cache.Set(sessionName, sessionFactory, _cachePolicy);
-
-                return sessionFactory;
             }
+
+            return Cache[sessionName] as ISessionFactory;
         }
     }
 }
