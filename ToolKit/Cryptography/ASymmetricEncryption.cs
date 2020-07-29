@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -140,11 +139,6 @@ namespace ToolKit.Cryptography
 
             var password = _password.Bytes;
 
-            if (password.Length < 32)
-            {
-                password = password.Concat(new byte[32 - password.Length]).ToArray();
-            }
-
             Buffer.BlockCopy(password, 0, iv, 0, 16);
 
             var decrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
@@ -171,36 +165,11 @@ namespace ToolKit.Cryptography
                     "In order to decrypt, you must provide the private key.");
             }
 
-            var b = new byte[_keySize];
+            var b = new byte[encryptedStream.Length];
 
-            var i = encryptedStream.Read(b, 0, _keySize);
+            _ = encryptedStream.Read(b, 0, (int)encryptedStream.Length);
 
-            if (i < _keySize + 1)
-            {
-                throw new InvalidOperationException("Invalid Formatted Password!");
-            }
-
-            _password = new EncryptionData(b);
-            var iv = new EncryptionData();
-
-            Array.Copy(_password.Bytes, iv.Bytes, 16);
-
-            var decrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
-            {
-                Key = _password,
-                InitializationVector = iv
-            };
-
-            var encryptedBytes = new byte[encryptedStream.Length - _keySize];
-
-            i = encryptedStream.Read(encryptedBytes, _keySize, (int)encryptedStream.Length - _keySize);
-
-            if (i == 0)
-            {
-                throw new InvalidOperationException("Invalid Formatted Payload");
-            }
-
-            return decrypt.Decrypt(encryptedStream);
+            return Decrypt(new EncryptionData(b));
         }
 
         /// <summary>
@@ -252,7 +221,7 @@ namespace ToolKit.Cryptography
         {
             if (!plainStream.CanRead)
             {
-                throw new ArgumentException("Invalid Encrypted Data!");
+                throw new ArgumentException("Can not read from the stream!");
             }
 
             if (_publicKey == null)
@@ -264,11 +233,6 @@ namespace ToolKit.Cryptography
             var iv = new byte[16];
 
             var password = _password.Bytes;
-
-            if (password.Length < 32)
-            {
-                password = password.Concat(new byte[32 - password.Length]).ToArray();
-            }
 
             Buffer.BlockCopy(password, 0, iv, 0, 16);
 
@@ -299,7 +263,7 @@ namespace ToolKit.Cryptography
         {
             if (encryptedData.IsEmpty)
             {
-                throw new ArgumentException("Invalid Encrypted Data!");
+                throw new ArgumentException("Encrypted data is empty!");
             }
 
             if (encryptedData.Bytes.Length < 257)

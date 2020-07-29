@@ -160,6 +160,26 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
+        public void Decrypt_Should_ReturnExpectedResult_When_ProvidedCorrectPrivateKeyAndUsingStream()
+        {
+            // Arrange
+            var e1 = new ASymmetricEncryption(_publicKey);
+            var e2 = new ASymmetricEncryption(_privateKey);
+
+            // Act
+            var encrypted = e1.Encrypt(_targetData);
+            EncryptionData decrypted;
+
+            using (var stream = new MemoryStream(encrypted.Bytes))
+            {
+                decrypted = e2.Decrypt(stream);
+            }
+
+            // Assert
+            Assert.True(_targetData.Text == decrypted.Text);
+        }
+
+        [Fact]
         public void Decrypt_Should_ThrowException_When_ProvidedWrongPrivateKey()
         {
             // Arrange
@@ -174,6 +194,36 @@ namespace UnitTests.Cryptography
 
             // Act & Assert
             Assert.Throws<CryptographicException>(() =>
+            {
+                var decrypted = e2.Decrypt(encrypted);
+            });
+        }
+
+        [Fact]
+        public void Decrypt_Should_ThrowException_When_NoEncryptedDataProvided()
+        {
+            // Arrange
+            var e2 = new ASymmetricEncryption(_privateKey);
+
+            var encrypted = new EncryptionData();
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var decrypted = e2.Decrypt(encrypted);
+            });
+        }
+
+        [Fact]
+        public void Decrypt_Should_ThrowException_When_ImproperEncryptedDataProvided()
+        {
+            // Arrange
+            var e2 = new ASymmetricEncryption(_privateKey);
+
+            var encrypted = new EncryptionData(new byte[100]);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() =>
             {
                 var decrypted = e2.Decrypt(encrypted);
             });
@@ -299,6 +349,25 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
+        public void Encrypt_Should_ReturnSamePassword_When_ExplicitPasswordProvidedAndPasswordWithNonUTF8Password()
+        {
+            // Arrange
+            var password = new EncryptionData("A really long simple password", System.Text.Encoding.ASCII);
+            var encrypt = new ASymmetricEncryption(_publicKey, password);
+            var encryptedPassword = new EncryptionData(new byte[256]);
+
+            // Act
+            var encryptedBytes = encrypt.Encrypt(_targetData);
+
+            Buffer.BlockCopy(encryptedBytes.Bytes, 0, encryptedPassword.Bytes, 0, 256);
+
+            var decryptedPassword = new RsaEncryption().Decrypt(encryptedPassword, _privateKey);
+
+            // Assert
+            Assert.True(decryptedPassword.Text == password.Text);
+        }
+
+        [Fact]
         public void Encrypt_Should_ReturnTheSamePasswordAsEncryptedPassword()
         {
             // Arrange
@@ -329,6 +398,40 @@ namespace UnitTests.Cryptography
                 {
                     var encrypted = e1.Encrypt(_targetData);
                 });
+        }
+
+        [Fact]
+        public void Encrypt_Should_ThrowException_When_NoDataForPayloadProvided()
+        {
+            // Arrange
+            var empty = new EncryptionData();
+            var e1 = new ASymmetricEncryption(_privateKey);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(
+                () =>
+                {
+                    var encrypted = e1.Encrypt(empty);
+                });
+        }
+
+        [Fact]
+        public void Encrypt_Should_ThrowException_When_StreamIsNotReadable()
+        {
+            // Arrange
+            var fileName = Guid.NewGuid().ToString();
+            var e1 = new ASymmetricEncryption(_privateKey);
+            var stream = new FileStream(fileName, FileMode.CreateNew, FileAccess.Write);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(
+                () =>
+                {
+                    var encrypted = e1.Encrypt(stream);
+                });
+
+            stream.Close();
+            stream.Dispose();
         }
 
         [Fact]
