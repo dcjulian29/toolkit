@@ -129,7 +129,7 @@ namespace ToolKit.Cryptography
             // providers, we reverse the order of the bytes to match what other providers output.
             Array.Reverse(encryptedData.Bytes);
 
-            var decrypted = new EncryptionData(rsa.Decrypt(encryptedData.Bytes, false));
+            var decrypted = new EncryptionData(rsa.Decrypt(encryptedData.Bytes, true));
             rsa.Clear();
 
             return decrypted;
@@ -158,7 +158,7 @@ namespace ToolKit.Cryptography
 
             try
             {
-                var encryptedBytes = rsa.Encrypt(data.Bytes, false);
+                var encryptedBytes = rsa.Encrypt(data.Bytes, true);
 
                 // Be aware the RSACryptoServiceProvider reverses the order of encrypted bytes after
                 // encryption and before decryption. In order to provide compatibility with other
