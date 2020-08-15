@@ -22,7 +22,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-        <Compile Include="../.build/commonassemblyinfo.cs" />
+        <Compile Include="../.build/CommonAssemblyInfo.cs" Condition="Exists('../.build/CommonAssemblyInfo.cs')" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj">

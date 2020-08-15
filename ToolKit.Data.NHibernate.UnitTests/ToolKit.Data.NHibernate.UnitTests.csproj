@@ -15,6 +15,6 @@
     <ProjectReference Include="..\ToolKit.Data.NHibernate\ToolKit.Data.NHibernate.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Release'">
-    <Compile Include="../.build/commonassemblyinfo.cs" />
+    <Compile Include="../.build/CommonAssemblyInfo.cs" Condition="Exists('../.build/CommonAssemblyInfo.cs')" />
   </ItemGroup>
 </Project>
