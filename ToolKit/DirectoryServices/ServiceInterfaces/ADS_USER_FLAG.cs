@@ -1,14 +1,16 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-//// ReSharper disable InconsistentNaming
-
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
     /// <summary>
     /// Specifies flags used for manipulating user properties.
     /// </summary>
     [Flags]
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     [SuppressMessage(
         "StyleCop.CSharp.DocumentationRules",
         "SA1650:ElementDocumentationMustBeSpelledCorrectly",

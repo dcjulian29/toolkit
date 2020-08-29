@@ -1,7 +1,11 @@
-//// ReSharper disable InconsistentNaming
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     /// <summary>
     /// Specifies the ACE type.
     /// </summary>

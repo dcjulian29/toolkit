@@ -1,4 +1,4 @@
-//// ReSharper disable InconsistentNaming
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
@@ -6,6 +6,10 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
     /// Specifies how security propagates for inherited access-control entries (ACEs) and types of
     /// auditing for a system ACE.
     /// </summary>
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     public enum ADS_ACEFLAG
     {
         /// <summary>

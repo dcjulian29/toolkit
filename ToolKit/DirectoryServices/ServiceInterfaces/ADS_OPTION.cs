@@ -1,4 +1,4 @@
-//// ReSharper disable InconsistentNaming
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
@@ -6,6 +6,10 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
     /// Specifies the available options that the IADsObjectOptions interface uses for manipulating
     /// directory objects.
     /// </summary>
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     public enum ADS_OPTION
     {
         /// <summary>

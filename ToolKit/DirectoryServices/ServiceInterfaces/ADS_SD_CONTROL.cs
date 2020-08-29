@@ -1,6 +1,5 @@
 using System;
-
-//// ReSharper disable InconsistentNaming
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
@@ -8,6 +7,10 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
     /// Specifies that an access-control list (ACL) is to be protected when new permissions are
     /// recursively applied to a directory tree.
     /// </summary>
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     [Flags]
     public enum ADS_SD_CONTROL
     {

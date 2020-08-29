@@ -1,9 +1,12 @@
 using System;
-
-//// ReSharper disable InconsistentNaming
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     /// <summary>
     /// Specifies the security level used in authenticating a client.
     /// </summary>

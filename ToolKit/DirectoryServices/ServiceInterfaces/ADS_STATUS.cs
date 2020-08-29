@@ -1,5 +1,3 @@
-//// ReSharper disable InconsistentNaming
-
 using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
@@ -7,6 +5,10 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
     /// <summary>
     /// Specifies the status of search preferences.
     /// </summary>
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     [SuppressMessage(
         "StyleCop.CSharp.DocumentationRules",
         "SA1650:ElementDocumentationMustBeSpelledCorrectly",

@@ -1,10 +1,14 @@
-//// ReSharper disable InconsistentNaming
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
     /// <summary>
     /// Specifies the type of initialization to be performed on a name translate object.
     /// </summary>
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     public enum ADS_NAME_INITTYPE
     {
         /// <summary>
