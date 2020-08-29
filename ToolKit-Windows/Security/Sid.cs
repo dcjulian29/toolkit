@@ -6,7 +6,7 @@ namespace ToolKit.Security
     /// <summary>
     /// This class provides functions related to Security Identifiers (SIDs)
     /// </summary>
-    public class Sid
+    public static class Sid
     {
         /// <summary>
         /// Gets the SID for the built-in administrators group on the machine. This is not the same
