@@ -17,7 +17,6 @@ namespace ToolKit.Cryptography
         Justification = "Encryption tend to have names not in standard dictionaries...")]
     public class ASymmetricEncryption
     {
-        private readonly int _keySize = 256;
         private readonly RsaPrivateKey _privateKey;
         private readonly RsaPublicKey _publicKey;
         private EncryptionData _password;

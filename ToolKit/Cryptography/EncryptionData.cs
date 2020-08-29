@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,7 @@ namespace ToolKit.Cryptography
     /// Adapted from code originally written by Jeff Atwood. The original code had no explicit
     /// license attached to it. If licensing is a concern, you should contact the original author.
     /// </remarks>
-    public class EncryptionData : IEquatable<EncryptionData>
+    public sealed class EncryptionData : IEquatable<EncryptionData>
     {
         private byte[] _byteData;
 
@@ -123,18 +123,7 @@ namespace ToolKit.Cryptography
         /// Gets a value indicating whether this instance is empty.
         /// </summary>
         /// <value><c>true</c> if no data is present; otherwise, <c>false</c>.</value>
-        public bool IsEmpty
-        {
-            get
-            {
-                if (Bytes == null)
-                {
-                    return true;
-                }
-
-                return Bytes.Length == 0;
-            }
-        }
+        public bool IsEmpty => Bytes == null || Bytes.Length == 0;
 
         /// <summary>
         /// Gets or sets the maximum number of bits allowed for this data.
@@ -210,18 +199,11 @@ namespace ToolKit.Cryptography
         public static bool operator ==(EncryptionData left, EncryptionData right) => Equals(left, right);
 
         /// <inheritdoc/>
-        public bool Equals(EncryptionData other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            return ReferenceEquals(this, other) || _byteData.SequenceEqual(other.Bytes);
-        }
+        public bool Equals(EncryptionData other) =>
+            !(other is null) && (ReferenceEquals(this, other) || _byteData.SequenceEqual(other.Bytes));
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) => (obj.GetType() == typeof(EncryptionData)) && Equals((EncryptionData)obj);
+        public override bool Equals(object obj) => obj is EncryptionData encryptionData && Equals(encryptionData);
 
         /// <inheritdoc/>
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode", Justification = "It's ok to have a non-read only member in this case.")]

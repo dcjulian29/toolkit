@@ -13,6 +13,7 @@ namespace ToolKit.Data.NHibernate.UnitTests
     {
         private static bool _databaseCreated = false;
         private readonly string _callingClass;
+        static readonly object _lock = new object();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="UnitTestDatabase" /> class.

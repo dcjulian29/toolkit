@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -22,8 +22,8 @@ namespace UnitTests.Extensions
         {
             Global = 0x00000002,
             Domain = 0x00000004,
-            Local = 0x00000004,
-            Universal = 0x00000008
+            Local = 0x00000008,
+            Universal = 0x00000010
         }
 
         [Flags]
@@ -119,7 +119,7 @@ namespace UnitTests.Extensions
             // Assert
             Assert.Throws<ArgumentException>(() =>
             {
-                var result = userFlag.Contains("noEnum");
+                _ = userFlag.Contains("noEnum");
             });
         }
 
@@ -134,7 +134,7 @@ namespace UnitTests.Extensions
             // Assert
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var result = userFlag.Contains(Groups.Domain);
+                _ = userFlag.Contains(Groups.Domain);
             });
         }
 
@@ -173,7 +173,7 @@ namespace UnitTests.Extensions
             // Assert
             Assert.Throws<ArgumentException>(() =>
             {
-                var result = color.Is("-1");
+                _ = color.Is("-1");
             });
         }
 
@@ -188,7 +188,7 @@ namespace UnitTests.Extensions
             // Assert
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var result = userFlag.Contains(Color.Green);
+                _ = userFlag.Contains(Color.Green);
             });
         }
 
