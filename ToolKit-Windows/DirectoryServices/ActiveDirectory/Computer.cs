@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
-using Common.Logging;
-using ToolKit;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 using DN = ToolKit.DirectoryServices.DistinguishedName;
 
@@ -15,8 +13,6 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
     /// </summary>
     public class Computer : DirectoryObject, IComputer
     {
-        private static ILog _log = LogManager.GetLogger<Computer>();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Computer"/> class.
         /// </summary>

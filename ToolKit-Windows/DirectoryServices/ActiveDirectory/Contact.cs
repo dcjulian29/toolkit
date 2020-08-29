@@ -13,8 +13,6 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
     /// </summary>
     public class Contact : DirectoryObject
     {
-        private static ILog _log = LogManager.GetLogger<Contact>();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Contact"/> class.
         /// </summary>
