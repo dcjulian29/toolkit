@@ -1,6 +1,6 @@
-#tool "nuget:?package=xunit.runner.console"
-#tool "nuget:?package=OpenCover"
-#tool "nuget:?package=ReportGenerator"
+#tool "nuget:?package=xunit.runner.console&version=2.4.1"
+#tool "nuget:?package=OpenCover&version=4.7.922"
+#tool "nuget:?package=ReportGenerator&version=4.5.0"
 
 var target = Argument("target", "Default");
 
