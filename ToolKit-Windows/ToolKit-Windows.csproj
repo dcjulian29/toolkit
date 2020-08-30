@@ -59,6 +59,14 @@
     <Compile Include="DirectoryServices\ActiveDirectory\User.cs" />
     <Compile Include="DirectoryServices\IUser.cs" />
     <Compile Include="DirectoryServices\LdapQuery.cs" />
+    <Compile Include="DirectoryServices\UserSort\SortByChanged.cs" />
+    <Compile Include="DirectoryServices\UserSort\SortByCreated.cs" />
+    <Compile Include="DirectoryServices\UserSort\SortByDisplayName.cs" />
+    <Compile Include="DirectoryServices\UserSort\SortByEmailAddress.cs" />
+    <Compile Include="DirectoryServices\UserSort\SortByLastLogonTimestamp.cs" />
+    <Compile Include="DirectoryServices\UserSort\SortByPasswordLastSet.cs" />
+    <Compile Include="DirectoryServices\UserSort\SortBySamAccountName.cs" />
+    <Compile Include="DirectoryServices\UserSort\SortByUserPrincipalName.cs" />
     <Compile Include="DirectoryServices\Users.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,4 +92,5 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
 </Project>
