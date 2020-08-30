@@ -13,8 +13,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Common.Logging" Version="3.4.1" />
-        <PackageReference Include="mongocsharpdriver" Version="2.6.1" />
-        <PackageReference Include="MongoDB.Driver" Version="2.6.1" />
+        <PackageReference Include="MongoDB.Driver" Version="2.11.1" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="MongoDB.Driver">

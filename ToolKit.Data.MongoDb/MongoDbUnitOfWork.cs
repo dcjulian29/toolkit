@@ -1,57 +1,57 @@
 ﻿using System;
 using System.Linq;
 using Common.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Builders;
-using MongoDB.Driver.Linq;
 
 namespace ToolKit.Data.MongoDb
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     /// <summary>
-    /// Maintains a list of objects affected by a business transaction and coordinates the writing
-    /// out of changes and the resolution of concurrency problems.
+    ///   Maintains a list of objects affected by a business transaction and coordinates the writing
+    ///   out of changes and the resolution of concurrency problems.
     /// </summary>
     public class MongoDbUnitOfWork : IUnitOfWork
     {
-        private static ILog _log = LogManager.GetLogger<MongoDbUnitOfWork>();
+        private static readonly ILog _log = LogManager.GetLogger<MongoDbUnitOfWork>();
 
-        private readonly MongoDatabase _database;
+        private readonly MongoDatabaseBase _database;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MongoDbUnitOfWork"/> class.
+        ///   Initializes a new instance of the <see cref="MongoDbUnitOfWork" /> class.
         /// </summary>
         /// <param name="database">The Mongo Database instance.</param>
-        public MongoDbUnitOfWork(MongoDatabase database) => _database = database;
+        public MongoDbUnitOfWork(MongoDatabaseBase database) => _database = database;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
-        /// Attaches the specified detached entity to the persistence context.
+        ///   Attaches the specified detached entity to the persistence context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
         public void Attach<T>(T entity) where T : class => Save(entity);
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
-        /// Deletes the specified entity from the persistence context.
+        ///   Deletes the specified entity from the persistence context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
         public void Delete<T>(T entity) where T : class
         {
-            var result = GetCollection<T>().Remove(Query.EQ("_id", GetMongoEntity(entity).Id));
+            var filter = Builders<T>.Filter.Eq("_id", GetMongoEntity(entity).Id);
+            var result = GetCollection<T>().DeleteOne(filter);
 
-            if (result.HasLastErrorMessage)
+            if ((result.IsAcknowledged) && (result.DeletedCount == 0))
             {
-                _log.Error(m => m("Error occurred during Delete... {0}", result.LastErrorMessage));
+                _log.Error(m => m("Error occurred during Delete... {0}", result.ToString()));
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting
-        /// non-managed resources.
+        ///   Performs application-defined tasks associated with freeing, releasing, or resetting
+        ///   non-managed resources.
         /// </summary>
         public void Dispose()
         {
@@ -59,44 +59,51 @@ namespace ToolKit.Data.MongoDb
             GC.SuppressFinalize(this);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
-        /// Gets this instance from the persistence context.
+        ///   Gets this instance from the persistence context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <returns>
-        /// An instance of the entity that can be used by the Repository implementation to further
-        /// query the results.
+        ///   An instance of the entity that can be used by the Repository implementation to further
+        ///   query the results.
         /// </returns>
-        public IQueryable<T> Get<T>() where T : class => GetCollection<T>().FindAllAs<T>().AsQueryable();
+        public IQueryable<T> Get<T>() where T : class => (IQueryable<T>)GetCollection<T>().Find(new BsonDocument());
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
-        /// Mark this unit of work to be rollback.
+        ///   Mark this unit of work to be rollback.
         /// </summary>
         public void Rollback() => _log.Warn(m => m("MongoDB does not support transactions..."));
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
-        /// Saves the specified entity to the persistence context.
+        ///   Saves the specified entity to the persistence context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Save<T>(T entity) where T : class => GetCollection<T>().Save(entity);
+        public void Save<T>(T entity) where T : class
+        {
+            var filter = Builders<T>.Filter.Eq("_id", GetMongoEntity(entity).Id);
+            GetCollection<T>().ReplaceOne(filter, entity);
+        }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
+        ///   Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-        /// unmanaged resources.
+        ///   <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+        ///   only unmanaged resources.
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
             // Method intentionally left empty.
         }
 
-        private MongoCollection GetCollection<T>() => _database.GetCollection<T>(typeof(T).Name.ToLower());
+        private IMongoCollection<T> GetCollection<T>()
+        {
+            return _database.GetCollection<T>(typeof(T).Name.ToLower());
+        }
 
         private IMongoEntity GetMongoEntity<T>(T entity) where T : class
         {
