@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Common;
@@ -336,11 +336,11 @@ namespace UnitTests.Data
             }
         }
 
-        public class SqLiteConfiguration : DbConfiguration
+        public class SQLiteConfiguration : DbConfiguration
         {
-            public SqLiteConfiguration()
+            public SQLiteConfiguration()
             {
-                SetDefaultConnectionFactory(new SqLiteConnectionFactory());
+                SetDefaultConnectionFactory(new SQLiteConnectionFactory());
                 SetProviderFactory("System.Data.SQLite", SQLiteFactory.Instance);
                 SetProviderFactory("System.Data.SQLite.EF6", SQLiteProviderFactory.Instance);
                 var t = Type.GetType("System.Data.SQLite.EF6.SQLiteProviderServices, System.Data.SQLite.EF6");
@@ -349,7 +349,7 @@ namespace UnitTests.Data
             }
         }
 
-        public class SqLiteConnectionFactory : IDbConnectionFactory
+        public class SQLiteConnectionFactory : IDbConnectionFactory
         {
             public DbConnection CreateConnection(string nameOrConnectionString)
             {
