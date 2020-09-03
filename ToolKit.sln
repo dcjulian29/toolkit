@@ -13,15 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.Data.NHibernate", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.EntityFramework", "ToolKit.Data.EntityFramework\ToolKit.Data.EntityFramework.csproj", "{4F9F8C27-961F-4FA9-BD7C-0FA9CEC68521}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.WebApi", "ToolKit.WebApi\ToolKit.WebApi.csproj", "{E55DC745-8585-4454-A21E-2CBB20A4BB68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.WebApi", "ToolKit.WebApi\ToolKit.WebApi.csproj", "{E55DC745-8585-4454-A21E-2CBB20A4BB68}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Wpf", "ToolKit.Wpf\ToolKit.Wpf.csproj", "{FD0183D0-FACE-4753-8626-D60F7815B834}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.Data.MongoDb", "ToolKit.Data.MongoDb\ToolKit.Data.MongoDb.csproj", "{45E88F4D-9E50-40F2-93EF-07439952F6FC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolkit.Data.EFCore", "Toolkit.Data.EFCore\Toolkit.Data.EFCore.csproj", "{E9AD798F-9937-49D3-B11B-F4933105C802}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4F0C8257-9E3C-416F-95BA-EDA9D4164EFF}"
 	ProjectSection(SolutionItems) = preProject
@@ -39,7 +37,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ToolKit.Wpf.nuspec = ToolKit.Wpf.nuspec
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolKit.Data.NHibernate.UnitTests", "ToolKit.Data.NHibernate.UnitTests\ToolKit.Data.NHibernate.UnitTests.csproj", "{0A5DEBEC-0947-44D3-B65A-14DF94FC779B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolKit.Data.NHibernate.UnitTests", "ToolKit.Data.NHibernate.UnitTests\ToolKit.Data.NHibernate.UnitTests.csproj", "{0A5DEBEC-0947-44D3-B65A-14DF94FC779B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{56B49795-BCD8-4F6A-A04C-A26B3756A48D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,20 +79,20 @@ Global
 		{E9AD798F-9937-49D3-B11B-F4933105C802}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9AD798F-9937-49D3-B11B-F4933105C802}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9AD798F-9937-49D3-B11B-F4933105C802}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A5DEBEC-0947-44D3-B65A-14DF94FC779B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A5DEBEC-0947-44D3-B65A-14DF94FC779B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A5DEBEC-0947-44D3-B65A-14DF94FC779B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A5DEBEC-0947-44D3-B65A-14DF94FC779B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56B49795-BCD8-4F6A-A04C-A26B3756A48D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56B49795-BCD8-4F6A-A04C-A26B3756A48D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56B49795-BCD8-4F6A-A04C-A26B3756A48D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56B49795-BCD8-4F6A-A04C-A26B3756A48D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C7DDEE4D-A9CC-4177-8179-FA425F4FD063} = {22195FBD-5D67-4673-A782-93BA5223B533}
+		{56B49795-BCD8-4F6A-A04C-A26B3756A48D} = {22195FBD-5D67-4673-A782-93BA5223B533}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5F858A8A-9462-4611-8FAF-96692EE6EC14}
