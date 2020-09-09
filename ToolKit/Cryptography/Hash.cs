@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
@@ -169,7 +169,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         private sealed class Crc32Algorithm : HashAlgorithm
         {
-            private static readonly uint _defaultPolynomial = 0xEDB88320;
+            private const uint DefaultPolynomial = 0xEDB88320;
             private uint _hash;
             private uint[] _table;
 
@@ -201,7 +201,7 @@ namespace ToolKit.Cryptography
 
                     for (var j = 0; j < 8; j++)
                     {
-                        entry = (entry & 1) == 1 ? (entry >> 1) ^ _defaultPolynomial : entry >> 1;
+                        entry = (entry & 1) == 1 ? (entry >> 1) ^ DefaultPolynomial : entry >> 1;
                     }
 
                     _table[i] = entry;

@@ -2,13 +2,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
+    /// <summary>
+    /// Specifies the ACE type.
+    /// </summary>
     [SuppressMessage(
         "Microsoft.Naming",
         "CA1707:IdentifiersShouldNotContainUnderscores",
         Justification = "This enumeration represents Win32API which include underscores.")]
-    /// <summary>
-    /// Specifies the ACE type.
-    /// </summary>
     public enum ADS_ACETYPE
     {
         /// <summary>

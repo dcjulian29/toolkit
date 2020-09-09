@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
@@ -41,7 +41,6 @@ namespace ToolKit.Cryptography
                               PasswordComplexity.NoConsecutiveCharacters;
         }
 
-        /// <inheritdoc/>
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ToolKit.Cryptography.PasswordGenerator"/> class.
         /// </summary>
@@ -59,7 +58,7 @@ namespace ToolKit.Cryptography
         public string Exclusions { get; set; } = String.Empty;
 
         /// <summary>
-        /// Gets or sets the inclusion of extended symbols
+        /// Gets or sets a value indicating whether inclusion of extended symbols is used.
         /// </summary>
         public bool IncludeExtended
         {
@@ -69,7 +68,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the inclusion of lower-case characters
+        /// Gets or sets a value indicating whether inclusion of lower-case characters is used.
         /// </summary>
         public bool IncludeLowerCase
         {
@@ -79,7 +78,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the inclusion of numbers in the password
+        /// Gets or sets a value indicating whether inclusion of numbers is used.
         /// </summary>
         public bool IncludeNumbers
         {
@@ -89,7 +88,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the inclusion of symbols in the password
+        /// Gets or sets a value indicating whether inclusion of symbols is used.
         /// </summary>
         public bool IncludeSymbols
         {
@@ -99,7 +98,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the inclusion of upper-case characters in the password
+        /// Gets or sets a value indicating whether inclusion of upper-case characters is used.
         /// </summary>
         public bool IncludeUpperCase
         {
@@ -114,7 +113,7 @@ namespace ToolKit.Cryptography
         public PasswordComplexity PasswordOptions { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to allow consecutive characters
+        /// Gets or sets a value indicating whether to allow consecutive characters
         /// </summary>
         public bool ProhibitConsecutiveCharacters
         {
@@ -124,7 +123,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets whether to allow any character to be used more than once
+        /// Gets or sets a value indicating whether to allow any character to be used more than once
         /// </summary>
         public bool ProhibitRepeatingCharacters
         {
@@ -195,7 +194,8 @@ namespace ToolKit.Cryptography
                     {
                         iterations++;
                     }
-                } while (!charResult);
+                }
+                while (!charResult);
 
                 newPassword.Append(nextCharacter);
                 usedCharacters.Add(nextCharacter);

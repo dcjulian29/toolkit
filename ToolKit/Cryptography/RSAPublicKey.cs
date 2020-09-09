@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -84,7 +83,7 @@ namespace ToolKit.Cryptography
         /// Loads public key from an X509 Certificate.
         /// </summary>
         /// <param name="certificateFileName">Name of the certificate file.</param>
-        /// <param name="filePassword">Passwrod of the certificate file.</param>
+        /// <param name="filePassword">Password of the certificate file.</param>
         /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
         public static RsaPublicKey LoadFromCertificateFile(string certificateFileName, string filePassword)
         {
@@ -212,7 +211,7 @@ namespace ToolKit.Cryptography
                 return s;
             }
 
-            throw new ApplicationException($"key <{key}> is missing from the Envioronment");
+            throw new ArgumentException($"key <{key}> is missing from the Environment");
         }
 
         private static string ReadXmlElement(string xml, string element)

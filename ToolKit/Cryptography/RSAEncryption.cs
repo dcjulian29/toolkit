@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 using Common.Logging;
@@ -48,7 +48,7 @@ namespace ToolKit.Cryptography
         public RsaPublicKey DefaultPublicKey => RsaPublicKey.LoadFromEnvironment();
 
         /// <summary>
-        /// Gets or sets the name of the key container used to store this key on disk; this is an
+        /// Gets the name of the key container used to store this key on disk; this is an
         /// unavoidable side effect of the underlying Microsoft CryptoAPI.
         /// </summary>
         public string KeyContainerName { get; } = "ToolKit.AsymmetricEncryption.DefaultContainerName";
