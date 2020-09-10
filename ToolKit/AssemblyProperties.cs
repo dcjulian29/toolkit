@@ -1,20 +1,17 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Common.Logging;
 
 namespace ToolKit
 {
     /// <summary>
     /// This class wraps several properties that can be determined by reflection on the Assembly
     /// </summary>
-    public class AssemblyProperties
+    public static class AssemblyProperties
     {
-        private static ILog _log = LogManager.GetLogger<AssemblyProperties>();
-
         /// <summary>
         /// Return the build number of the file containing an assembly.
         /// </summary>
@@ -280,11 +277,11 @@ namespace ToolKit
 
         private static Assembly LoadAssembly(string fileName)
         {
-            var assembly = Assembly.LoadFile(fileName);
+            var assembly = Assembly.Load(fileName);
 
             if (assembly == null)
             {
-                throw new NullReferenceException("Unable to obtain a valid Assembly!");
+                throw new FileLoadException("Unable to obtain a valid Assembly!");
             }
 
             return assembly;

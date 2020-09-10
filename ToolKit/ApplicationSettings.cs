@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -33,7 +33,7 @@ namespace ToolKit
                 var fullPath = Assembly.GetAssembly(typeof(T)).Location;
                 var pathDirectory = Path.GetDirectoryName(fullPath);
                 var separator = Path.DirectorySeparatorChar;
-                var potentialFileName = String.Format("{0}{1}{2}", pathDirectory, separator, fileName);
+                var potentialFileName = $"{pathDirectory}{separator}{fileName}";
 
                 if (File.Exists(potentialFileName))
                 {
@@ -46,7 +46,7 @@ namespace ToolKit
                 return default(T);
             }
 
-            _log.DebugFormat("Loading application settings from {0}", fileName);
+            _log.Debug($"Loading application settings from {fileName}");
 
             var serializer = new XmlSerializer(typeof(T));
 
