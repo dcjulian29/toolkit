@@ -64,6 +64,7 @@ if (branch != "master") {
 }
 
 var msbuildSettings = new MSBuildSettings {
+    ArgumentCustomization = args => args.Append("/consoleloggerparameters:ErrorsOnly"),
     Configuration = configuration,
     ToolVersion = MSBuildToolVersion.VS2019,
     NodeReuse = false,
@@ -106,7 +107,9 @@ Task("Clean")
     .Does(() =>
     {
         CleanDirectories(buildDirectory);
-        MSBuild(solutionFile, msbuildSettings.WithTarget("Clean"));
+        CleanDirectories(baseDirectory + "/**/bin");
+        CleanDirectories(baseDirectory + "/**/obj");
+        CleanDirectories(packageDirectory);
     });
 
 Task("Init")
