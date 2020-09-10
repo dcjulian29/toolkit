@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using FluentNHibernate.Cfg.Db;
 
 namespace ToolKit.Data.NHibernate.UnitTests
@@ -56,13 +57,22 @@ namespace ToolKit.Data.NHibernate.UnitTests
         /// </summary>
         public override void InitializeDatabase(Action initialization)
         {
-            // SchemaExport doesn't recreate the file/schema on subsequent initializations.
-            if (!_databaseCreated && File.Exists($"{_callingClass}.db"))
-            {
-                File.Delete($"{_callingClass}.db");
-            }
+            Monitor.Enter(_lock);
 
-            initialization();
+            try
+            {
+                // SchemaExport doesn't recreate the file/schema on subsequent initializations.
+                if (!_databaseCreated && File.Exists($"{_callingClass}.db"))
+                {
+                    File.Delete($"{_callingClass}.db");
+                }
+
+                initialization();
+            }
+            finally
+            {
+                Monitor.Exit(_lock);
+            }
         }
 
         protected override IPersistenceConfigurer DatabaseConfigurer()
