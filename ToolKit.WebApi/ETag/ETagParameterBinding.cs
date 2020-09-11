@@ -36,27 +36,35 @@ namespace ToolKit.WebApi.ETag
         /// </param>
         /// <param name="cancellationToken">Cancellation token for canceling the binding operation.</param>
         /// <returns>A task object representing the asynchronous operation.</returns>
-        public override Task ExecuteBindingAsync(ModelMetadataProvider metadataProvider,
-            HttpActionContext actionContext, CancellationToken cancellationToken)
+        public override Task ExecuteBindingAsync(
+            ModelMetadataProvider metadataProvider,
+            HttpActionContext actionContext,
+            CancellationToken cancellationToken)
         {
             EntityTagHeaderValue etagHeader = null;
-            switch (_match)
-            {
-                case ETagMatch.IfNoneMatch:
-                    etagHeader = actionContext.Request.Headers.IfNoneMatch.FirstOrDefault();
-                    break;
 
-                case ETagMatch.IfMatch:
-                    etagHeader = actionContext.Request.Headers.IfMatch.FirstOrDefault();
-                    break;
-            }
-
-            ETag etag = null;
-            if (etagHeader != null)
+            if (actionContext != null)
             {
-                etag = new ETag { Tag = etagHeader.Tag };
+                switch (_match)
+                {
+                    case ETagMatch.IfNoneMatch:
+                        etagHeader = actionContext.Request.Headers.IfNoneMatch.FirstOrDefault();
+                        break;
+
+                    case ETagMatch.IfMatch:
+                        etagHeader = actionContext.Request.Headers.IfMatch.FirstOrDefault();
+                        break;
+                }
+
+                EntityTag etag = null;
+
+                if (etagHeader != null)
+                {
+                    etag = new EntityTag { Tag = etagHeader.Tag };
+                }
+
+                actionContext.ActionArguments[Descriptor.ParameterName] = etag;
             }
-            actionContext.ActionArguments[Descriptor.ParameterName] = etag;
 
             var tsc = new TaskCompletionSource<object>();
             tsc.SetResult(null);

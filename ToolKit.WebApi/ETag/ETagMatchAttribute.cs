@@ -28,10 +28,11 @@ namespace ToolKit.WebApi.ETag
         /// <returns>The parameter binding.</returns>
         public override HttpParameterBinding GetBinding(HttpParameterDescriptor parameter)
         {
-            if (parameter.ParameterType == typeof(ETag))
+            if (parameter?.ParameterType == typeof(EntityTag))
             {
                 return new ETagParameterBinding(parameter, _match);
             }
+
             return parameter.BindAsError("Wrong parameter type");
         }
     }

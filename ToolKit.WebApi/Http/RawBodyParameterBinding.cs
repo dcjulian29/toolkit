@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -48,7 +48,7 @@ namespace ToolKit.WebApi.Http
             HttpActionContext actionContext,
             CancellationToken cancellationToken)
         {
-            var binding = actionContext.ActionDescriptor.ActionBinding;
+            var binding = actionContext?.ActionDescriptor.ActionBinding;
 
             if (actionContext.Request.Method == HttpMethod.Get)
             {
@@ -67,10 +67,11 @@ namespace ToolKit.WebApi.Http
                 return actionContext.Request.Content.ReadAsStringAsync().ContinueWith(
                     (task) =>
                     {
-                        var stringResult = task.Result;
-                        SetValue(actionContext, stringResult);
+                        SetValue(actionContext, task.Result);
                     },
-                    cancellationToken);
+                    cancellationToken,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Current);
             }
 
             if (type == typeof(byte[]))
@@ -78,10 +79,11 @@ namespace ToolKit.WebApi.Http
                 return actionContext.Request.Content.ReadAsByteArrayAsync().ContinueWith(
                     (task) =>
                     {
-                        var result = task.Result;
-                        SetValue(actionContext, result);
+                        SetValue(actionContext, task.Result);
                     },
-                    cancellationToken);
+                    cancellationToken,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Current);
             }
 
             throw new InvalidOperationException("Non-supported parameter type!");
