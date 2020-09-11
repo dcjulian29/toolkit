@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Common.Logging;
@@ -6,20 +7,20 @@ using Common.Logging;
 namespace ToolKit.Data.EntityFramework
 {
     /// <summary>
-    /// Maintains a list of objects affected by a business transaction and 
-    /// coordinates the writing out of changes and the resolution of 
-    /// concurrency problems.
+    /// Maintains a list of objects affected by a business transaction and coordinates the writing
+    /// out of changes and the resolution of concurrency problems.
     /// </summary>
     public class EntityFrameworkUnitOfWork : DbContext, IUnitOfWork
     {
         private static ILog _log = LogManager.GetLogger<EntityFrameworkUnitOfWork>();
 
-        private bool _rollbackOnDispose = false;
+        private readonly DbContextTransaction _transaction;
 
-        private DbContextTransaction _transaction;
+        private bool _disposed;
+        private bool _rollbackOnDispose;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntityFrameworkUnitOfWork"/> class.
+        /// Initializes a new instance of the <see cref="EntityFrameworkUnitOfWork" /> class.
         /// </summary>
         public EntityFrameworkUnitOfWork()
         {
@@ -27,9 +28,9 @@ namespace ToolKit.Data.EntityFramework
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntityFrameworkUnitOfWork"/> class.
+        /// Initializes a new instance of the <see cref="EntityFrameworkUnitOfWork" /> class.
         /// </summary>
-        /// <param name="nameOrConnectionString">Either the database name or a connection string. </param>
+        /// <param name="nameOrConnectionString">Either the database name or a connection string.</param>
         public EntityFrameworkUnitOfWork(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
@@ -59,30 +60,22 @@ namespace ToolKit.Data.EntityFramework
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing,
-        /// or resetting unmanaged resources.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting
+        /// unmanaged resources.
         /// </summary>
+        /// <exception cref="ArgumentNullException">
+        /// When requesting the runtime to not call the finalize, this object is null.
+        /// </exception>
         public new void Dispose()
         {
-            if (_rollbackOnDispose)
-            {
-                _log.Warn("Rolling back Unit Of Work Transaction...");
-                _transaction.Rollback();
-            }
-            else
-            {
-                SaveChanges();
-                _transaction.Commit();
-            }
-
-            _transaction.Dispose();
-            base.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
-        /// Gets a <see cref="T:System.Data.Entity.Infrastructure.DbEntityEntry"/> object for the
-        /// given entity providing access to information about the entity and the ability
-        /// to perform actions on the entity.
+        /// Gets a <see cref="T:System.Data.Entity.Infrastructure.DbEntityEntry" /> object for the
+        /// given entity providing access to information about the entity and the ability to perform
+        /// actions on the entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>An entry for the entity.</returns>
@@ -96,7 +89,8 @@ namespace ToolKit.Data.EntityFramework
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <returns>
-        /// An instance of the entity that can be used by the Repository implementation to further query the results.
+        /// An instance of the entity that can be used by the Repository implementation to further
+        /// query the results.
         /// </returns>
         public IQueryable<T> Get<T>() where T : class
         {
@@ -118,6 +112,11 @@ namespace ToolKit.Data.EntityFramework
         /// <param name="entity">The entity.</param>
         public void Save<T>(T entity) where T : class
         {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             var method = entity.GetType().GetMethod("IsTransient");
 
             if (method != null)
@@ -131,6 +130,37 @@ namespace ToolKit.Data.EntityFramework
             {
                 Set<T>().Add(entity);
             }
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing">
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+        /// only unmanaged resources.
+        /// </param>
+        protected override void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                base.Dispose(disposing);
+                return;
+            }
+
+            if (_rollbackOnDispose)
+            {
+                _log.Warn("Rolling back Unit Of Work Transaction...");
+                _transaction.Rollback();
+            }
+            else
+            {
+                SaveChanges();
+                _transaction.Commit();
+            }
+
+            _transaction.Dispose();
+            base.Dispose(disposing);
+            _disposed = true;
         }
     }
 }
