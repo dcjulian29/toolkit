@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using ToolKit.Cryptography;
@@ -149,7 +149,7 @@ namespace UnitTests.Cryptography
         public void LoadFromConfig_Should_ThrowExceptionWhenConfigAppSettingsEmpty()
         {
             // Arrange & Act & Assert
-            Assert.Throws<ApplicationException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 var key = RsaPublicKey.LoadFromEnvironment();
             });

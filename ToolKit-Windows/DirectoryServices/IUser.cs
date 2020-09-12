@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices
 {
@@ -120,6 +121,9 @@ namespace ToolKit.DirectoryServices
         /// Gets the GUID of the user object.
         /// </summary>
         /// <value>The GUID of the user object.</value>
+        [SuppressMessage("Naming",
+            "CA1720:Identifier contains type name",
+            Justification = "Too Bad. It is what it is.")]
         Guid Guid { get; }
 
         /// <summary>

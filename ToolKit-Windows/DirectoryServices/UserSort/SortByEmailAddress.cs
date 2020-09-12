@@ -37,6 +37,11 @@ namespace ToolKit.DirectoryServices.UserSort
         /// </returns>
         public int Compare(IUser x, IUser y)
         {
+            if ((x == null) || (y == null))
+            {
+                return 0;
+            }
+
             var compare = String.CompareOrdinal(x.EmailAddress, y.EmailAddress);
 
             switch (compare)

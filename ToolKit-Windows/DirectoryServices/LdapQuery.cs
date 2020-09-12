@@ -9,8 +9,6 @@ namespace ToolKit.DirectoryServices
     /// </summary>
     public class LdapQuery : DisposableObject
     {
-        private static ILog _log = LogManager.GetLogger<LdapQuery>();
-
         private DirectoryEntry _directoryEntry;
         private DirectorySearcher _directorySearcher;
         private string _ldapFilter;
@@ -78,7 +76,7 @@ namespace ToolKit.DirectoryServices
         /// <param name="filter">The search filter string in LDAP format.</param>
         /// <param name="globalCatalog">if set to <c>true</c>, use the global catalog.</param>
         public LdapQuery(DistinguishedName dn, string filter, bool globalCatalog)
-            : this(globalCatalog ? dn.GcPath : dn.LdapPath, filter)
+            : this(globalCatalog ? dn?.GcPath : dn?.LdapPath, filter)
         {
         }
 
@@ -89,7 +87,7 @@ namespace ToolKit.DirectoryServices
         /// <param name="filter">The search filter string in LDAP format.</param>
         /// <param name="globalCatalog">if set to <c>true</c>, use the global catalog.</param>
         public LdapQuery(DistinguishedName dn, LdapFilter filter, bool globalCatalog)
-            : this(dn, filter.ToString(), globalCatalog)
+            : this(dn, filter?.ToString(), globalCatalog)
         {
         }
 

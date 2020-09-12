@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
@@ -117,7 +118,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                     var expiration = GetNodeValue("//DirectoryObject/accountexpires");
                     return String.IsNullOrEmpty(expiration)
                         ? DateTime.MaxValue
-                        : DateTime.FromFileTimeUtc(Convert.ToInt64(expiration));
+                        : DateTime.FromFileTimeUtc(Convert.ToInt64(expiration, CultureInfo.InvariantCulture));
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -135,7 +136,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/badpwdcount"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/badpwdcount"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -148,7 +149,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 var nodeValue = GetNodeValue("//DirectoryObject/badpasswordtime");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -232,7 +233,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/countrycode"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/countrycode"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -301,7 +302,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the the distinguished name of the user account.
+        /// Gets the distinguished name of the user account.
         /// </summary>
         /// <value>The distinguished name of the user account.</value>
         public string DistinguishedName
@@ -364,6 +365,9 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the user object.
         /// </summary>
         /// <value>The GUID of the user object.</value>
+        [SuppressMessage("Naming",
+            "CA1720:Identifier contains type name",
+            Justification = "Too Bad. It is what it is.")]
         public Guid Guid
         {
             get
@@ -429,7 +433,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 var nodeValue = GetNodeValue("//DirectoryObject/lastlogoff");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -442,7 +446,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 var nodeValue = GetNodeValue("//DirectoryObject/lastlogon");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -455,7 +459,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 var nodeValue = GetNodeValue("//DirectoryObject/lastlogontimestamp");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -479,7 +483,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/logoncount"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/logoncount"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -603,7 +607,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 var nodeValue = GetNodeValue("//DirectoryObject/pwdlastset");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -639,7 +643,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/primarygroupid"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/primarygroupid"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -760,7 +764,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -772,7 +776,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -784,7 +788,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/useraccountcontrol"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/useraccountcontrol"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -829,25 +833,26 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </summary>
         public void Disable()
         {
-            var de = ToDirectoryEntry();
-
-            try
+            using (var de = ToDirectoryEntry())
             {
-                var uac = (int)de.Properties["userAccountControl"].Value;
+                try
+                {
+                    var uac = (int)de.Properties["userAccountControl"].Value;
 
-                de.Properties["userAccountControl"].Value = uac | (int)ADS_USER_FLAG.ACCOUNTDISABLE;
+                    de.Properties["userAccountControl"].Value = uac | (int)ADS_USER_FLAG.ACCOUNTDISABLE;
 
-                de.CommitChanges();
-            }
-            catch (DirectoryServicesCOMException ex)
-            {
-                _log.Error(m => m("Unable to Disable Account! {0}", DistinguishedName), ex);
-                throw;
-            }
-            catch (UnauthorizedAccessException uaex)
-            {
-                _log.Error(m => m("Access Denied trying to disable {0}", DistinguishedName), uaex);
-                throw;
+                    de.CommitChanges();
+                }
+                catch (DirectoryServicesCOMException ex)
+                {
+                    _log.Error($"Unable to Disable Account! {DistinguishedName}", ex);
+                    throw;
+                }
+                catch (UnauthorizedAccessException uaex)
+                {
+                    _log.Error($"Access Denied trying to disable {DistinguishedName}", uaex);
+                    throw;
+                }
             }
         }
 
@@ -857,7 +862,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if this user is an administrative account; otherwise, <c>false</c>.</returns>
         public bool IsAdministrativeAccount()
         {
-            return SamAccountName.ToUpper(CultureInfo.InvariantCulture).EndsWith("-ADM")
+            return SamAccountName.EndsWith("-ADM", StringComparison.InvariantCultureIgnoreCase)
                 || DistinguishedName.Contains(",OU=Administrative Accounts,");
         }
 
@@ -867,7 +872,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if this user is an application account; otherwise, <c>false</c>.</returns>
         public bool IsApplicationAccount()
         {
-            return SamAccountName.ToUpper(CultureInfo.InvariantCulture).EndsWith("-APP")
+            return SamAccountName.EndsWith("-APP", StringComparison.InvariantCultureIgnoreCase)
                 || DistinguishedName.Contains(",OU=Application Accounts,");
         }
 
@@ -886,7 +891,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if this user is an service account; otherwise, <c>false</c>.</returns>
         public bool IsServiceAccount()
         {
-            return SamAccountName.ToUpper(CultureInfo.InvariantCulture).EndsWith("-SVC")
+            return SamAccountName.EndsWith("-SVC", StringComparison.InvariantCultureIgnoreCase)
                 || DistinguishedName.Contains(",OU=Service Accounts,");
         }
 
