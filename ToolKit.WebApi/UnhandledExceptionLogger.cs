@@ -37,7 +37,7 @@ namespace ToolKit.WebApi
             }
             else
             {
-                _log.Fatal("A unhandled exception occurred and no Exception Logger was configured!");
+                _log.Fatal("A non-handled exception occurred and no Exception Logger was configured!");
             }
         }
     }
