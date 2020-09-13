@@ -27,12 +27,12 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             if (String.IsNullOrEmpty(domainName))
             {
-                throw new ArgumentNullException("domainName");
+                throw new ArgumentNullException(nameof(domainName));
             }
 
             if (String.IsNullOrEmpty(nameOfGpo))
             {
-                throw new ArgumentNullException("nameOfGpo");
+                throw new ArgumentNullException(nameof(nameOfGpo));
             }
 
             DomainName = domainName;
@@ -46,20 +46,20 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 var domainObject = Domain.GetDomain(context).GetDirectoryEntry();
 
                 dn = (string)domainObject.Properties["distinguishedName"][0];
-                _log.Debug(m => m("_DomainDN: {0}", dn));
+                _log.Debug($"_DomainDN: {dn}");
             }
             catch (Exception ex)
             {
-                _log.Error(m => m("Could not find domain: {0}", domainName), ex);
+                _log.Error($"Could not find domain: {domainName}", ex);
                 throw;
             }
 
             // Let look up the GPO and put the information into the properties
-            _log.Debug(m => m("Looking up GPO: {0}", nameOfGpo));
+            _log.Debug($"Looking up GPO: {nameOfGpo}");
 
             try
             {
-                var name = String.Format("CN=Policies,CN=System,{0}", dn);
+                var name = $"CN=Policies,CN=System,{dn}";
                 var path = DirectoryServices.DistinguishedName.Parse(name);
                 var filter = new LdapFilter("displayName", "=", nameOfGpo);
 
@@ -68,12 +68,12 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                     var result = query.FindOne();
 
                     DistinguishedName = result.Properties["distinguishedName"][0] as string;
-                    _log.DebugFormat("GPO DistinguishedName: {0}", DistinguishedName);
+                    _log.Debug($"GPO DistinguishedName: {DistinguishedName}");
                 }
             }
             catch (Exception ex)
             {
-                _log.Error(m => m("Could not find GPO: {0}. Exception: {1}", nameOfGpo, ex.Message), ex);
+                _log.Error($"Could not find GPO: {nameOfGpo}. Exception: {ex.Message}", ex);
                 throw;
             }
         }
@@ -122,7 +122,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="place">The place(index) to insert the GPO at</param>
         public void InsertAt(string distinguishedNameOfOu, int place)
         {
-            var thisLink = String.Format("[LDAP://{0};0]", DistinguishedName);
+            var thisLink = $"[LDAP://{DistinguishedName};0]";
             string oldGpLink;
             var newGpLink = String.Empty;
 
@@ -131,11 +131,11 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             using (var entry = new DirectoryEntry(path.LdapPath))
             {
                 var pathOfOu = entry.Path;
-                _log.Debug(m => m("OU Distinguished Name: {0}", pathOfOu));
+                _log.Debug($"OU Distinguished Name: {pathOfOu}");
 
                 var link = (entry.Properties["GPLink"].Value as string) ?? String.Empty;
 
-                _log.Debug(m => m("oldGPLink: {0}", link));
+                _log.Debug($"oldGPLink: {link}");
 
                 oldGpLink = link;
             }
@@ -176,7 +176,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 newGpLink = thisLink;
             }
 
-            _log.Debug(m => m("newGPLink: {0}", newGpLink));
+            _log.Debug($"newGPLink: {newGpLink}");
 
             // Commit the change back to to the OU
             using (var entry = new DirectoryEntry(path.LdapPath))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
@@ -181,7 +182,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/countrycode"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/countrycode"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -288,6 +289,9 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the contact object.
         /// </summary>
         /// <value>The GUID of the contact object.</value>
+        [SuppressMessage("Naming",
+            "CA1720:Identifier contains type name",
+            Justification = "Too Bad. It is what it is.")]
         public Guid Guid
         {
             get
@@ -535,7 +539,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -547,7 +551,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"), CultureInfo.CurrentCulture);
             }
         }
 

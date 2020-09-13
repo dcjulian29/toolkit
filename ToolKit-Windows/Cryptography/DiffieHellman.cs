@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,6 +10,9 @@ namespace ToolKit.Cryptography
     /// A class to simplify Diffie-Hellman key exchange.
     /// </summary>
     /// <seealso cref="ToolKit.DisposableObject"/>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules",
+        "SA1650:ElementDocumentationMustBeSpelledCorrectly",
+        Justification = "Can't change the person's name")]
     public class DiffieHellman : DisposableObject
     {
         private readonly ECDiffieHellmanCng _dh;
@@ -47,10 +51,27 @@ namespace ToolKit.Cryptography
         /// <param name="publicKey">The public key of the other side.</param>
         /// <param name="encrypted">The encrypted data.</param>
         /// <param name="iv">The initialization vector of the other side.</param>
-        /// <returns></returns>
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        /// <returns>The decrypted data.</returns>
+        [SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times",
+            Justification = "Why does it think it gets disposed multiple times?")]
         public EncryptionData Decrypt(EncryptionData publicKey, EncryptionData encrypted, EncryptionData iv)
         {
+            if (publicKey == null)
+            {
+                throw new ArgumentNullException(nameof(publicKey));
+            }
+
+            if (encrypted == null)
+            {
+                throw new ArgumentNullException(nameof(encrypted));
+            }
+
+            if (iv == null)
+            {
+                throw new ArgumentNullException(nameof(iv));
+            }
+
             var decryptedMessage = new EncryptionData
             {
                 EncodingToUse = Encoding.UTF8
@@ -91,10 +112,22 @@ namespace ToolKit.Cryptography
         /// </summary>
         /// <param name="publicKey">The public key.</param>
         /// <param name="secretMessage">The secret.</param>
-        /// <returns></returns>
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        /// <returns>The encrypted data.</returns>
+        [SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times",
+            Justification = "Why does it think it gets disposed multiple times?")]
         public EncryptionData Encrypt(EncryptionData publicKey, EncryptionData secretMessage)
         {
+            if (publicKey == null)
+            {
+                throw new ArgumentNullException(nameof(publicKey));
+            }
+
+            if (secretMessage == null)
+            {
+                throw new ArgumentNullException(nameof(secretMessage));
+            }
+
             var encryptedMessage = new EncryptionData()
             {
                 EncodingToUse = Encoding.UTF8
@@ -105,12 +138,8 @@ namespace ToolKit.Cryptography
 
             _encryptor.Key = derivedKey;
 
-            MemoryStream stream = null;
-
-            try
+            using (var stream = new MemoryStream())
             {
-                stream = new MemoryStream();
-
                 using (var encryption = _encryptor.CreateEncryptor())
                 {
                     using (var cryptStream = new CryptoStream(stream, encryption, CryptoStreamMode.Write))
@@ -120,13 +149,7 @@ namespace ToolKit.Cryptography
                     }
 
                     encryptedMessage.Bytes = stream.ToArray();
-
-                    stream = null;
                 }
-            }
-            finally
-            {
-                stream?.Dispose();
             }
 
             return encryptedMessage;

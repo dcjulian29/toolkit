@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
@@ -106,7 +107,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                         return DateTime.MaxValue;
                     }
 
-                    return DateTime.FromFileTimeUtc(Convert.ToInt64(expiration));
+                    return DateTime.FromFileTimeUtc(Convert.ToInt64(expiration, CultureInfo.InvariantCulture));
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -124,7 +125,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/badpwdcount"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/badpwdcount"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -137,7 +138,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 var nodeValue = GetNodeValue("//DirectoryObject/badpasswordtime");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -185,7 +186,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/useraccountcontrol"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/useraccountcontrol"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -197,7 +198,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/countrycode"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/countrycode"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -273,7 +274,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return base.NetBiosDomain;
+                return NetBiosDomain;
             }
         }
 
@@ -293,13 +294,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the computer object.
         /// </summary>
         /// <value>The GUID of the computer object.</value>
-        public Guid Guid
-        {
-            get
-            {
-                return new Guid(HexEncoding.ToBytes(GetNodeValue("//DirectoryObject/objectguid")));
-            }
-        }
+        [SuppressMessage("Naming",
+            "CA1720:Identifier contains type name",
+            Justification = "Too Bad. It is what it is.")]
+        public Guid Guid => new Guid(HexEncoding.ToBytes(GetNodeValue("//DirectoryObject/objectguid")));
 
         /// <summary>
         /// Gets the last logoff date and time of the computer account.
@@ -310,7 +308,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 string nodeValue = GetNodeValue("//DirectoryObject/lastlogoff");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -323,7 +321,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 string nodeValue = GetNodeValue("//DirectoryObject/lastlogontimestamp");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -347,7 +345,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/logoncount"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/logoncount"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -435,7 +433,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             get
             {
                 string nodeValue = GetNodeValue("//DirectoryObject/pwdlastset");
-                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue));
+                return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
 
@@ -447,7 +445,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/primarygroupid"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/primarygroupid"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -496,7 +494,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -508,7 +506,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -550,12 +548,12 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             // Samba servers do not report their OS, so it is customary to put the server in a
             // special OU.
-            if (DistinguishedName.ToUpper(CultureInfo.InvariantCulture).Contains(",OU=SAMBA"))
+            if (DistinguishedName.IndexOf(",OU=SAMBA", StringComparison.InvariantCultureIgnoreCase) >= 0)
             {
                 return true;
             }
 
-            if (OperatingSystem.ToLower(CultureInfo.InvariantCulture).Contains("server"))
+            if (OperatingSystem.IndexOf("SERVER", StringComparison.InvariantCultureIgnoreCase) >= 0)
             {
                 return true;
             }

@@ -14,7 +14,15 @@
     <ItemGroup>
         <PackageReference Include="Common.Logging" Version="3.4.1" />
         <PackageReference Include="FluentNHibernate" Version="2.1.2" />
+        <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="NHibernate" Version="5.1.2" />
+        <PackageReference Include="StyleCop.MSBuild" Version="6.2.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">

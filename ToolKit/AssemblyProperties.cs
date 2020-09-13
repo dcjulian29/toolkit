@@ -277,7 +277,7 @@ namespace ToolKit
 
         private static Assembly LoadAssembly(string fileName)
         {
-            var assembly = Assembly.Load(fileName);
+            var assembly = Assembly.LoadFile(fileName);
 
             if (assembly == null)
             {

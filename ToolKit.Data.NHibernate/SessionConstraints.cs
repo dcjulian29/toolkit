@@ -1,5 +1,4 @@
-﻿using Common.Logging;
-using NHibernate;
+﻿using NHibernate;
 
 namespace ToolKit.Data.NHibernate
 {
@@ -8,7 +7,6 @@ namespace ToolKit.Data.NHibernate
     /// </summary>
     public class SessionConstraint
     {
-        private static ILog _log = LogManager.GetLogger<SessionConstraint>();
         private readonly ISession _session;
         private bool _nextBooleanValue = true;
 
@@ -51,7 +49,7 @@ namespace ToolKit.Data.NHibernate
         /// <returns><c>true</c> if the session is in an active transaction; otherwise, <c>false</c>.</returns>
         public bool InTransaction()
         {
-            var sessionInTransaction = _session.Transaction != null && _session.Transaction.IsActive;
+            var sessionInTransaction = _session.Transaction?.IsActive == true;
 
             return _nextBooleanValue ? sessionInTransaction : !sessionInTransaction;
         }
