@@ -14,7 +14,7 @@ namespace Toolkit.Data.EFCore
     /// </summary>
     public class EfCoreUnitOfWork : DbContext, IUnitOfWork
     {
-        private static ILog _log = LogManager.GetLogger<EfCoreUnitOfWork>();
+        private static readonly ILog _log = LogManager.GetLogger<EfCoreUnitOfWork>();
 
         private readonly IDbContextTransaction _transaction;
 
@@ -72,7 +72,7 @@ namespace Toolkit.Data.EFCore
         }
 
         /// <summary>
-        /// Gets a <see cref="T:System.Data.Entity.Infrastructure.EntityEntry" /> object for the
+        /// Gets a <see cref="Data.Entity.Infrastructure.EntityEntry" /> object for the
         /// given entity providing access to information about the entity and the ability to perform
         /// actions on the entity.
         /// </summary>
