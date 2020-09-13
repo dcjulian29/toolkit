@@ -101,8 +101,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             {
                 try
                 {
-                    string expiration = GetNodeValue("//DirectoryObject/accountexpires");
-                    if (String.IsNullOrEmpty(expiration))
+                    var expiration = GetNodeValue("//DirectoryObject/accountexpires");
+                    if (string.IsNullOrEmpty(expiration))
                     {
                         return DateTime.MaxValue;
                     }

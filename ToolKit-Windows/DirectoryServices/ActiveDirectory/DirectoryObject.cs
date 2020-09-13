@@ -501,15 +501,19 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 }
                 else
                 {
-                    if (node.Attributes != null && node.Attributes[0].InnerText == "System.String")
+                    if (node.Attributes?[0].InnerText == "System.String")
                     {
-                        value = XmlEncoder.Decode(node.InnerText);
-                        _log.Debug($"{xpathQuery} --> {value}");
+                        if (!String.IsNullOrEmpty(node.InnerText))
+                        {
+                            value = XmlEncoder.Decode(node.InnerText);
+                        }
+
+                        _log.Debug($"{xpathQuery} --> \"{value}\"");
                     }
                     else
                     {
                         value = node.InnerText;
-                        _log.Debug($"{xpathQuery} --> {value}");
+                        _log.Debug($"{xpathQuery} --> \"{value}\"");
                     }
                 }
             }

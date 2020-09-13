@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 
 namespace ToolKit.Validation
 {
     /// <summary>
     /// Provide common parameter checking.
     /// </summary>
-    public class Check
+    public static class Check
     {
         /// <summary>
         /// Check to validate that the parameter is not null.
@@ -16,12 +16,7 @@ namespace ToolKit.Validation
         /// <returns>The value of the parameter if it is not <c>null</c>.</returns>
         public static T NotNull<T>(T value, string parameterName) where T : class
         {
-            if ((object)value == null)
-            {
-                throw new ArgumentNullException(parameterName);
-            }
-
-            return value;
+            return value ?? throw new ArgumentNullException(parameterName);
         }
 
         /// <summary>

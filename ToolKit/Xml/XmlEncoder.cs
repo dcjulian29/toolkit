@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Text;
 using Common.Logging;
+using ToolKit.Validation;
 
 namespace ToolKit.Xml
 {
@@ -11,7 +12,7 @@ namespace ToolKit.Xml
     /// </summary>
     public static class XmlEncoder
     {
-        private static ILog _log = LogManager.GetLogger(typeof(XmlEncoder));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(XmlEncoder));
 
         /// <summary>
         /// Decodes a string to remove XML entity markups
@@ -20,10 +21,7 @@ namespace ToolKit.Xml
         /// <returns>an decoded string</returns>
         public static string Decode(string inputText)
         {
-            if (String.IsNullOrEmpty(inputText))
-            {
-                throw new ArgumentNullException("inputText");
-            }
+            inputText = Check.NotEmpty(inputText, nameof(inputText));
 
             // If the string doesn't have a & character, it doesn't have any entities.
             if (inputText.IndexOf('&') < 0)
@@ -44,7 +42,7 @@ namespace ToolKit.Xml
                 var ch = inputText[i];
                 if (ch != '&')
                 {
-                    sb.AppendFormat("{0}", ch);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", ch);
                     continue;
                 }
 
@@ -53,7 +51,7 @@ namespace ToolKit.Xml
                 // If the end marker is not ; then ignore this "entity" and continue on
                 if ((endOfEntity > 0) && (inputText[endOfEntity] == '&'))
                 {
-                    sb.AppendFormat("{0}", ch);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", ch);
                     continue;
                 }
 
@@ -67,17 +65,20 @@ namespace ToolKit.Xml
                         if ((entity[0] == 'x') || (entity[0] == 'X'))
                         {
                             // It's encoded in hexadecimal
-                            ch = (char)Int32.Parse(entity.Substring(2), NumberStyles.AllowHexSpecifier);
+                            ch = (char)int.Parse(
+                                entity.Substring(2),
+                                NumberStyles.AllowHexSpecifier,
+                                CultureInfo.InvariantCulture);
                         }
                         else
                         {
                             // It's encoded in decimal
-                            ch = (char)Int32.Parse(entity);
+                            ch = (char)int.Parse(entity, CultureInfo.InvariantCulture);
                         }
                     }
                     catch (FormatException fex)
                     {
-                        _log.Warn(inputText + ": " + fex.Message, fex);
+                        _log.Warn($"{inputText}: {fex.Message}", fex);
                         continue;
                     }
                     catch (ArgumentException aex)
@@ -126,7 +127,7 @@ namespace ToolKit.Xml
                 }
 
                 i = endOfEntity;
-                sb.AppendFormat("{0}", ch);
+                sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", ch);
             }
 
             return sb.ToString();
@@ -139,6 +140,7 @@ namespace ToolKit.Xml
         /// <returns>an encoded string</returns>
         public static string Encode(string inputText)
         {
+            inputText = Check.NotNull(inputText, nameof(inputText));
             var sb = new StringBuilder();
 
             foreach (var item in inputText)
@@ -168,13 +170,13 @@ namespace ToolKit.Xml
                             break;
 
                         default:
-                            sb.Append(item.ToString());
+                            sb.Append(item.ToString(CultureInfo.InvariantCulture));
                             break;
                     }
                 }
                 else
                 {
-                    sb.AppendFormat("&#{0};", ((int)item).ToString());
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "&#{0};", (int)item);
                 }
             }
 
