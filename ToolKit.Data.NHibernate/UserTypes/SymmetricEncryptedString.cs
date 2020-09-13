@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using Common.Logging;
 using NHibernate;
 using NHibernate.Engine;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
 using ToolKit.Cryptography;
+using ToolKit.Validation;
 
 namespace ToolKit.Data.NHibernate.UserTypes
 {
@@ -17,20 +19,13 @@ namespace ToolKit.Data.NHibernate.UserTypes
     /// </summary>
     public class SymmetricEncryptedString : IUserType, IParameterizedType
     {
-        private static EncryptionData _encryptionKey;
-        private static EncryptionData _initializationVector;
-        private static ILog _log = LogManager.GetLogger<SymmetricEncryptedString>();
-        private readonly SymmetricEncryption _encryptor = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael);
+        private static readonly ILog _log = LogManager.GetLogger<SymmetricEncryptedString>();
+        private static readonly string _hash = SHA256Hash.Create().Compute(new EncryptionData(Environment.MachineName));
 
-        /// <summary>
-        /// Initializes static members of the <see cref="SymmetricEncryptedString"/> class.
-        /// </summary>
-        static SymmetricEncryptedString()
-        {
-            var hash = SHA256Hash.Create().Compute(new EncryptionData(Environment.MachineName));
-            _encryptionKey = new EncryptionData(hash);
-            _initializationVector = new EncryptionData(hash);
-        }
+        private static EncryptionData _encryptionKey = new EncryptionData(_hash);
+        private static EncryptionData _initializationVector = new EncryptionData(_hash);
+
+        private readonly SymmetricEncryption _encryptor = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael);
 
         /// <summary>
         /// Gets or sets the encryption key to use when saving or reading from database.
@@ -41,7 +36,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
 
             set
             {
-                _log.Info(m => m("Changing the Encryption Key for SymmetricEncryptedStrings."));
+                _log.Info("Changing the Encryption Key for SymmetricEncryptedStrings.");
 
                 _encryptionKey = value;
             }
@@ -56,30 +51,33 @@ namespace ToolKit.Data.NHibernate.UserTypes
 
             set
             {
-                _log.Info(m => m("Changing the Initialization Vector for SymmetricEncryptedStrings."));
+                _log.Info("Changing the Initialization Vector for SymmetricEncryptedStrings.");
 
                 _initializationVector = value;
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
         /// Gets a value indicating whether this instance is mutable.
         /// </summary>
         /// <value><c>true</c> if this instance is mutable; otherwise, <c>false</c>.</value>
         public bool IsMutable => false;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
         /// Gets the type returned by <c>NullSafeGet</c>.
         /// </summary>
         /// <value>The type returned by <c>NullSafeGet</c>.</value>
-        public Type ReturnedType => typeof(String);
+        public Type ReturnedType => typeof(string);
 
         /// <summary>
-        /// Gets the SQL types for the columns mapped by this type. In this case just a SQL Type will
-        /// be returned: <seealso cref="DbType.String"/>
+        /// Gets the SQL types for the columns mapped by this type. In this case just a SQL Type
+        /// will be returned: <seealso cref="DbType.String" />
         /// </summary>
+        [SuppressMessage("Performance",
+            "CA1819:Properties should not return arrays",
+            Justification = "Constrained by the Interface")]
         public SqlType[] SqlTypes
         {
             get
@@ -105,9 +103,9 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// </summary>
         /// <param name="value">generally a collection element or entity field</param>
         /// <returns>a copy of the collection element or entity field</returns>
-        public object DeepCopy(object value) => value == null ? null : String.Copy((String)value);
+        public object DeepCopy(object value) => value == null ? null : String.Copy((string)value);
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
         /// Transform the object into its cacheable representation. At the very least this method
         /// should perform a deep copy if the type is mutable. That may not be enough for some
@@ -118,7 +116,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <returns>a cacheable representation of the object</returns>
         public object Disassemble(object value) => DeepCopy(value);
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
         /// Compare two instances of the class mapped by this type for persistent "equality" or
         /// equality of persistent state
@@ -136,15 +134,15 @@ namespace ToolKit.Data.NHibernate.UserTypes
             return x.Equals(y);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
         /// Get a hash code for the instance, consistent with persistence "equality"
         /// </summary>
         /// <param name="x">The object to calculate the hash code</param>
         /// <returns>the hash code.</returns>
-        public int GetHashCode(object x) => x == null ? 0 : x.GetHashCode();
+        public int GetHashCode(object x) => (x?.GetHashCode()) ?? 0;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
         /// Retrieve an instance of the mapped class from a ADO.Net result set. Classes that inherit
         /// from this class should handle possibility of null values.
@@ -156,6 +154,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <param name="session">the NHibernate session</param>
         public object NullSafeGet(DbDataReader rs, string[] names, ISessionImplementor session, object owner)
         {
+            names = Check.NotNull(names, nameof(names));
             var resultString = (string)NHibernateUtil.String.NullSafeGet(rs, names[0], session);
 
             if (resultString == null)
@@ -174,10 +173,10 @@ namespace ToolKit.Data.NHibernate.UserTypes
             return _encryptor.Decrypt(data).Text;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
-        /// Write an instance of the mapped class to a prepared statement. Handle possibility of null
-        /// values. A multi-column type should be written to parameters starting from index.
+        /// Write an instance of the mapped class to a prepared statement. Handle possibility of
+        /// null values. A multi-column type should be written to parameters starting from index.
         /// </summary>
         /// <param name="cmd">an object that implements the Database Command interface</param>
         /// <param name="value">the object to write</param>
@@ -204,8 +203,8 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// During merge, replace the existing (target) value in the entity we are merging to with a
         /// new (original) value from the detached entity we are merging. For immutable objects, or
         /// null values, it is safe to simply return the first parameter. For mutable objects, it is
-        /// safe to return a copy of the first parameter. For objects with component values, it might
-        /// make sense to recursively replace component values.
+        /// safe to return a copy of the first parameter. For objects with component values, it
+        /// might make sense to recursively replace component values.
         /// </summary>
         /// <param name="original">the value from the detached entity being merged</param>
         /// <param name="target">the value in the managed entity</param>
@@ -213,7 +212,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <returns>Returns the first parameter because it is immutable</returns>
         public object Replace(object original, object target, object owner) => original;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <summary>
         /// Gets called by Hibernate to pass the configured type parameters to the implementation.
         /// </summary>

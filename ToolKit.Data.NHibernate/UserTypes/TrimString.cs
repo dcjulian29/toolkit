@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using NHibernate;
 using NHibernate.Engine;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
+using ToolKit.Validation;
 
 namespace ToolKit.Data.NHibernate.UserTypes
 {
@@ -25,13 +27,16 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// Gets the type returned by <c>NullSafeGet</c>.
         /// </summary>
         /// <value>The type returned by <c>NullSafeGet</c>.</value>
-        public Type ReturnedType => typeof(String);
+        public Type ReturnedType => typeof(string);
 
         /// <inheritdoc/>
         /// <summary>
         /// Gets the SQL types for the columns mapped by this type. In this case just a SQL Type
-        /// will be returned: <seealso cref="F:System.Data.DbType.String"/>
+        /// will be returned: <seealso cref="DbType.String"/>
         /// </summary>
+        [SuppressMessage("Performance",
+            "CA1819:Properties should not return arrays",
+            Justification = "Constrained by the Interface")]
         public SqlType[] SqlTypes
         {
             get
@@ -90,19 +95,20 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// </summary>
         /// <param name="x">The object to calculate the hash code</param>
         /// <returns>the hash code.</returns>
-        public int GetHashCode(object x) => x == null ? 0 : x.GetHashCode();
+        public int GetHashCode(object x) => (x?.GetHashCode()) ?? 0;
 
         /// <summary>
         /// Retrieve an instance of the mapped class from a ADO.Net result set. Implementers should
         /// handle possibility of null values.
         /// </summary>
-        /// <param name="rs">a DbDataReader</param>
-        /// <param name="names">column names</param>
-        /// <param name="owner">the containing entity</param>
-        /// <param name="session">the NHibernate session</param>
+        /// <param name="rs">A Database DataReader</param>
+        /// <param name="names">Column Names</param>
+        /// <param name="session">NHibernate Session</param>
+        /// <param name="owner">The Containing Entity</param>
         /// <returns>Trimmed string or null</returns>
         public object NullSafeGet(DbDataReader rs, string[] names, ISessionImplementor session, object owner)
         {
+            names = Check.NotNull(names, nameof(names));
             var resultString = (string)NHibernateUtil.String.NullSafeGet(rs, names[0], session);
 
             return resultString?.Trim();

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using Common.Logging;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using NHibernate;
 using NHibernate.Engine;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
+using ToolKit.Validation;
 using static System.Int32;
 
 namespace ToolKit.Data.NHibernate.UserTypes
@@ -33,8 +35,11 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <inheritdoc/>
         /// <summary>
         /// Gets the SQL types for the columns mapped by this type. In this case just a SQL Type will
-        /// be returned: <seealso cref="F:NHibernate.SqlTypes.SqlTypeFactory.Int32"/>
+        /// be returned: <seealso cref="NHibernate.SqlTypes.SqlTypeFactory.Int32"/>
         /// </summary>
+        [SuppressMessage("Performance",
+            "CA1819:Properties should not return arrays",
+            Justification = "Constrained by the Interface")]
         public SqlType[] SqlTypes => new[] { SqlTypeFactory.Int32 };
 
         /// <inheritdoc/>
@@ -90,20 +95,21 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// </summary>
         /// <param name="x">The object to calculate the hash code</param>
         /// <returns>the hash code.</returns>
-        public int GetHashCode(object x) => x == null ? 0 : x.GetHashCode();
+        public int GetHashCode(object x) => (x?.GetHashCode()) ?? 0;
 
         /// <inheritdoc/>
         /// <summary>
         /// Retrieve an instance of the mapped class from a ADO.Net result set. Implementers should
         /// handle possibility of null values.
         /// </summary>
-        /// <param name="rs">a DbDataReader</param>
-        /// <param name="names">column names</param>
-        /// <param name="owner">the containing entity</param>
-        /// <param name="session">the NHibernate session</param>
+        /// <param name="rs">A Database DataReader</param>
+        /// <param name="names">Column Names</param>
+        /// <param name="session">NHibernate Session</param>
+        /// <param name="owner">The Containing Entity</param>
         /// <returns>A boolean object containing <c>true</c> or <c>false</c>.</returns>
         public object NullSafeGet(DbDataReader rs, string[] names, ISessionImplementor session, object owner)
         {
+            names = Check.NotNull(names, nameof(names));
             var result = NHibernateUtil.String.NullSafeGet(rs, names[0], session, owner);
 
             if (result == null)
@@ -111,13 +117,12 @@ namespace ToolKit.Data.NHibernate.UserTypes
                 return false;
             }
 
-            var i = 0;
-
+            int i;
             try
             {
-                i = result is string s ? Parse(s) : (int)result;
+                i = result is string s ? Parse(s, CultureInfo.InvariantCulture) : (int)result;
             }
-            catch (Exception)
+            catch (ArgumentNullException)
             {
                 return false;
             }
@@ -136,6 +141,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <param name="session">the NHibernate session</param>
         public void NullSafeSet(DbCommand cmd, object value, int index, ISessionImplementor session)
         {
+            cmd = Check.NotNull(cmd, nameof(cmd));
             if (value == null)
             {
                 ((IDataParameter)cmd.Parameters[index]).Value = 0;

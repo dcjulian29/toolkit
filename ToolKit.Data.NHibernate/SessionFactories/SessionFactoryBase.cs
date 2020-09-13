@@ -17,7 +17,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
     /// </summary>
     public abstract class SessionFactoryBase : IDisposable
     {
-        private static ILog _log = LogManager.GetLogger<SessionFactoryBase>();
+        private static readonly ILog _log = LogManager.GetLogger<SessionFactoryBase>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionFactoryBase"/> class.
@@ -51,7 +51,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
                 .Where(ValidateAssembly)
                 .Aggregate(
                     cfg,
-                    (current, assembly) => 
+                    (current, assembly) =>
                         current.Mappings(m => m.FluentMappings.AddFromAssembly(assembly)));
 
             if (createDatabase)
@@ -161,7 +161,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
                     if (!String.IsNullOrEmpty(baseType.FullName)
                       && baseType.FullName.Contains("FluentNHibernate.Mapping.ClassMap"))
                     {
-                        _log.DebugFormat("{0} mapping found.", type);
+                        _log.Debug($"{type} mapping found.");
                         return true;
                     }
 
@@ -169,7 +169,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
                 }
             }
 
-            _log.DebugFormat("{0} does not contain any mappings.", assembly.FullName);
+            _log.Debug($"{assembly.FullName} does not contain any mappings.");
 
             return false;
         }
@@ -178,15 +178,15 @@ namespace ToolKit.Data.NHibernate.SessionFactories
         {
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings[connectionString]))
             {
-                _log.DebugFormat("\"{0}\" was loaded from Application Settings...", connectionString);
+                _log.Debug($"\"{connectionString}\" was loaded from Application Settings...");
                 ConnectionString = ConfigurationManager.AppSettings[connectionString];
             }
 
             var setting = ConfigurationManager.ConnectionStrings[connectionString];
 
-            if (!String.IsNullOrEmpty(setting != null ? setting.ConnectionString : null))
+            if (!String.IsNullOrEmpty(setting?.ConnectionString))
             {
-                _log.DebugFormat("\"{0}\" was loaded from Connection Settings...", connectionString);
+                _log.Debug($"\"{connectionString}\" was loaded from Connection Settings...");
                 ConnectionString = setting.ConnectionString;
             }
 
