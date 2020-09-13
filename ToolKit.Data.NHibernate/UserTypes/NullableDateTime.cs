@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Common.Logging;
 using NHibernate;
 using NHibernate.Engine;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
+using ToolKit.Validation;
 
 namespace ToolKit.Data.NHibernate.UserTypes
 {
@@ -14,7 +17,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
     /// </summary>
     public class NullableDateTime : IUserType
     {
-        private static ILog _log = LogManager.GetLogger<NullableDateTime>();
+        private static readonly ILog _log = LogManager.GetLogger<NullableDateTime>();
 
         /// <inheritdoc/>
         /// <summary>
@@ -33,8 +36,11 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <inheritdoc/>
         /// <summary>
         /// Gets the SQL types for the columns mapped by this type. In this case just a SQL Type will
-        /// be returned: <seealso cref="F:System.Data.DbType.DateTime"/>
+        /// be returned: <seealso cref="DbType.DateTime"/>
         /// </summary>
+        [SuppressMessage("Performance",
+            "CA1819:Properties should not return arrays",
+            Justification = "Constrained by the Interface")]
         public SqlType[] SqlTypes
         {
             get
@@ -98,7 +104,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// </summary>
         /// <param name="x">The object to calculate the hash code</param>
         /// <returns>the hash code.</returns>
-        public int GetHashCode(object x) => x == null ? 0 : x.GetHashCode();
+        public int GetHashCode(object x) => (x?.GetHashCode()) ?? 0;
 
         /// <inheritdoc/>
         /// <summary>
@@ -112,6 +118,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <returns>A DateTime object or null</returns>
         public object NullSafeGet(DbDataReader rs, string[] names, ISessionImplementor session, object owner)
         {
+            names = Check.NotNull(names, nameof(names));
             var result = NHibernateUtil.String.NullSafeGet(rs, names[0], session);
 
             var returnValue = DateTime.MinValue;
@@ -123,7 +130,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
 
             try
             {
-                returnValue = DateTime.Parse(Convert.ToString(result));
+                returnValue = DateTime.Parse((string)result, CultureInfo.CurrentCulture);
             }
             catch (FormatException fex)
             {
@@ -145,6 +152,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// <param name="session">the NHibernate session</param>
         public void NullSafeSet(DbCommand cmd, object value, int index, ISessionImplementor session)
         {
+            cmd = Check.NotNull(cmd, nameof(cmd));
             if (value == null)
             {
                 ((IDataParameter)cmd.Parameters[index]).Value = DBNull.Value;
@@ -153,7 +161,8 @@ namespace ToolKit.Data.NHibernate.UserTypes
             {
                 try
                 {
-                    ((IDataParameter)cmd.Parameters[index]).Value = DateTime.Parse(value.ToString());
+                    ((IDataParameter)cmd.Parameters[index]).Value
+                        = DateTime.Parse((string)value, CultureInfo.CurrentCulture);
                 }
                 catch (FormatException fex)
                 {

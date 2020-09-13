@@ -51,6 +51,7 @@ namespace ToolKit.Data.NHibernate
         /// <summary>
         /// This method will Initializes the database in a class that inherits from this base class.
         /// </summary>
+        /// <param name="initialization">The action to preform to initialize database.</param>
         public abstract override void InitializeDatabase(Action initialization);
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace ToolKit.Data.NHibernate
         {
             if (Cache.Contains(sessionName))
             {
-                _log.Debug(m => m("Returning Existing session: {0}", sessionName));
+                _log.Debug($"Returning Existing session: {sessionName}");
             }
             else
             {
@@ -86,7 +87,7 @@ namespace ToolKit.Data.NHibernate
                 {
                     if (!Cache.Contains(sessionName))
                     {
-                        _log.Debug(m => m("Creating a new session: {0}", sessionName));
+                        _log.Debug($"Creating a new session: {sessionName}");
 
                         var sessionFactory = Fluently.Configure()
                             .Database(DatabaseConfigurer)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -166,7 +167,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </returns>
         public static bool IsComputer(DistinguishedName distinguishedName)
         {
-            return Exists(distinguishedName.GcPath) && IsComputer(new DirectoryEntry(distinguishedName.GcPath));
+            using (var de = new DirectoryEntry(distinguishedName?.GcPath))
+            {
+                return Exists(distinguishedName?.GcPath) && IsComputer(de);
+            }
         }
 
         /// <summary>
@@ -176,7 +180,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if the specified result is a computer; otherwise, <c>false</c>.</returns>
         public static bool IsComputer(SearchResult result)
         {
-            return IsComputer(result.GetDirectoryEntry());
+            return IsComputer(result?.GetDirectoryEntry());
         }
 
         /// <summary>
@@ -210,8 +214,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </returns>
         public static bool IsContact(DistinguishedName distinguishedName)
         {
-            return Exists(distinguishedName.GcPath)
-                   && IsContact(new DirectoryEntry(distinguishedName.GcPath));
+            using (var de = new DirectoryEntry(distinguishedName?.GcPath))
+            {
+                return Exists(distinguishedName?.GcPath) && IsContact(de);
+            }
         }
 
         /// <summary>
@@ -221,7 +227,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if the specified result is a contact; otherwise, <c>false</c>.</returns>
         public static bool IsContact(SearchResult result)
         {
-            return IsContact(result.GetDirectoryEntry());
+            return IsContact(result?.GetDirectoryEntry());
         }
 
         /// <summary>
@@ -253,7 +259,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if the specified distinguished name is a group; otherwise, <c>false</c>.</returns>
         public static bool IsGroup(DistinguishedName distinguishedName)
         {
-            return Exists(distinguishedName.GcPath) && IsGroup(new DirectoryEntry(distinguishedName.GcPath));
+            using (var de = new DirectoryEntry(distinguishedName?.GcPath))
+            {
+                return Exists(distinguishedName?.GcPath) && IsGroup(de);
+            }
         }
 
         /// <summary>
@@ -263,7 +272,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if the specified result is a group; otherwise, <c>false</c>.</returns>
         public static bool IsGroup(SearchResult result)
         {
-            return IsGroup(result.GetDirectoryEntry());
+            return IsGroup(result?.GetDirectoryEntry());
         }
 
         /// <summary>
@@ -293,7 +302,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if the specified distinguished name is a user; otherwise, <c>false</c>.</returns>
         public static bool IsUser(DistinguishedName distinguishedName)
         {
-            return Exists(distinguishedName.GcPath) && IsUser(new DirectoryEntry(distinguishedName.GcPath));
+            using (var de = new DirectoryEntry(distinguishedName?.GcPath))
+            {
+                return Exists(distinguishedName?.GcPath) && IsUser(de);
+            }
         }
 
         /// <summary>
@@ -303,7 +315,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns><c>true</c> if the specified result is a user; otherwise, <c>false</c>.</returns>
         public static bool IsUser(SearchResult result)
         {
-            return IsUser(result.GetDirectoryEntry());
+            return IsUser(result?.GetDirectoryEntry());
         }
 
         /// <summary>
@@ -331,7 +343,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="newLocation">The distinguished name of the new parent container.</param>
         public void Move(DistinguishedName newLocation)
         {
-            if (!Exists(newLocation.GcPath))
+            if (!Exists(newLocation?.GcPath))
             {
                 throw new ArgumentException("Destination does not exists!");
             }
@@ -370,8 +382,9 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             foreach (string key in collection.PropertyNames)
             {
-                extracted.Add(key, collection[key].Count == 1
-                    ? collection[key][0] : collection[key].Cast<object>().ToArray());
+                extracted.Add(
+                    key,
+                    collection[key].Count == 1 ? collection[key][0] : collection[key].Cast<object>().ToArray());
             }
 
             Initialize(extracted);
@@ -379,8 +392,18 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
         internal void Initialize(Dictionary<string, object> collection)
         {
-            _properties = new XmlDocument();
-            _properties.LoadXml("<?xml version=\"1.0\" encoding=\"utf-8\" ?><DirectoryObject></DirectoryObject>");
+            _properties = new XmlDocument()
+            {
+                XmlResolver = null
+            };
+
+            var xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><DirectoryObject></DirectoryObject>";
+            using (var reader = XmlReader.Create(
+                new StringReader(xml),
+                new XmlReaderSettings() { XmlResolver = null }))
+            {
+                _properties.Load(reader);
+            }
 
             var topNode = _properties.SelectSingleNode("//DirectoryObject");
 
@@ -444,7 +467,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
                     if (_debugMode)
                     {
-                        _log.Debug(m => m("{0} --> {1}", xpathQuery, value));
+                        _log.Debug($"{xpathQuery} --> {value}");
                     }
 
                     nodeListValues.Add(value);
@@ -452,7 +475,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             }
             catch (Exception ex)
             {
-                _log.Error(m => m("{0}", ex));
+                _log.Error(ex.Message, ex);
+                throw;
             }
 
             return nodeListValues;
@@ -473,25 +497,25 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
                 if (node == null)
                 {
-                    _log.Debug(m => m("{0} --> null", xpathQuery));
+                    _log.Debug($"{xpathQuery} --> null");
                 }
                 else
                 {
                     if (node.Attributes != null && node.Attributes[0].InnerText == "System.String")
                     {
                         value = XmlEncoder.Decode(node.InnerText);
-                        _log.Debug(m => m("{0} --> {1}", xpathQuery, value));
+                        _log.Debug($"{xpathQuery} --> {value}");
                     }
                     else
                     {
                         value = node.InnerText;
-                        _log.Debug(m => m("{0} --> {1}", xpathQuery, value));
+                        _log.Debug($"{xpathQuery} --> {value}");
                     }
                 }
             }
-            catch (Exception ex)
+            catch (ArgumentNullException ex)
             {
-                _log.Error(m => m("{0}", ex));
+                _log.Warn($"{xpathQuery} --> null", ex);
             }
 
             return value;
@@ -515,14 +539,18 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                         .Aggregate(objectClass, (current, node) => current + $"{node.InnerText} ");
                 }
             }
-            catch (Exception ex)
+            catch (ArgumentNullException anex)
             {
-                _log.Error(ex.Message, ex);
+                _log.Error(anex.Message, anex);
+            }
+            catch (InvalidCastException icex)
+            {
+                _log.Error(icex.Message, icex);
             }
 
             if (_debugMode)
             {
-                _log.Debug(m => m("objectClass: {0}", objectClass));
+                _log.Debug($"objectClass: {objectClass}");
             }
 
             return objectClass.Trim();
@@ -536,11 +564,11 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             if (_debugMode)
             {
-                _log.Debug(m => m("ldapPath: {0}", distinguishedName.LdapPath));
+                _log.Debug($"ldapPath: {distinguishedName?.LdapPath}");
             }
 
             // Create a Search Result object to take advantaged of the COM marshaling of properties.
-            using (var entry = new DirectoryEntry(distinguishedName.LdapPath))
+            using (var entry = new DirectoryEntry(distinguishedName?.LdapPath))
             {
                 using (var search = new DirectorySearcher(entry, "cn=*"))
                 {
@@ -558,6 +586,11 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
         private static bool IsType(DirectoryEntry entry, string objectType)
         {
+            if (entry == null)
+            {
+                return false;
+            }
+
             var propertyCollection = entry.Properties;
 
             if (propertyCollection.Count == 0)
@@ -606,7 +639,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             if (_debugMode)
             {
-                _log.Debug(m => m("{0} > {1} : {2}", key, attribute.InnerText, element.InnerText));
+                _log.Debug($"{key} > {attribute.InnerText} : {element.InnerText}");
             }
 
             return element;
@@ -625,27 +658,27 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             {
                 var path = root.Path.Substring(7);
                 var slash = path.IndexOf("/", StringComparison.Ordinal);
-                path = String.Format("LDAP://{0}", path.Insert(slash + 1, "CN=Partitions, CN=Configuration,"));
+                path = $"LDAP://{path.Insert(slash + 1, "CN=Partitions, CN=Configuration,")}";
 
-                // find domain NetBIOS name
-                var entry = new DirectoryEntry(path);
-
-                SearchResultCollection results;
-                using (var search = new DirectorySearcher(entry))
+                using (var entry = new DirectoryEntry(path))
                 {
-                    search.Filter = "(&(objectClass=top)(nETBIOSName=*))";
-                    search.PropertiesToLoad.Add("nETBIOSName");
-                    search.PropertiesToLoad.Add("nCName");
-
-                    results = search.FindAll();
-                }
-
-                foreach (SearchResult result in results)
-                {
-                    var contextName = (string)result.Properties["nCName"][0];
-                    if (String.Compare(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase) == 0)
+                    SearchResultCollection results;
+                    using (var search = new DirectorySearcher(entry))
                     {
-                        netBiosName = (string)result.Properties["netBIOSName"][0];
+                        search.Filter = "(&(objectClass=top)(nETBIOSName=*))";
+                        search.PropertiesToLoad.Add("nETBIOSName");
+                        search.PropertiesToLoad.Add("nCName");
+
+                        results = search.FindAll();
+                    }
+
+                    foreach (SearchResult result in results)
+                    {
+                        var contextName = (string)result.Properties["nCName"][0];
+                        if (String.Compare(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase) == 0)
+                        {
+                            netBiosName = (string)result.Properties["netBIOSName"][0];
+                        }
                     }
                 }
             }

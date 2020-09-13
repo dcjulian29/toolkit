@@ -36,6 +36,11 @@ namespace ToolKit.DirectoryServices.UserSort
         /// </returns>
         public int Compare(IUser x, IUser y)
         {
+            if ((x == null) || (y == null))
+            {
+                return 0;
+            }
+
             if (x.Changed > y.Changed)
             {
                 return _ascending ? 1 : -1;
