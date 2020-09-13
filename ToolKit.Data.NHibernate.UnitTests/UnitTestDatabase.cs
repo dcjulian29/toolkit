@@ -17,7 +17,7 @@ namespace ToolKit.Data.NHibernate.UnitTests
     {
         private static readonly object _lock = new object();
 
-        private static bool _databaseCreated = false;
+        private static bool _databaseCreated;
 
         private readonly string _callingClass;
 
