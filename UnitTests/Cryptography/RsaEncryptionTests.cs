@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
@@ -175,7 +175,7 @@ namespace UnitTests.Cryptography
             var key = new RsaEncryption();
 
             // Assert
-            Assert.Equal(expected, key.DefaultPublicKey.Exponent);
+            Assert.Equal(expected, RsaEncryption.DefaultPublicKey.Exponent);
 
             RemoveKeysToEnvironment();
         }
@@ -192,9 +192,26 @@ namespace UnitTests.Cryptography
             var key = new RsaEncryption();
 
             // Assert
-            Assert.Equal(expected, key.DefaultPrivateKey.PrimeExponentP);
+            Assert.Equal(expected, RsaEncryption.DefaultPrivateKey.PrimeExponentP);
 
             RemoveKeysToEnvironment();
+        }
+
+        [Fact]
+        public void Encrypt_Should_ThrowException_When_DataIsNull()
+        {
+            // Arrange
+            var publicKey = new RsaPublicKey();
+            var privateKey = new RsaPrivateKey();
+            var e1 = new RsaEncryption();
+            e1.GenerateNewKeyset(ref publicKey, ref privateKey);
+            EncryptionData data = null;
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                e1.Encrypt(data, publicKey);
+            });
         }
 
         [Fact]
@@ -212,23 +229,6 @@ namespace UnitTests.Cryptography
             Assert.Throws<CryptographicException>(() =>
             {
                 e1.Encrypt(new EncryptionData(_targetString), publicKey);
-            });
-        }
-
-        [Fact]
-        public void Encrypt_Should_ThrowException_When_KeyIsNull()
-        {
-            // Arrange
-            var publicKey = new RsaPublicKey(); ;
-            var privateKey = new RsaPrivateKey();
-            var e1 = new RsaEncryption();
-            e1.GenerateNewKeyset(ref publicKey, ref privateKey);
-            EncryptionData data = null;
-
-            // Act & Assert
-            Assert.Throws<NullReferenceException>(() =>
-            {
-                e1.Encrypt(data, publicKey);
             });
         }
 
