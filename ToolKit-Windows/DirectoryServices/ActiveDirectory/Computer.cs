@@ -102,7 +102,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 try
                 {
                     var expiration = GetNodeValue("//DirectoryObject/accountexpires");
-                    if (string.IsNullOrEmpty(expiration))
+                    if (String.IsNullOrEmpty(expiration))
                     {
                         return DateTime.MaxValue;
                     }
@@ -307,7 +307,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                string nodeValue = GetNodeValue("//DirectoryObject/lastlogoff");
+                var nodeValue = GetNodeValue("//DirectoryObject/lastlogoff");
                 return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
@@ -320,7 +320,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                string nodeValue = GetNodeValue("//DirectoryObject/lastlogontimestamp");
+                var nodeValue = GetNodeValue("//DirectoryObject/lastlogontimestamp");
                 return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
@@ -432,7 +432,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                string nodeValue = GetNodeValue("//DirectoryObject/pwdlastset");
+                var nodeValue = GetNodeValue("//DirectoryObject/pwdlastset");
                 return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
@@ -481,7 +481,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                string nodeValue = GetNodeValue("//DirectoryObject/objectsid");
+                var nodeValue = GetNodeValue("//DirectoryObject/objectsid");
                 return Security.Sid.ToString(HexEncoding.ToBytes(nodeValue));
             }
         }

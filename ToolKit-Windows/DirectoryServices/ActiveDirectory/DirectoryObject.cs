@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Common.Logging;
+using ToolKit.Validation;
 using ToolKit.Xml;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
@@ -19,9 +20,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
     public class DirectoryObject
     {
         // This class can do a lot a debug logging. No need to do most of it if running in release mode.
-        private static bool _debugMode = AssemblyProperties.IsDebugMode(typeof(DirectoryObject).Assembly.Location);
+        private static readonly bool _debugMode =
+            AssemblyProperties.IsDebugMode(typeof(DirectoryObject).Assembly.Location);
 
-        private static ILog _log = LogManager.GetLogger<DirectoryObject>();
+        private static readonly ILog _log = LogManager.GetLogger<DirectoryObject>();
 
         private string _distinguishedName;
 
@@ -343,7 +345,9 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="newLocation">The distinguished name of the new parent container.</param>
         public void Move(DistinguishedName newLocation)
         {
-            if (!Exists(newLocation?.GcPath))
+            newLocation = Check.NotNull(newLocation, nameof(newLocation));
+
+            if (!Exists(newLocation.GcPath))
             {
                 throw new ArgumentException("Destination does not exists!");
             }
@@ -397,9 +401,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 XmlResolver = null
             };
 
-            var xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><DirectoryObject></DirectoryObject>";
             using (var reader = XmlReader.Create(
-                new StringReader(xml),
+                new StringReader("<?xml version=\"1.0\" encoding=\"utf-8\" ?><DirectoryObject></DirectoryObject>"),
                 new XmlReaderSettings() { XmlResolver = null }))
             {
                 _properties.Load(reader);
@@ -456,7 +459,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 {
                     string value;
 
-                    if (node.Attributes != null && node.Attributes[0].InnerText == "System.String")
+                    if (node.Attributes?[0].InnerText == "System.String")
                     {
                         value = XmlEncoder.Decode(node.InnerText);
                     }
@@ -608,7 +611,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             }
 
             var objectClass = propertyCollection["objectclass"].Cast<object>()
-                .Aggregate(String.Empty, (current, property) => current + $"{property.ToString()} ");
+                .Aggregate(String.Empty, (current, property) => current + $"{property} ");
 
             return objectClass.Contains(objectType);
         }
@@ -679,7 +682,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                     foreach (SearchResult result in results)
                     {
                         var contextName = (string)result.Properties["nCName"][0];
-                        if (String.Compare(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase) == 0)
+                        if (String.Equals(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase))
                         {
                             netBiosName = (string)result.Properties["netBIOSName"][0];
                         }
