@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using ToolKit.Xml;
 using Xunit;
 
@@ -14,8 +14,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringContainsAnAmpersand()
         {
             // Arrange
-            var expected = "&";
-            var source = "&amp;";
+            const string expected = "&";
+            const string source = "&amp;";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -28,8 +28,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringContainsDoubleQuote()
         {
             // Arrange
-            var expected = "\"";
-            var source = "&quot;";
+            const string expected = "\"";
+            const string source = "&quot;";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -42,8 +42,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringContainsGreaterThan()
         {
             // Arrange
-            var expected = ">";
-            var source = "&gt;";
+            const string expected = ">";
+            const string source = "&gt;";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -56,8 +56,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringContainsLessThan()
         {
             // Arrange
-            var expected = "<";
-            var source = "&lt;";
+            const string expected = "<";
+            const string source = "&lt;";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -70,8 +70,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringContainsNonPrintableInDecimal()
         {
             // Arrange
-            var expected = "\r";
-            var source = "&#13;";
+            const string expected = "\r";
+            const string source = "&#13;";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -84,8 +84,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringContainsNonPrintableInHexaDecimal()
         {
             // Arrange
-            var expected = "\n";
-            var source = "&#x0A;";
+            const string expected = "\n";
+            const string source = "&#x0A;";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -98,8 +98,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringContainsSingleQuote()
         {
             // Arrange
-            var expected = "\'";
-            var source = "&apos;";
+            const string expected = "\'";
+            const string source = "&apos;";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -112,8 +112,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringContainsTwoSpaces()
         {
             // Arrange
-            var expected = "  ";
-            var source = "&nbsp; ";
+            const string expected = "  ";
+            const string source = "&nbsp; ";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -126,8 +126,8 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnCorrectlyEncodedString_When_StringIsANormalString()
         {
             // Arrange
-            var expected = "Normal";
-            var source = "Normal";
+            const string expected = "Normal";
+            const string source = "Normal";
 
             // Act
             var actual = XmlEncoder.Decode(source);
@@ -140,7 +140,7 @@ namespace UnitTests.Xml
         public void Decode_Should_ReturnInputString_When_InputStringDoesNotContainEntity()
         {
             // Arrange
-            var expected = "&NotAnEntity";
+            const string expected = "&NotAnEntity";
 
             // Act
             var actual = XmlEncoder.Decode(expected);
@@ -153,8 +153,8 @@ namespace UnitTests.Xml
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringContainsAnAmpersand()
         {
             // Arrange
-            var expected = "&amp;";
-            var source = "&";
+            const string expected = "&amp;";
+            const string source = "&";
 
             // Act
             var actual = XmlEncoder.Encode(source);
@@ -167,8 +167,8 @@ namespace UnitTests.Xml
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringContainsDoubleQuote()
         {
             // Arrange
-            var expected = "&quot;";
-            var source = "\"";
+            const string expected = "&quot;";
+            const string source = "\"";
 
             // Act
             var actual = XmlEncoder.Encode(source);
@@ -181,8 +181,8 @@ namespace UnitTests.Xml
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringContainsGreaterThan()
         {
             // Arrange
-            var expected = "&gt;";
-            var source = ">";
+            const string expected = "&gt;";
+            const string source = ">";
 
             // Act
             var actual = XmlEncoder.Encode(source);
@@ -195,8 +195,8 @@ namespace UnitTests.Xml
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringContainsLessThan()
         {
             // Arrange
-            var expected = "&lt;";
-            var source = "<";
+            const string expected = "&lt;";
+            const string source = "<";
 
             // Act
             var actual = XmlEncoder.Encode(source);
@@ -209,8 +209,8 @@ namespace UnitTests.Xml
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringContainsNonPrintable()
         {
             // Arrange
-            var expected = "&#13;";
-            var source = "\r";
+            const string expected = "&#13;";
+            const string source = "\r";
 
             // Act
             var actual = XmlEncoder.Encode(source);
@@ -223,8 +223,8 @@ namespace UnitTests.Xml
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringContainsSingleQuote()
         {
             // Arrange
-            var expected = "&apos;";
-            var source = "\'";
+            const string expected = "&apos;";
+            const string source = "\'";
 
             // Act
             var actual = XmlEncoder.Encode(source);
@@ -237,8 +237,8 @@ namespace UnitTests.Xml
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringContainsTwoSpaces()
         {
             // Arrange
-            var expected = "&nbsp; ";
-            var source = "  ";
+            const string expected = "&nbsp; ";
+            const string source = "  ";
 
             // Act
             var actual = XmlEncoder.Encode(source);
@@ -251,8 +251,8 @@ namespace UnitTests.Xml
         public void Encode_Should_ReturnCorrectlyEncodedString_When_StringIsANormalString()
         {
             // Arrange
-            var expected = "Normal";
-            var source = "Normal";
+            const string expected = "Normal";
+            const string source = "Normal";
 
             // Act
             var actual = XmlEncoder.Encode(source);

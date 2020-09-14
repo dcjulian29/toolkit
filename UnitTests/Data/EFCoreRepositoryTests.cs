@@ -309,7 +309,7 @@ namespace UnitTests.Data
             }
         }
 
-        public class Patient : EntityWithTypedId<Int64>
+        public class Patient : EntityWithTypedId<long>
         {
             public virtual DateTime AdmitDate { get; set; }
 
