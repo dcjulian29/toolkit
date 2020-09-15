@@ -86,37 +86,31 @@ namespace ToolKit.Cryptography
             /// <summary>
             /// Cyclic Redundancy Check provider, 32-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             CRC32,
 
             /// <summary>
             /// Message Digest algorithm 5, 128-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             MD5,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-1 variant, 160-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             SHA1,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-2 variant, 256-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             SHA256,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-2 variant, 384-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             SHA384,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-2 variant, 512-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             SHA512
         }
 

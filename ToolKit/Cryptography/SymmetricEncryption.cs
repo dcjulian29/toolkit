@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
+using ToolKit.Validation;
 
 namespace ToolKit.Cryptography
 {
@@ -9,25 +10,31 @@ namespace ToolKit.Cryptography
     /// Symmetric-key algorithms are a class of algorithms for cryptography that use trivially
     /// related, often identical, cryptographic keys for both decryption and encryption. The
     /// encryption key is trivially related to the decryption key, in that they may be identical or
-    /// there is a simple transformation to go between the two keys. The keys, in practice, represent
-    /// a shared secret between two or more parties that can be used to maintain a private
+    /// there is a simple transformation to go between the two keys. The keys, in practice,
+    /// represent a shared secret between two or more parties that can be used to maintain a private
     /// information link.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.DocumentationRules",
         "SA1650:ElementDocumentationMustBeSpelledCorrectly",
         Justification = "Encryption tend to have names not in standard dictionaries...")]
-    public class SymmetricEncryption
+    public class SymmetricEncryption : DisposableObject
     {
         private readonly int _bufferSize = 2048;
+
         private readonly SymmetricAlgorithm _crypto;
+
         private EncryptionData _initializationVector;
+
         private EncryptionData _key;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymmetricEncryption"/> class using the
+        /// Initializes a new instance of the <see cref="SymmetricEncryption" /> class using the
         /// specified provider.
         /// </summary>
         /// <param name="provider">The cryptographic provider.</param>
+        [SuppressMessage("Security",
+            "CA5350:Do Not Use Weak Cryptographic Algorithms",
+            Justification = "While I wouldn't use weak algorithms, I don't want to break backward-compatibility.")]
         public SymmetricEncryption(Provider provider)
         {
             switch (provider)
@@ -53,7 +60,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="SymmetricEncryption"/> class from being created.
+        /// Prevents a default instance of the <see cref="SymmetricEncryption" /> class from being created.
         /// </summary>
         [ExcludeFromCodeCoverage]
         private SymmetricEncryption()
@@ -67,8 +74,8 @@ namespace ToolKit.Cryptography
         public enum Provider
         {
             /// <summary>
-            /// The Rijndael (also known as AES) provider supports keys of 128, 192, or 256 bits with
-            /// a default of 256 bits
+            /// The Rijndael (also known as AES) provider supports keys of 128, 192, or 256 bits
+            /// with a default of 256 bits
             /// </summary>
             // ReSharper disable once IdentifierTypo
             Rijndael,
@@ -118,8 +125,8 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the key size in bits. We use the default key size for any given provider; if
-        /// you want to force a specific key size, set this property
+        /// Gets or sets the key size in bits. We use the default key size for any given provider;
+        /// if you want to force a specific key size, set this property
         /// </summary>
         public int KeySizeBits
         {
@@ -182,6 +189,8 @@ namespace ToolKit.Cryptography
         /// <returns>the decrypted data.</returns>
         public EncryptionData Decrypt(EncryptionData encryptedData)
         {
+            Check.NotNull(encryptedData, nameof(encryptedData));
+
             _crypto.Key = _key.Bytes;
             _crypto.IV = _initializationVector.Bytes;
 
@@ -246,7 +255,7 @@ namespace ToolKit.Cryptography
             {
                 var b = new byte[_bufferSize + 1];
 
-                using (CryptoStream cs = new CryptoStream(
+                using (var cs = new CryptoStream(
                     encryptedStream,
                     _crypto.CreateDecryptor(),
                     CryptoStreamMode.Read))
@@ -287,6 +296,8 @@ namespace ToolKit.Cryptography
         /// <returns>the encrypted data.</returns>
         public EncryptionData Encrypt(EncryptionData d)
         {
+            Check.NotNull(d, nameof(d));
+
             _crypto.Key = _key.Bytes;
             _crypto.IV = _initializationVector.Bytes;
 
@@ -351,6 +362,8 @@ namespace ToolKit.Cryptography
         /// <returns>the encrypted data.</returns>
         public EncryptionData Encrypt(Stream s)
         {
+            Check.NotNull(s, nameof(s));
+
             _crypto.Key = _key.Bytes;
             _crypto.IV = _initializationVector.Bytes;
 
@@ -372,6 +385,18 @@ namespace ToolKit.Cryptography
 
                 return new EncryptionData(ms.ToArray());
             }
+        }
+
+        /// <summary>
+        /// Disposes the resources used by the inherited class.
+        /// </summary>
+        /// <param name="disposing">
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+        /// only unmanaged resources.
+        /// </param>
+        protected override void DisposeResources(bool disposing)
+        {
+            _crypto.Dispose();
         }
 
         private EncryptionData RandomInitializationVector()

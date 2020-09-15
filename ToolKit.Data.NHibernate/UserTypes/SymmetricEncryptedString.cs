@@ -17,7 +17,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
     /// Use symmetric encryption to store the string encrypted in the database and "translate" when
     /// the object is saved or retrieved from the database.
     /// </summary>
-    public class SymmetricEncryptedString : IUserType, IParameterizedType
+    public class SymmetricEncryptedString : DisposableObject, IUserType, IParameterizedType
     {
         private static readonly ILog _log = LogManager.GetLogger<SymmetricEncryptedString>();
         private static readonly string _hash = SHA256Hash.Create().Compute(new EncryptionData(Environment.MachineName));
@@ -220,6 +220,15 @@ namespace ToolKit.Data.NHibernate.UserTypes
         public void SetParameterValues(IDictionary<string, string> parameters)
         {
             // Method intentionally left empty.
+        }
+
+        /// <summary>Disposes the resources used by the inherited class.</summary>
+        /// <param name="disposing">
+        ///   <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
+        /// unmanaged resources.</param>
+        protected override void DisposeResources(bool disposing)
+        {
+            _encryptor.Dispose();
         }
     }
 }

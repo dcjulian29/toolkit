@@ -145,15 +145,16 @@ namespace ToolKit.Cryptography
 
             Buffer.BlockCopy(password, 0, iv, 0, 16);
 
-            var decrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
+            using (var decrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
             {
                 Key = new EncryptionData(password),
                 InitializationVector = new EncryptionData(iv)
-            };
+            })
+            {
+                var decryptedData = decrypt.Decrypt(payload);
 
-            var decryptedData = decrypt.Decrypt(payload);
-
-            return decryptedData;
+                return decryptedData;
+            }
         }
 
         /// <summary>
@@ -209,15 +210,16 @@ namespace ToolKit.Cryptography
 
             Buffer.BlockCopy(password, 0, iv, 0, 16);
 
-            var encrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
+            using (var encrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
             {
                 Key = new EncryptionData(password),
                 InitializationVector = new EncryptionData(iv)
-            };
+            })
+            {
+                var encryptedData = encrypt.Encrypt(plainData);
 
-            var encryptedData = encrypt.Encrypt(plainData);
-
-            return CombineEncrypted(encryptedData);
+                return CombineEncrypted(encryptedData);
+            }
         }
 
         /// <summary>
@@ -246,15 +248,16 @@ namespace ToolKit.Cryptography
 
             Buffer.BlockCopy(password, 0, iv, 0, 16);
 
-            var encrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
+            using (var encrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
             {
                 Key = new EncryptionData(password),
                 InitializationVector = new EncryptionData(iv)
-            };
+            })
+            {
+                var encryptedData = encrypt.Encrypt(plainStream);
 
-            var encryptedData = encrypt.Encrypt(plainStream);
-
-            return CombineEncrypted(encryptedData);
+                return CombineEncrypted(encryptedData);
+            }
         }
 
         private EncryptionData CombineEncrypted(EncryptionData payload)
