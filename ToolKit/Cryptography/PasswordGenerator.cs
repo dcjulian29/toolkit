@@ -34,11 +34,11 @@ namespace ToolKit.Cryptography
         public PasswordGenerator(int seed)
         {
             _randomGenerator = new Random(seed);
-            PasswordOptions = PasswordComplexity.UseNumbers |
-                              PasswordComplexity.UseSymbols |
-                              PasswordComplexity.UseLowerCharacters |
-                              PasswordComplexity.UseUpperCharacters |
-                              PasswordComplexity.NoConsecutiveCharacters;
+            PasswordOptions = PasswordComplexities.UseNumbers |
+                              PasswordComplexities.UseSymbols |
+                              PasswordComplexities.UseLowerCharacters |
+                              PasswordComplexities.UseUpperCharacters |
+                              PasswordComplexities.NoConsecutiveCharacters;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         /// <param name="seed">The seed to use when generating the password.</param>
         /// <param name="options">PasswordGenerator Generation Options</param>
-        public PasswordGenerator(int seed, PasswordComplexity options)
+        public PasswordGenerator(int seed, PasswordComplexities options)
             : this(seed)
         {
             PasswordOptions = options;
@@ -62,9 +62,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeExtended
         {
-            get => PasswordOptions.HasFlag(PasswordComplexity.UseExtendedCharacters);
+            get => PasswordOptions.HasFlag(PasswordComplexities.UseExtendedCharacters);
 
-            set => SetPasswordOption(PasswordComplexity.UseExtendedCharacters, value);
+            set => SetPasswordOption(PasswordComplexities.UseExtendedCharacters, value);
         }
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeLowerCase
         {
-            get => PasswordOptions.HasFlag(PasswordComplexity.UseLowerCharacters);
+            get => PasswordOptions.HasFlag(PasswordComplexities.UseLowerCharacters);
 
-            set => SetPasswordOption(PasswordComplexity.UseLowerCharacters, value);
+            set => SetPasswordOption(PasswordComplexities.UseLowerCharacters, value);
         }
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeNumbers
         {
-            get => PasswordOptions.HasFlag(PasswordComplexity.UseNumbers);
+            get => PasswordOptions.HasFlag(PasswordComplexities.UseNumbers);
 
-            set => SetPasswordOption(PasswordComplexity.UseNumbers, value);
+            set => SetPasswordOption(PasswordComplexities.UseNumbers, value);
         }
 
         /// <summary>
@@ -92,9 +92,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeSymbols
         {
-            get => PasswordOptions.HasFlag(PasswordComplexity.UseSymbols);
+            get => PasswordOptions.HasFlag(PasswordComplexities.UseSymbols);
 
-            set => SetPasswordOption(PasswordComplexity.UseSymbols, value);
+            set => SetPasswordOption(PasswordComplexities.UseSymbols, value);
         }
 
         /// <summary>
@@ -102,24 +102,24 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool IncludeUpperCase
         {
-            get => PasswordOptions.HasFlag(PasswordComplexity.UseUpperCharacters);
+            get => PasswordOptions.HasFlag(PasswordComplexities.UseUpperCharacters);
 
-            set => SetPasswordOption(PasswordComplexity.UseUpperCharacters, value);
+            set => SetPasswordOption(PasswordComplexities.UseUpperCharacters, value);
         }
 
         /// <summary>
         /// Gets or sets the password options
         /// </summary>
-        public PasswordComplexity PasswordOptions { get; set; }
+        public PasswordComplexities PasswordOptions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow consecutive characters
         /// </summary>
         public bool ProhibitConsecutiveCharacters
         {
-            get => PasswordOptions.HasFlag(PasswordComplexity.NoConsecutiveCharacters);
+            get => PasswordOptions.HasFlag(PasswordComplexities.NoConsecutiveCharacters);
 
-            set => SetPasswordOption(PasswordComplexity.NoConsecutiveCharacters, value);
+            set => SetPasswordOption(PasswordComplexities.NoConsecutiveCharacters, value);
         }
 
         /// <summary>
@@ -127,9 +127,9 @@ namespace ToolKit.Cryptography
         /// </summary>
         public bool ProhibitRepeatingCharacters
         {
-            get => PasswordOptions.HasFlag(PasswordComplexity.NoRepeatingCharacters);
+            get => PasswordOptions.HasFlag(PasswordComplexities.NoRepeatingCharacters);
 
-            set => SetPasswordOption(PasswordComplexity.NoRepeatingCharacters, value);
+            set => SetPasswordOption(PasswordComplexities.NoRepeatingCharacters, value);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         public void DisableAll()
         {
-            foreach (PasswordComplexity value in Enum.GetValues(typeof(PasswordComplexity)))
+            foreach (PasswordComplexities value in Enum.GetValues(typeof(PasswordComplexities)))
             {
                 SetPasswordOption(value, false);
             }
@@ -243,7 +243,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         public void IncludeAll()
         {
-            foreach (PasswordComplexity value in Enum.GetValues(typeof(PasswordComplexity)))
+            foreach (PasswordComplexities value in Enum.GetValues(typeof(PasswordComplexities)))
             {
                 SetPasswordOption(value, true);
             }
@@ -294,7 +294,7 @@ namespace ToolKit.Cryptography
             return Convert.ToInt32(unsignedRandom % charArrayLength);
         }
 
-        private void SetPasswordOption(PasswordComplexity option, Boolean enabled)
+        private void SetPasswordOption(PasswordComplexities option, Boolean enabled)
         {
             if (enabled)
             {

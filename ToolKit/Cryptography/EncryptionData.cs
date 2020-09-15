@@ -79,6 +79,9 @@ namespace ToolKit.Cryptography
         /// The byte representation of the data; This will be padded to MinBytes and trimmed to
         /// MaxBytes as necessary.
         /// </value>
+        [SuppressMessage("Performance",
+            "CA1819:Properties should not return arrays",
+            Justification = "Not Going To Change This.")]
         public byte[] Bytes
         {
             get
@@ -169,7 +172,7 @@ namespace ToolKit.Cryptography
             {
                 if (Bytes == null)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
 
                 // Need to handle nulls here; oddly, C# will happily convert nulls into the string
@@ -230,7 +233,7 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Returns text representation of bytes using the default text encoding
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents this instance.</returns>
+        /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString() => Text;
 
         private void Initialize()

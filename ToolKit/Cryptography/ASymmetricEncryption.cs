@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using ToolKit.Validation;
 
 namespace ToolKit.Cryptography
 {
@@ -59,6 +60,8 @@ namespace ToolKit.Cryptography
         /// </exception>
         public ASymmetricEncryption(RsaPublicKey key, EncryptionData password)
         {
+            password = Check.NotNull(password, nameof(password));
+
             if (password.IsEmpty)
             {
                 throw new ArgumentNullException(nameof(password), "A password must be provided!");
@@ -118,6 +121,8 @@ namespace ToolKit.Cryptography
         /// <returns>the decrypted data.</returns>
         public EncryptionData Decrypt(EncryptionData encryptedData)
         {
+            encryptedData = Check.NotNull(encryptedData, nameof(encryptedData));
+
             if (_privateKey == null)
             {
                 throw new InvalidOperationException(
@@ -158,6 +163,8 @@ namespace ToolKit.Cryptography
         /// <returns>the decrypted data.</returns>
         public EncryptionData Decrypt(Stream encryptedStream)
         {
+            encryptedStream = Check.NotNull(encryptedStream, nameof(encryptedStream));
+
             if (_privateKey == null)
             {
                 throw new InvalidOperationException(
@@ -178,6 +185,8 @@ namespace ToolKit.Cryptography
         /// <returns>the encrypted data.</returns>
         public EncryptionData Encrypt(EncryptionData plainData)
         {
+            plainData = Check.NotNull(plainData, nameof(plainData));
+
             if (plainData.IsEmpty)
             {
                 throw new ArgumentException("Invalid Encrypted Data!");
@@ -218,6 +227,8 @@ namespace ToolKit.Cryptography
         /// <returns>the encrypted data.</returns>
         public EncryptionData Encrypt(Stream plainStream)
         {
+            plainStream = Check.NotNull(plainStream, nameof(plainStream));
+
             if (!plainStream.CanRead)
             {
                 throw new ArgumentException("Can not read from the stream!");
@@ -270,7 +281,7 @@ namespace ToolKit.Cryptography
                 throw new ArgumentException("Improper Encryption Data!");
             }
 
-            var password = new Byte[256];
+            var password = new byte[256];
 
             Buffer.BlockCopy(encryptedData.Bytes, 0, password, 0, 256);
 

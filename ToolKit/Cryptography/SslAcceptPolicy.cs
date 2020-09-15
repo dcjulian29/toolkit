@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -12,7 +12,7 @@ namespace ToolKit.Cryptography
     /// </summary>
     public static class SslAcceptPolicy
     {
-        private static ILog _log = LogManager.GetLogger(typeof(SslAcceptPolicy));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(SslAcceptPolicy));
 
         /// <summary>
         /// Gets a value indicating whether <see cref="SslAcceptPolicy"/> is enabled.
@@ -24,6 +24,9 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Set the SSL Acceptance Policy to accept all certificates even self-signed certificates.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security",
+            "CA5359:Do Not Disable Certificate Validation",
+            Justification = "Sometimes you just need to accept self-signed certificates.")]
         public static void AcceptAll()
         {
             if (Enabled)
@@ -33,9 +36,7 @@ namespace ToolKit.Cryptography
 
             OriginalPolicy = ServicePointManager.ServerCertificateValidationCallback;
 
-#pragma warning disable SG0004 // Certificate Validation has been disabled
             ServicePointManager.ServerCertificateValidationCallback = AcceptCertificatePolicy.Validate;
-#pragma warning restore SG0004 // Certificate Validation has been disabled
 
             Enabled = true;
         }
@@ -50,9 +51,7 @@ namespace ToolKit.Cryptography
                 return;
             }
 
-#pragma warning disable SG0004
             ServicePointManager.ServerCertificateValidationCallback = OriginalPolicy;
-#pragma warning restore SG0004
 
             OriginalPolicy = null;
             Enabled = false;
@@ -70,6 +69,9 @@ namespace ToolKit.Cryptography
                 SslPolicyErrors sslPolicyErrors)
             {
                 _log.Debug($"Accepting Certificate: {certificate.Subject}\nFrom: {certificate.Issuer}");
+                _log.Debug($"Sender: {sender}");
+                _log.Debug($"Chain: {chain}");
+                _log.Debug($"SSL Policy Errors: {sslPolicyErrors}");
 
                 return true;
             }

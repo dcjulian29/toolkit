@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
-using Common.Logging;
 
 namespace ToolKit.Cryptography
 {
@@ -19,10 +18,11 @@ namespace ToolKit.Cryptography
         /// <param name="password">The password.</param>
         public DerivedKey(string password)
         {
-            var salt = SHA512Hash.Create().Compute(
-                $"{Environment.MachineName}{Environment.OSVersion}{Environment.UserName}");
-
-            Initialize(new EncryptionData(password), new EncryptionData(salt));
+            var saltPrimer = $"{Environment.MachineName}{Environment.OSVersion}{Environment.UserName}";
+            using (var salt = SHA512Hash.Create())
+            {
+                Initialize(new EncryptionData(password), new EncryptionData(salt.Compute(saltPrimer)));
+            }
         }
 
         /// <summary>
@@ -33,14 +33,6 @@ namespace ToolKit.Cryptography
         public DerivedKey(string password, string salt)
         {
             Initialize(new EncryptionData(password), new EncryptionData(salt));
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="DerivedKey"/> class.
-        /// </summary>
-        ~DerivedKey()
-        {
-            DisposeResources(false);
         }
 
         /// <summary>
@@ -77,18 +69,21 @@ namespace ToolKit.Cryptography
             _provider = null;
         }
 
+        [SuppressMessage("Security",
+            "CA5379:Do Not Use Weak Key Derivation Function Algorithm",
+            Justification = "Rfc2898DeriveBytes type only supports HMACSHA1")]
         private void Initialize(EncryptionData password, EncryptionData salt)
         {
             var year = DateTime.UtcNow.Year;
 
             // Starting with Year 2000, use 1000 iterations.
-            year = year - 2000;
+            year -= 2000;
             var iterations = 1000;
 
             // Every 5 years, square the iterations.
-            for (var i = year; i > 4; i = i - 5)
+            for (var i = year; i > 4; i -= 5)
             {
-                iterations = iterations ^ 2;
+                iterations ^= 2;
             }
 
             _provider = new Rfc2898DeriveBytes(password.Bytes, salt.Bytes, iterations);

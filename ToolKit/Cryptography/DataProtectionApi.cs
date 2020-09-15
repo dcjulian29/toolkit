@@ -1,22 +1,25 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
-using Common.Logging;
 
 namespace ToolKit.Cryptography
 {
     /// <summary>
     /// Provides access to the Date Protection API Win32 subsystem
     /// </summary>
+    [SuppressMessage("Design",
+        "CA1060:Move pinvokes to native methods class",
+        Justification = "This is a native methods class.")]
     public class DataProtectionApi
     {
-        private EncryptionData _entropy;
-
         [Flags]
         private enum CryptProtect
         {
+            None = 0x0,
+
             UiForbidden = 0x1,
+
             LocalMachine = 0x4
         }
 
@@ -24,15 +27,8 @@ namespace ToolKit.Cryptography
         /// Gets or sets the key used in the encryption and decryption.
         /// </summary>
         /// <value>The key used in the encryption and decryption.</value>
-        public EncryptionData Key
-        {
-            get =>
-                _entropy ?? (_entropy =
-                    new EncryptionData(
-                        SHA256Hash.Create().ComputeToBytes(Encoding.Unicode.GetBytes(Environment.MachineName))));
-
-            set => _entropy = value;
-        }
+        public EncryptionData Key { get; set; } = new EncryptionData(
+                        SHA256Hash.Create().ComputeToBytes(Encoding.Unicode.GetBytes(Environment.MachineName)));
 
         /// <summary>
         /// Gets or sets the type of the key.
@@ -58,19 +54,17 @@ namespace ToolKit.Cryptography
             var cipherTextBlob = new DataBlob(cipherTextBytes);
             var entropyBlob = new DataBlob(Key.Bytes);
 
-            var description = String.Empty;
+            var description = string.Empty;
 
             try
             {
-                var flags = CryptProtect.UiForbidden;
-
                 CryptUnprotectData(
                     ref cipherTextBlob,
                     ref description,
                     ref entropyBlob,
                     IntPtr.Zero,
                     IntPtr.Zero,
-                    flags,
+                    CryptProtect.UiForbidden,
                     ref plainTextBlob);
 
                 var plainTextBytes = new byte[plainTextBlob.DataLength];
@@ -111,7 +105,7 @@ namespace ToolKit.Cryptography
         /// <returns>A byte array representing the encrypted data.</returns>
         public byte[] Encrypt(byte[] plainTextBytes)
         {
-            var description = String.Empty;
+            var description = string.Empty;
 
             var plainTextBlob = new DataBlob(plainTextBytes);
             var cipherTextBlob = new DataBlob(null);
@@ -161,7 +155,7 @@ namespace ToolKit.Cryptography
         }
 
         [ExcludeFromCodeCoverage]
-        [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern bool CryptProtectData(
             ref DataBlob plainText,
             string description,
@@ -172,7 +166,7 @@ namespace ToolKit.Cryptography
             ref DataBlob cipherText);
 
         [ExcludeFromCodeCoverage]
-        [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern bool CryptUnprotectData(
             ref DataBlob cipherText,
             ref string description,
@@ -185,14 +179,11 @@ namespace ToolKit.Cryptography
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         private struct DataBlob
         {
-            internal int DataLength;
-            internal IntPtr DataBuffer;
-
             public DataBlob(byte[] data = null)
             {
                 if (data == null)
                 {
-                    data = new byte[0];
+                    data = Array.Empty<byte>();
                 }
 
                 DataBuffer = Marshal.AllocHGlobal(data.Length);
@@ -201,6 +192,10 @@ namespace ToolKit.Cryptography
 
                 Marshal.Copy(data, 0, DataBuffer, data.Length);
             }
+
+            internal int DataLength { get; set; }
+
+            internal IntPtr DataBuffer { get; set; }
         }
     }
 }

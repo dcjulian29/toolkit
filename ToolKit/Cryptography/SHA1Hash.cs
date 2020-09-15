@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
@@ -17,9 +17,10 @@ namespace ToolKit.Cryptography
     /// digital signatures and for data integrity.
     /// </remarks>
     [Obsolete("SHA-1 is no longer considered secure against well-funded opponents. You should use a stronger hash algorithm.")]
-
-    // ReSharper disable once InconsistentNaming
-    public class SHA1Hash : IHash
+    [SuppressMessage("Minor Code Smell",
+        "S101:Types should be named in PascalCase",
+        Justification = "Class names contains an acronym.")]
+    public sealed class SHA1Hash : DisposableObject, IHash
     {
         private Hash _algorithm = new Hash(Hash.Provider.SHA1);
 
@@ -144,6 +145,22 @@ namespace ToolKit.Cryptography
         public byte[] ComputeToBytes(EncryptionData data, EncryptionData salt)
         {
             return _algorithm.Calculate(data, salt).Bytes;
+        }
+
+        /// <summary>
+        /// Disposes the resources used by the inherited class.
+        /// </summary>
+        /// <param name="disposing">
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+        /// only unmanaged resources.
+        /// </param>
+        protected override void DisposeResources(bool disposing)
+        {
+            if (_algorithm != null)
+            {
+                _algorithm.Dispose();
+                _algorithm = null;
+            }
         }
     }
 }

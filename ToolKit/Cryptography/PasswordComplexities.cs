@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 
 namespace ToolKit.Cryptography
@@ -7,8 +7,13 @@ namespace ToolKit.Cryptography
     /// An Enumeration of the features of a password to use when generating a random password.
     /// </summary>
     [Flags]
-    public enum PasswordComplexity
+    public enum PasswordComplexities
     {
+        /// <summary>
+        /// No complexities should be included.
+        /// </summary>
+        None = 0x0,
+
         /// <summary>
         /// Should the password allow characters to be repeated
         /// </summary>

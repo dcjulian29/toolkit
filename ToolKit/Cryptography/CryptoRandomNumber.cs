@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,18 +14,18 @@ namespace ToolKit.Cryptography
     /// </summary>
     public static class CryptoRandomNumber
     {
-        private static readonly RNGCryptoServiceProvider _Provider = new RNGCryptoServiceProvider();
+        private static readonly RNGCryptoServiceProvider _provider = new RNGCryptoServiceProvider();
 
         /// <summary>
         /// Returns a non-negative random integer.
         /// </summary>
         /// <returns>
-        /// A 32-bit signed integer that is greater than or equal to 0 and less than <see cref="System.Int32.MaxValue"/>.
+        /// A 32-bit signed integer that is greater than or equal to 0 and less than <see cref="int.MaxValue"/>.
         /// </returns>
         public static int Next()
         {
             var byteArray = new byte[4];
-            _Provider.GetBytes(byteArray);
+            _provider.GetBytes(byteArray);
 
             return Math.Abs(BitConverter.ToInt32(byteArray, 0));
         }
@@ -34,7 +35,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         /// <param name="maxValue">The exclusive upper bound of the random number to be generated.</param>
         /// <returns>
-        /// A 32-bit signed integer that is greater than or equal to 0 and less than <see cref="System.Int32.MaxValue"/>.
+        /// A 32-bit signed integer that is greater than or equal to 0 and less than <see cref="int.MaxValue"/>.
         /// </returns>
         public static int Next(int maxValue)
         {
@@ -52,7 +53,7 @@ namespace ToolKit.Cryptography
         /// <param name="minValue">The inclusive lower bound of the random number return.</param>
         /// <param name="maxValue">The exclusive upper bound of the random number to be generated.</param>
         /// <returns>
-        /// A 32-bit signed integer that is greater than or equal to 0 and less than <see cref="System.Int32.MaxValue"/>.
+        /// A 32-bit signed integer that is greater than or equal to 0 and less than <see cref="int.MaxValue"/>.
         /// </returns>
         public static int Next(int minValue, int maxValue)
         {
@@ -91,7 +92,7 @@ namespace ToolKit.Cryptography
                 throw new ArgumentNullException(nameof(bytes), "Bytes is null!");
             }
 
-            _Provider.GetBytes(bytes);
+            _provider.GetBytes(bytes);
         }
 
         /// <summary>
@@ -113,7 +114,7 @@ namespace ToolKit.Cryptography
 
             numbers.Each(n => sb.Append(n));
 
-            return Convert.ToDouble(sb.ToString());
+            return Convert.ToDouble(sb.ToString(), CultureInfo.CurrentCulture);
         }
 
         [ExcludeFromCodeCoverage]
@@ -125,7 +126,7 @@ namespace ToolKit.Cryptography
         [ExcludeFromCodeCoverage]
         private static int GetNumber(int minValue, int maxValue)
         {
-            var number = -1;
+            int number;
 
             do
             {

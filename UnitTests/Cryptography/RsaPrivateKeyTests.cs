@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using ToolKit.Cryptography;
@@ -57,10 +56,7 @@ namespace UnitTests.Cryptography
             key.ExportToXmlFile(file);
 
             // Act & Assert
-            Assert.Throws<IOException>(() =>
-            {
-                key.ExportToXmlFile(file);
-            });
+            Assert.Throws<IOException>(() => key.ExportToXmlFile(file));
         }
 
         [Fact]
@@ -80,10 +76,7 @@ namespace UnitTests.Cryptography
         public void LoadFromCertificateFile_Should_ThrowException_When_PrivateKeyFileDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var privateKey = RsaPrivateKey.LoadFromCertificateFile("nonexist.pfx", "password");
-            });
+            Assert.Throws<ArgumentException>(() => _ = RsaPrivateKey.LoadFromCertificateFile("nonexist.pfx", "password"));
         }
 
         [Fact]
@@ -93,40 +86,31 @@ namespace UnitTests.Cryptography
             var cert = Directory.GetCurrentDirectory() + @"\RsaEncrypt.pfx";
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var privateKey = RsaPrivateKey.LoadFromCertificateFile(cert, "");
-            });
+            Assert.Throws<ArgumentNullException>(() => _ = RsaPrivateKey.LoadFromCertificateFile(cert, ""));
         }
 
         [Fact]
         public void LoadFromEnvironment_Should_ThrowExceptionWhenEnvironmentDoesNotContainValues()
         {
             // Arrange & Act & Assert
-            Assert.Throws<ApplicationException>(() =>
-            {
-                var key = RsaPrivateKey.LoadFromEnvironment();
-            });
+            Assert.Throws<ArgumentException>(() => _ = RsaPrivateKey.LoadFromEnvironment());
         }
 
         [Fact]
         public void LoadFromString_Should_ThrowException_When_XmlDoesntContainElements()
         {
             // Arrange
-            var xml = "<RSAKeyValue><Exponent>AQAB</Exponent></RSAKeyValue>";
+            const string xml = "<RSAKeyValue><Exponent>AQAB</Exponent></RSAKeyValue>";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var key = new RsaPrivateKey(xml);
-            });
+            Assert.Throws<ArgumentException>(() => _ = new RsaPrivateKey(xml));
         }
 
         [Fact]
         public void LoadFromXmlFile_Should_LoadThePrivateKeyFromFile()
         {
             // Arrange
-            var expected = "71bwZomEwGq5FFx+43FIFngA6uZEZqPTMcTfc250F8WH"
+            const string expected = "71bwZomEwGq5FFx+43FIFngA6uZEZqPTMcTfc250F8WH"
                          + "7AFE94ucRpQR6JOKt6POZj/2NtY499YIKlJIjWM4Qw==";
             var file = Directory.GetCurrentDirectory() + @"\privateKey.xml";
 
@@ -141,10 +125,7 @@ namespace UnitTests.Cryptography
         public void LoadFromXmlFile_Should_ThrowException_When_FileDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var key = RsaPrivateKey.LoadFromXmlFile("nonexist.xml");
-            });
+            Assert.Throws<ArgumentException>(() => _ = RsaPrivateKey.LoadFromXmlFile("nonexist.xml"));
         }
 
         [Fact]
