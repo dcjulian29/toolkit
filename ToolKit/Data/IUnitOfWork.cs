@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ToolKit.Data
 {
@@ -34,6 +32,9 @@ namespace ToolKit.Data
         /// <returns>
         /// An instance of the entity that can be used by the Repository implementation to further query the results.
         /// </returns>
+        [SuppressMessage("Naming",
+            "CA1716:Identifiers should not match keywords",
+            Justification = "Really? Get off your high horse")]
         IQueryable<T> Get<T>() where T : class;
 
         /// <summary>

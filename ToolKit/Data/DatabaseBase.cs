@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.Data
 {
@@ -7,8 +8,14 @@ namespace ToolKit.Data
     /// </summary>
     public abstract class DatabaseBase : IDatabase
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell",
+        [SuppressMessage("Critical Code Smell",
             "S2223:Non-constant static fields should not be visible",
+            Justification = "This field is used in UnitTest to 'mock' the underlying DB")]
+        [SuppressMessage("Usage",
+            "CA2211:Non-constant fields should not be visible",
+            Justification = "This field is used in UnitTest to 'mock' the underlying DB")]
+        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules",
+            "SA1401:FieldsMustBePrivate",
             Justification = "This field is used in UnitTest to 'mock' the underlying DB")]
         protected static IDatabase _instance;
 
@@ -20,7 +27,7 @@ namespace ToolKit.Data
         /// <summary>
         /// Gets or sets a value indicating whether Unit Test are being run.
         /// </summary>
-        public static bool UnitTests { get; protected set; } = false;
+        public static bool UnitTests { get; protected set; }
 
         /// <summary>
         /// This method will Initialize the database in a class that inherits from this base class.
