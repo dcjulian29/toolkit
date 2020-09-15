@@ -50,7 +50,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".editorconfig" />
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Release'">
