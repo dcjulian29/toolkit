@@ -14,7 +14,8 @@ namespace ToolKit.Validation
         /// <param name="value">The parameter's value.</param>
         /// <param name="parameterName">The parameter's string representation.</param>
         /// <returns>The value of the parameter if it is not <c>null</c>.</returns>
-        public static T NotNull<T>(T value, string parameterName) where T : class
+        public static T NotNull<T>(T value, string parameterName)
+            where T : class
         {
             return value ?? throw new ArgumentNullException(parameterName);
         }
@@ -26,7 +27,8 @@ namespace ToolKit.Validation
         /// <param name="value">The parameter's value.</param>
         /// <param name="parameterName">The parameter's string representation.</param>
         /// <returns>The value of the parameter if it is not <c>null</c>.</returns>
-        public static T? NotNull<T>(T? value, string parameterName) where T : struct
+        public static T? NotNull<T>(T? value, string parameterName)
+            where T : struct
         {
             if (!value.HasValue)
             {

@@ -8,29 +8,30 @@ namespace ToolKit.Xml
 {
     /// <summary>
     /// This class contains two static methods to encode and decode text to be compatible with being
-    /// put into an XML document
+    /// put into an XML document.
     /// </summary>
     public static class XmlEncoder
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(XmlEncoder));
 
         /// <summary>
-        /// Decodes a string to remove XML entity markups
+        /// Decodes a string to remove XML entity markups.
         /// </summary>
-        /// <param name="inputText">Input text containing entity markups</param>
-        /// <returns>an decoded string</returns>
+        /// <param name="inputText">Input text containing entity markups.</param>
+        /// <returns>an decoded string.</returns>
         public static string Decode(string inputText)
         {
             inputText = Check.NotEmpty(inputText, nameof(inputText));
 
             // If the string doesn't have a & character, it doesn't have any entities.
-            if (inputText.IndexOf('&') < 0)
+            if (inputText.IndexOf('&', StringComparison.Ordinal) < 0)
             {
                 return inputText;
             }
 
             // If the string contains a & but not a ;, it doesn't have any entities.
-            if ((inputText.IndexOf('&') > -1) && (inputText.IndexOf(';') < 0))
+            if ((inputText.IndexOf('&', StringComparison.Ordinal) > -1)
+                && (inputText.IndexOf(';', StringComparison.Ordinal) < 0))
             {
                 return inputText;
             }
@@ -55,11 +56,11 @@ namespace ToolKit.Xml
                     continue;
                 }
 
-                var entity = inputText.Substring(i, endOfEntity + 1 - i);
+                var entity = inputText[i.. (endOfEntity + 1)];
 
                 if ((entity.Length > 1) && (entity[1] == '#'))
                 {
-                    entity = entity.Substring(2, entity.Length - 3);
+                    entity = entity[2..^1];
                     try
                     {
                         if ((entity[0] == 'x') || (entity[0] == 'X'))
@@ -134,10 +135,10 @@ namespace ToolKit.Xml
         }
 
         /// <summary>
-        /// Encodes a string to replace certain types of characters that are not "XML-Friendly"
+        /// Encodes a string to replace certain types of characters that are not "XML-Friendly".
         /// </summary>
         /// <param name="inputText">Input text to be encoded.</param>
-        /// <returns>an encoded string</returns>
+        /// <returns>an encoded string.</returns>
         public static string Encode(string inputText)
         {
             inputText = Check.NotNull(inputText, nameof(inputText));
@@ -180,7 +181,7 @@ namespace ToolKit.Xml
                 }
             }
 
-            return sb.ToString().Replace("  ", "&nbsp; ");
+            return sb.ToString().Replace("  ", "&nbsp; ", StringComparison.Ordinal);
         }
     }
 }

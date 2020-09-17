@@ -1,22 +1,19 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
-using Common.Logging;
 
 namespace ToolKit
 {
     /// <summary>
     /// A class that handles Hex encoding and decoding.
     /// </summary>
-    public class HexEncoding
+    public static class HexEncoding
     {
-        private static ILog _log = LogManager.GetLogger<HexEncoding>();
-
         /// <summary>
         /// Gets the byte count of the hex string.
         /// </summary>
         /// <param name="hexString">The hex string.</param>
-        /// <returns>the number of bytes of the hex values</returns>
+        /// <returns>the number of bytes of the hex values.</returns>
         public static int GetByteCount(string hexString)
         {
             var numHexChars = hexString.Count(IsHexDigit);
@@ -31,17 +28,17 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Returns true is c is a hexadecimal digit (A-F, a-f, 0-9)
+        /// Returns true is c is a hexadecimal digit (A-F, a-f, 0-9).
         /// </summary>
-        /// <param name="c">Character to test</param>
-        /// <returns>true if hex digit, false if not</returns>
+        /// <param name="c">Character to test.</param>
+        /// <returns>true if hex digit, false if not.</returns>
         public static bool IsHexDigit(char c)
         {
             var numA = Convert.ToInt32('A');
             var num1 = Convert.ToInt32('0');
-            c = Char.ToUpper(c);
+            c = char.ToUpperInvariant(c);
 
-            var numChar = Convert.ToInt32(c);
+            var numChar = Convert.ToInt32(c, CultureInfo.InvariantCulture);
 
             if (numChar >= numA && numChar < (numA + 6))
             {
@@ -57,10 +54,10 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Determines if given string is in proper hexadecimal string format
+        /// Determines if given string is in proper hexadecimal string format.
         /// </summary>
         /// <param name="hexString">The hex string.</param>
-        /// <returns>true if hex formatted, false if not</returns>
+        /// <returns>true if hex formatted, false if not.</returns>
         public static bool IsHexFormat(string hexString)
         {
             return hexString.All(IsHexDigit);
@@ -71,12 +68,12 @@ namespace ToolKit
         /// create one byte. First two hexadecimal characters become first byte in returned array.
         /// Non-hexadecimal characters are ignored.
         /// </summary>
-        /// <param name="hexString">string to convert to byte array</param>
-        /// <returns>byte array, in the same left-to-right order as the hexString</returns>
+        /// <param name="hexString">string to convert to byte array.</param>
+        /// <returns>byte array, in the same left-to-right order as the hexString.</returns>
         public static byte[] ToBytes(string hexString)
         {
             // Remove all none A-F, 0-9, characters
-            var strip = hexString.Where(IsHexDigit).Aggregate(String.Empty, (current, c) => current + c);
+            var strip = hexString.Where(IsHexDigit).Aggregate(string.Empty, (current, c) => current + c);
 
             // If odd number of characters, discard last character
             if (strip.Length % 2 != 0)
@@ -91,8 +88,8 @@ namespace ToolKit
             for (var i = 0; i < bytes.Length; i++)
             {
                 var hex = new string(new char[] { strip[j], strip[j + 1] });
-                bytes[i] = byte.Parse(hex, NumberStyles.HexNumber);
-                j = j + 2;
+                bytes[i] = byte.Parse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                j += 2;
             }
 
             return bytes;
@@ -102,11 +99,11 @@ namespace ToolKit
         /// Creates a string from the hexadecimal byte array. Each byte is converted into two
         /// characters representing the hex value.
         /// </summary>
-        /// <param name="bytes">byte array to convert to string</param>
-        /// <returns>string, in the same left-to-right order as the byte array</returns>
+        /// <param name="bytes">byte array to convert to string.</param>
+        /// <returns>string, in the same left-to-right order as the byte array.</returns>
         public static string ToString(byte[] bytes)
         {
-            return bytes.Aggregate(String.Empty, (current, t) => current + t.ToString("X2"));
+            return bytes.Aggregate(string.Empty, (current, t) => current + t.ToString("X2", CultureInfo.InvariantCulture));
         }
     }
 }

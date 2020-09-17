@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Serialization;
 using Common.Logging;
 
@@ -11,12 +12,12 @@ namespace ToolKit
     /// </summary>
     /// <typeparam name="T">
     /// A type that is inheriting from this class.
-    /// Example: MySettings : ApplicationSettings&lt;MySettings&gt;
+    /// Example: MySettings : ApplicationSettings&lt;MySettings&gt;.
     /// </typeparam>
     [XmlRoot("settings")]
     public abstract class ApplicationSettings<T>
     {
-        private static ILog _log = LogManager.GetLogger<ApplicationSettings<T>>();
+        private static readonly ILog _log = LogManager.GetLogger<ApplicationSettings<T>>();
 
         /// <summary>
         /// Loads the application settings.
@@ -43,14 +44,14 @@ namespace ToolKit
 
             if (!File.Exists(fileName))
             {
-                return default(T);
+                return default;
             }
 
             _log.Debug($"Loading application settings from {fileName}");
 
             var serializer = new XmlSerializer(typeof(T));
 
-            using (var reader = new StreamReader(fileName))
+            using (var reader = XmlReader.Create(new FileStream(fileName, FileMode.Open)))
             {
                 return (T)serializer.Deserialize(reader);
             }
@@ -68,12 +69,12 @@ namespace ToolKit
                 var fullPath = Assembly.GetAssembly(typeof(T)).Location;
                 var pathDirectory = Path.GetDirectoryName(fullPath);
                 var separator = Path.DirectorySeparatorChar;
-                fileName = String.Format("{0}{1}{2}", pathDirectory, separator, fileName);
+                fileName = $"{pathDirectory}{separator}{fileName}";
             }
 
             var serializer = new XmlSerializer(typeof(T));
 
-            _log.DebugFormat("Saving application settings to {0}", fileName);
+            _log.Debug($"Saving application settings to {fileName}");
 
             using (var writer = new StreamWriter(fileName))
             {

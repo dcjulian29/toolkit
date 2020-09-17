@@ -1,18 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
 namespace ToolKit.Network
 {
     /// <summary>
-    /// A representation of an IP version 4 address
+    /// A representation of an IP version 4 address.
     /// </summary>
     public class IpV4Network
     {
-        private IpV4Address _address;
-        private IpV4Address _mask;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="IpV4Network"/> class.
         /// </summary>
@@ -20,8 +18,8 @@ namespace ToolKit.Network
         /// <param name="mask">The subnet mask in IPV4 format.</param>
         public IpV4Network(IpV4Address address, IpV4Address mask)
         {
-            _address = address;
-            _mask = mask;
+            Address = address;
+            Netmask = mask;
         }
 
         /// <summary>
@@ -31,14 +29,18 @@ namespace ToolKit.Network
         /// <param name="mask">The subnet mask in IPV4 format.</param>
         public IpV4Network(IpV4Address address, int mask)
         {
-            _address = address;
+            Address = address;
 
             var octet1 = 0;
             var octet2 = 0;
             var octet3 = 0;
             var octet4 = 0;
 
-            var bits = String.Format("{0}{1}", new String('1', mask), new string('0', 32 - mask));
+            var bits = string.Format(
+                CultureInfo.InvariantCulture,
+                "{0}{1}",
+                new string('1', mask),
+                new string('0', 32 - mask));
 
             if (mask >= 1 && mask <= 8)
             {
@@ -63,7 +65,7 @@ namespace ToolKit.Network
                 octet4 = Convert.ToInt32(bits.Substring(24), 2);
             }
 
-            _mask = new IpV4Address(octet1, octet2, octet3, octet4);
+            Netmask = new IpV4Address(octet1, octet2, octet3, octet4);
         }
 
         /// <summary>
@@ -76,13 +78,7 @@ namespace ToolKit.Network
         /// <summary>
         /// Gets the Internet Protocol (IP) V4 Address.
         /// </summary>
-        public IpV4Address Address
-        {
-            get
-            {
-                return _address;
-            }
-        }
+        public IpV4Address Address { get; }
 
         /// <summary>
         /// Gets the CIDR representation of the bit mask of the network.
@@ -91,7 +87,7 @@ namespace ToolKit.Network
         {
             get
             {
-                return _mask.ToBinary().Count(f => f == '1');
+                return Netmask.ToBinary().Count(f => f == '1');
             }
         }
 
@@ -103,15 +99,15 @@ namespace ToolKit.Network
             get
             {
                 var retval = new StringBuilder();
-                var address = ConvertToOctets(_address);
-                var mask = ConvertToOctets(_mask);
+                var address = ConvertToOctets(Address);
+                var mask = ConvertToOctets(Netmask);
                 var inverted = new List<int>();
 
                 mask.Each(m => inverted.Add(255 - m));
 
-                for (int i = 0; i < 4; i++)
+                for (var i = 0; i < 4; i++)
                 {
-                    retval.AppendFormat("{0}.", address[i] | inverted[i]);
+                    retval.AppendFormat(CultureInfo.InvariantCulture, "{0}.", address[i] | inverted[i]);
                 }
 
                 return new IpV4Address(retval.ToString(0, retval.Length - 1));
@@ -119,7 +115,7 @@ namespace ToolKit.Network
         }
 
         /// <summary>
-        /// Gets the Maximum Host IPV4 Address for the Network
+        /// Gets the Maximum Host IPV4 Address for the Network.
         /// </summary>
         public IpV4Address MaximumAddress
         {
@@ -129,15 +125,15 @@ namespace ToolKit.Network
                 var octets = broadcast.ToString().Split('.');
 
                 return new IpV4Address(
-                    Convert.ToInt32(octets[0]),
-                    Convert.ToInt32(octets[1]),
-                    Convert.ToInt32(octets[2]),
-                    Convert.ToInt32(octets[3]) - 1);
+                    Convert.ToInt32(octets[0], CultureInfo.InvariantCulture),
+                    Convert.ToInt32(octets[1], CultureInfo.InvariantCulture),
+                    Convert.ToInt32(octets[2], CultureInfo.InvariantCulture),
+                    Convert.ToInt32(octets[3], CultureInfo.InvariantCulture) - 1);
             }
         }
 
         /// <summary>
-        /// Gets the Minimum Host IPV4 Address for the Network
+        /// Gets the Minimum Host IPV4 Address for the Network.
         /// </summary>
         public IpV4Address MinumumAddress
         {
@@ -147,23 +143,17 @@ namespace ToolKit.Network
                 var octets = network.ToString().Split('.');
 
                 return new IpV4Address(
-                    Convert.ToInt32(octets[0]),
-                    Convert.ToInt32(octets[1]),
-                    Convert.ToInt32(octets[2]),
-                    Convert.ToInt32(octets[3]) + 1);
+                    Convert.ToInt32(octets[0], CultureInfo.InvariantCulture),
+                    Convert.ToInt32(octets[1], CultureInfo.InvariantCulture),
+                    Convert.ToInt32(octets[2], CultureInfo.InvariantCulture),
+                    Convert.ToInt32(octets[3], CultureInfo.InvariantCulture) + 1);
             }
         }
 
         /// <summary>
         /// Gets the Network Mask.
         /// </summary>
-        public IpV4Address Netmask
-        {
-            get
-            {
-                return _mask;
-            }
-        }
+        public IpV4Address Netmask { get; }
 
         /// <summary>
         /// Gets the Internet Protocol (IP) V4 Network Id Address..
@@ -173,12 +163,12 @@ namespace ToolKit.Network
             get
             {
                 var retval = new StringBuilder();
-                var address = ConvertToOctets(_address);
-                var mask = ConvertToOctets(_mask);
+                var address = ConvertToOctets(Address);
+                var mask = ConvertToOctets(Netmask);
 
-                for (int i = 0; i < 4; i++)
+                for (var i = 0; i < 4; i++)
                 {
-                    retval.AppendFormat("{0}.", address[i] & mask[i]);
+                    retval.AppendFormat(CultureInfo.InvariantCulture, "{0}.", address[i] & mask[i]);
                 }
 
                 return new IpV4Address(retval.ToString(0, retval.Length - 1));
@@ -186,17 +176,17 @@ namespace ToolKit.Network
         }
 
         /// <summary>
-        /// Gets the Number of Hosts for the Network
+        /// Gets the Number of Hosts for the Network.
         /// </summary>
         public int NumberOfHosts
         {
             get
             {
-                return Convert.ToInt32(Math.Pow(2, _mask.ToBinary().Count(f => f == '0')) - 2);
+                return Convert.ToInt32(Math.Pow(2, Netmask.ToBinary().Count(f => f == '0')) - 2);
             }
         }
 
-        private IReadOnlyList<int> ConvertToOctets(IpV4Address address)
+        private static IReadOnlyList<int> ConvertToOctets(IpV4Address address)
         {
             var binary = address.ToBinary(true);
             var octets = binary.Split('.');
