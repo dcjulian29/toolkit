@@ -22,15 +22,15 @@ namespace Toolkit.Data.EFCore
 
         private bool _rollbackOnDispose;
 
-        /// <inheritdoc />
         /// <summary>
         /// Initializes a new instance of the <see cref="EfCoreUnitOfWork" /> class.
         /// </summary>
-        /// <param name="options">The options to be used by this unit of work</param>
+        /// <param name="options">The options to be used by this unit of work.</param>
         /// <param name="rollbackOnDispose">
         /// Should a roll back occur if this class is disposed before commit.
         /// </param>
-        public EfCoreUnitOfWork(DbContextOptions options, bool rollbackOnDispose = false) : base(options)
+        public EfCoreUnitOfWork(DbContextOptions options, bool rollbackOnDispose = false)
+            : base(options)
         {
             _rollbackOnDispose = rollbackOnDispose;
             _transaction = Database.BeginTransaction();
@@ -41,7 +41,8 @@ namespace Toolkit.Data.EFCore
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public new void Attach<T>(T entity) where T : class
+        public new void Attach<T>(T entity)
+            where T : class
         {
             Set<T>().Attach(entity);
             Entry(entity).State = EntityState.Modified;
@@ -52,7 +53,8 @@ namespace Toolkit.Data.EFCore
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Delete<T>(T entity) where T : class
+        public void Delete<T>(T entity)
+            where T : class
         {
             Set<T>().Remove(entity);
             Entry(entity).State = EntityState.Deleted;
@@ -72,7 +74,7 @@ namespace Toolkit.Data.EFCore
         }
 
         /// <summary>
-        /// Gets a <see cref="Data.Entity.Infrastructure.EntityEntry" /> object for the
+        /// Gets a <see cref="EntityEntry" /> object for the
         /// given entity providing access to information about the entity and the ability to perform
         /// actions on the entity.
         /// </summary>
@@ -91,7 +93,8 @@ namespace Toolkit.Data.EFCore
         /// An instance of the entity that can be used by the Repository implementation to further
         /// query the results.
         /// </returns>
-        public IQueryable<T> Get<T>() where T : class
+        public IQueryable<T> Get<T>()
+            where T : class
         {
             return Set<T>();
         }
@@ -110,7 +113,8 @@ namespace Toolkit.Data.EFCore
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Save<T>(T entity) where T : class
+        public void Save<T>(T entity)
+            where T : class
         {
             if (entity == null)
             {
