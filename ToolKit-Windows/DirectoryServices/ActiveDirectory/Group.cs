@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
@@ -177,7 +177,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the the distinguished name of the group.
+        /// Gets the distinguished name of the group.
         /// </summary>
         /// <value>The distinguished name of the group.</value>
         public string DistinguishedName

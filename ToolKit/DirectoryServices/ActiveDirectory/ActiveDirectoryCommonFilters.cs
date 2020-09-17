@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
-using Common.Logging;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
@@ -13,9 +12,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         "StyleCop.CSharp.DocumentationRules",
         "SA1650:ElementDocumentationMustBeSpelledCorrectly",
         Justification = "This class contains acronyms or abbreviations.")]
-    [SuppressMessage("ReSharper", "StringLiteralTypo", Justification = "Contains Many Acroymns")]
-    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Contains Many Acroymns")]
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Contains Many Acroymns")]
+    [SuppressMessage(
+        "Naming",
+        "CA1707:Identifiers should not contain underscores",
+        Justification = "This class contains acronyms or abbreviations.")]
     public static class ActiveDirectoryCommonFilters
     {
         /// <summary>
@@ -84,56 +84,64 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
         /// <summary>
         /// Gets a sAMAccountType LdapFilter object that represents a certain type of object in
-        /// Active Directory. <seealso href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx"/>
+        /// Active Directory. <seealso
+        /// href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx" />
         /// </summary>
         /// <value>sAMAccountType value describing an account type object.</value>
         public static LdapFilter SAM_ALIAS_OBJECT => new LdapFilter("sAMAcountType=536870912");
 
         /// <summary>
         /// Gets a sAMAccountType LdapFilter object that represents a certain type of object in
-        /// Active Directory. <seealso href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx"/>
+        /// Active Directory. <seealso
+        /// href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx" />
         /// </summary>
         /// <value>sAMAccountType value describing an account type object.</value>
         public static LdapFilter SAM_GROUP_OBJECT => new LdapFilter("sAMAcountType=268435456");
 
         /// <summary>
         /// Gets a sAMAccountType LdapFilter object that represents a certain type of object in
-        /// Active Directory. <seealso href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx"/>
+        /// Active Directory. <seealso
+        /// href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx" />
         /// </summary>
         /// <value>sAMAccountType value describing an account type object.</value>
         public static LdapFilter SAM_MACHINE_ACCOUNT => new LdapFilter("sAMAcountType=805306369");
 
         /// <summary>
         /// Gets a sAMAccountType LdapFilter object that represents a certain type of object in
-        /// Active Directory. <seealso href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx"/>
+        /// Active Directory. <seealso
+        /// href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx" />
         /// </summary>
         /// <value>sAMAccountType value describing an account type object.</value>
         public static LdapFilter SAM_NON_SECURITY_ALIAS_OBJECT => new LdapFilter("sAMAcountType=536870913");
 
         /// <summary>
         /// Gets a sAMAccountType LdapFilter object that represents a certain type of object in
-        /// Active Directory. <seealso href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx"/>
+        /// Active Directory. <seealso
+        /// href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx" />
         /// </summary>
         /// <value>sAMAccountType value describing an account type object.</value>
         public static LdapFilter SAM_NON_SECURITY_GROUP_OBJECT => new LdapFilter("sAMAcountType=268435457");
 
         /// <summary>
         /// Gets a sAMAccountType LdapFilter object that represents a certain type of object in
-        /// Active Directory. <seealso href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx"/>
+        /// Active Directory. <seealso
+        /// href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx" />
         /// </summary>
         /// <value>sAMAccountType value describing an account type object.</value>
         public static LdapFilter SAM_NORMAL_USER_ACCOUNT => new LdapFilter("sAMAcountType=805306368");
 
         /// <summary>
         /// Gets a sAMAccountType LdapFilter object that represents a certain type of object in
-        /// Active Directory. <seealso href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx"/>
+        /// Active Directory. <seealso
+        /// href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx" />
         /// </summary>
         /// <value>sAMAccountType value describing an account type object.</value>
         public static LdapFilter SAM_TRUST_ACCOUNT => new LdapFilter("sAMAcountType=805306370");
 
         /// <summary>
         /// Gets a sAMAccountType LdapFilter object that represents a certain type of object in
-        /// Active Directory. <seealso href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx"/>
+        /// Active Directory. <seealso
+        /// href="http://msdn.microsoft.com/en-us/library/cc228417(PROT.13).aspx" />
         /// </summary>
         /// <value>sAMAccountType value describing an account type object.</value>
         public static LdapFilter SAM_USER_OBJECT => new LdapFilter("sAMAcountType=805306368");
@@ -196,15 +204,16 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </summary>
         /// <param name="name">The partial name of the computer.</param>
         /// <returns>LdapFilter for computers that match the partial or complete name provided.</returns>
-        public static LdapFilter ComputersNameContaining(string name) => Computers.And(String.Format("name=*{0}*", name), true);
+        public static LdapFilter ComputersNameContaining(string name) => Computers.And($"name=*{name}*", true);
 
         /// <summary>
         /// Returns an LdapFilter for computers that match the partial or complete operating system
         /// name provided.
         /// </summary>
         /// <param name="operatingSystem">The operating system.</param>
-        /// <returns>LdapFilter for computer that match the partial or complete OS provided</returns>
-        public static LdapFilter ComputersWithOS(string operatingSystem) => Computers.And(String.Format("operatingSystem=*{0}*", operatingSystem), true);
+        /// <returns>LdapFilter for computer that match the partial or complete OS provided..</returns>
+        public static LdapFilter ComputersWithOS(string operatingSystem) =>
+            Computers.And($"operatingSystem=*{operatingSystem}*", true);
 
         /// <summary>
         /// Returns an LdapFilter for computers that match the partial or complete operating system
@@ -212,130 +221,88 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </summary>
         /// <param name="operatingSystem">The operating system.</param>
         /// <param name="servicePack">The service pack.</param>
-        /// <returns>LdapFilter for computer that match the partial or complete OS and SP provided</returns>
+        /// <returns>LdapFilter for computer that match the partial or complete OS and SP provided.</returns>
         public static LdapFilter ComputersWithOsAndSp(string operatingSystem, int servicePack) =>
             ComputersWithOS(operatingSystem)
                 .And($"operatingSystemServicePack=*{servicePack}*", true);
 
         /// <summary>
-        /// Returns an LdapFilter for contacts who are a member of a group (typically a distribution list)
+        /// Returns an LdapFilter for contacts who are a member of a group (typically a distribution list).
         /// </summary>
         /// <param name="group">The group's DistinguishedName.</param>
-        /// <returns>LdapFilter for contacts</returns>
+        /// <returns>LdapFilter for contacts.</returns>
         public static LdapFilter ContactsInGroup(DistinguishedName group) =>
-            Contacts.And(new LdapFilter("memberOf", "=", @group.ToString()), true);
+            Contacts.And(new LdapFilter("memberOf", "=", $"{group}"), true);
 
         /// <summary>
-        /// Returns an LdapFilter for Group that matches the name provided
+        /// Returns an LdapFilter for Group that matches the name provided.
         /// </summary>
         /// <param name="nameOfGroup">The name of the group.</param>
-        /// <returns>LdapFilter for group</returns>
+        /// <returns>LdapFilter for group.</returns>
         public static LdapFilter Group(string nameOfGroup) => Group(nameOfGroup, false);
 
         /// <summary>
-        /// Returns an LdapFilter for Group that matches the name provided
+        /// Returns an LdapFilter for Group that matches the name provided.
         /// </summary>
         /// <param name="nameOfGroup">The name of group.</param>
         /// <param name="fuzzySearch">if set to <c>true</c>, use wild cards.</param>
-        /// <returns>LdapFilter for group</returns>
+        /// <returns>LdapFilter for group.</returns>
         public static LdapFilter Group(string nameOfGroup, bool fuzzySearch) =>
             Groups.And(fuzzySearch ? $"sAMAccountName=*{nameOfGroup}*" : $"sAMAccountName={nameOfGroup}", true);
 
         /// <summary>
         /// Returns an LdapFilter for use with userAccountControl searches.
         /// </summary>
-        /// <param name="uac">An ADS_USER_Flag enumeration</param>
-        /// <returns>LdapFilter for User Account Control Search</returns>
+        /// <param name="uac">An ADS_USER_Flag enumeration.</param>
+        /// <returns>LdapFilter for User Account Control Search.</returns>
         public static LdapFilter UserAccessControl(ADS_USER_FLAG uac)
         {
-            switch (uac)
+            return uac switch
             {
-                case ADS_USER_FLAG.SCRIPT:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=1");
-
-                case ADS_USER_FLAG.ACCOUNTDISABLE:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2");
-
-                case ADS_USER_FLAG.HOMEDIR_REQUIRED:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8");
-
-                case ADS_USER_FLAG.LOCKOUT:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=16");
-
-                case ADS_USER_FLAG.PASSWD_NOTREQD:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=32");
-
-                case ADS_USER_FLAG.PASSWD_CANT_CHANGE:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=64");
-
-                case ADS_USER_FLAG.ENCRYPTED_TEXT_PASSWORD_ALLOWED:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=128");
-
-                case ADS_USER_FLAG.TEMP_DUPLICATE_ACCOUNT:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=256");
-
-                case ADS_USER_FLAG.NORMAL_ACCOUNT:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=512");
-
-                case ADS_USER_FLAG.INTERDOMAIN_TRUST_ACCOUNT:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2048");
-
-                case ADS_USER_FLAG.WORKSTATION_TRUST_ACCOUNT:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=4096");
-
-                case ADS_USER_FLAG.SERVER_TRUST_ACCOUNT:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8192");
-
-                case ADS_USER_FLAG.DONT_EXPIRE_PASSWD:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=65536");
-
-                case ADS_USER_FLAG.MNS_LOGON_ACCOUNT:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=131072");
-
-                case ADS_USER_FLAG.SMARTCARD_REQUIRED:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=262144");
-
-                case ADS_USER_FLAG.TRUSTED_FOR_DELEGATION:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=524288");
-
-                case ADS_USER_FLAG.NOT_DELEGATED:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=1048576");
-
-                case ADS_USER_FLAG.USE_DES_KEY_ONLY:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2097152");
-
-                case ADS_USER_FLAG.DONT_REQUIRE_PREAUTH:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=4194304");
-
-                case ADS_USER_FLAG.PASSWORD_EXPIRED:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8388608");
-
-                case ADS_USER_FLAG.TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION:
-                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=16777216");
-
-                default:
-                    throw new InvalidOperationException("Invalid User Flag!");
-            }
+                ADS_USER_FLAG.SCRIPT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=1"),
+                ADS_USER_FLAG.ACCOUNTDISABLE => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2"),
+                ADS_USER_FLAG.HOMEDIR_REQUIRED => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8"),
+                ADS_USER_FLAG.LOCKOUT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=16"),
+                ADS_USER_FLAG.PASSWD_NOTREQD => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=32"),
+                ADS_USER_FLAG.PASSWD_CANT_CHANGE => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=64"),
+                ADS_USER_FLAG.ENCRYPTED_TEXT_PASSWORD_ALLOWED
+                    => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=128"),
+                ADS_USER_FLAG.TEMP_DUPLICATE_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=256"),
+                ADS_USER_FLAG.NORMAL_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=512"),
+                ADS_USER_FLAG.INTERDOMAIN_TRUST_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2048"),
+                ADS_USER_FLAG.WORKSTATION_TRUST_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=4096"),
+                ADS_USER_FLAG.SERVER_TRUST_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8192"),
+                ADS_USER_FLAG.DONT_EXPIRE_PASSWD => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=65536"),
+                ADS_USER_FLAG.MNS_LOGON_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=131072"),
+                ADS_USER_FLAG.SMARTCARD_REQUIRED => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=262144"),
+                ADS_USER_FLAG.TRUSTED_FOR_DELEGATION => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=524288"),
+                ADS_USER_FLAG.NOT_DELEGATED => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=1048576"),
+                ADS_USER_FLAG.USE_DES_KEY_ONLY => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2097152"),
+                ADS_USER_FLAG.DONT_REQUIRE_PREAUTH => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=4194304"),
+                ADS_USER_FLAG.PASSWORD_EXPIRED => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8388608"),
+                ADS_USER_FLAG.TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=16777216"),
+                _ => throw new InvalidOperationException("Invalid User Flag!"),
+            };
         }
 
         /// <summary>
         /// Returns an LdapFilter for Users and contacts in a group.
         /// </summary>
         /// <param name="group">The group's Distinguished Name.</param>
-        /// <returns>LdapFilter for the Users and Contacts</returns>
+        /// <returns>LdapFilter for the Users and Contacts.</returns>
         public static LdapFilter UsersContactsInGroup(DistinguishedName group) =>
             LdapFilter.And(
                 new LdapFilter("objectCategory=person"),
                 LdapFilter.Or(
                     new LdapFilter("objectClass=contact"),
                     new LdapFilter("objectClass=user")),
-                new LdapFilter("memberOf", "=", @group.ToString()));
+                new LdapFilter("memberOf", "=", $"{group}"));
 
         /// <summary>
         /// Returns an LdapFilter for Users that were created after the specified date.
         /// </summary>
         /// <param name="theDate">The date that will be converted to an Ldap format.</param>
-        /// <returns>LdapFilter for the Users</returns>
+        /// <returns>LdapFilter for the Users.</returns>
         public static LdapFilter UsersCreatedAfterDate(DateTime theDate) =>
             Users.And(
                 new LdapFilter("whenCreated", ">=", AdDateTime.ToLdapDateTime(theDate)), true);
@@ -344,7 +311,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Returns an LdapFilter for Users that were created before the specified date.
         /// </summary>
         /// <param name="theDate">The date that will be converted to an Ldap format.</param>
-        /// <returns>LdapFilter for the Users</returns>
+        /// <returns>LdapFilter for the Users.</returns>
         public static LdapFilter UsersCreatedBeforeDate(DateTime theDate) =>
             Users.And(
                 new LdapFilter("whenCreated", "<=", AdDateTime.ToLdapDateTime(theDate)), true);
@@ -354,7 +321,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </summary>
         /// <param name="firstDate">The first date of the range.</param>
         /// <param name="secondDate">The second date of the range.</param>
-        /// <returns>LdapFilter for the Users</returns>
+        /// <returns>LdapFilter for the Users.</returns>
         public static LdapFilter UsersCreatedBetweenDates(DateTime firstDate, DateTime secondDate) =>
             Users.And(
                 LdapFilter.And(

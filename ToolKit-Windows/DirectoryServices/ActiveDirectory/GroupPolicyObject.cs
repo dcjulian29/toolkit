@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
@@ -25,12 +25,12 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="nameOfGpo">The name of the GPO</param>
         public GroupPolicyObject(string domainName, string nameOfGpo)
         {
-            if (String.IsNullOrEmpty(domainName))
+            if (string.IsNullOrEmpty(domainName))
             {
                 throw new ArgumentNullException(nameof(domainName));
             }
 
-            if (String.IsNullOrEmpty(nameOfGpo))
+            if (string.IsNullOrEmpty(nameOfGpo))
             {
                 throw new ArgumentNullException(nameof(nameOfGpo));
             }
@@ -124,7 +124,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             var thisLink = $"[LDAP://{DistinguishedName};0]";
             string oldGpLink;
-            var newGpLink = String.Empty;
+            var newGpLink = string.Empty;
 
             // Let's get the existing gpLink attribute
             var path = DirectoryServices.DistinguishedName.Parse(distinguishedNameOfOu);
@@ -133,7 +133,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 var pathOfOu = entry.Path;
                 _log.Debug($"OU Distinguished Name: {pathOfOu}");
 
-                var link = (entry.Properties["GPLink"].Value as string) ?? String.Empty;
+                var link = (entry.Properties["GPLink"].Value as string) ?? string.Empty;
 
                 _log.Debug($"oldGPLink: {link}");
 

@@ -1,5 +1,6 @@
-﻿using System;
-using Common.Logging;
+using System;
+using System.Globalization;
+using ToolKit.Validation;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
@@ -12,10 +13,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
     public static class AdDateTime
     {
         /// <summary>
-        /// Converts a DateTime object into an IADsLargeInteger object
+        /// Converts a DateTime object into an IADsLargeInteger object.
         /// </summary>
-        /// <param name="dateTime">The DateTime object to convert</param>
-        /// <returns>The UTC DateTime object represented as an IADsLargeInteger</returns>
+        /// <param name="dateTime">The DateTime object to convert.</param>
+        /// <returns>The UTC DateTime object represented as an IADsLargeInteger.</returns>
         public static IADsLargeInteger ToADsLargeInteger(DateTime dateTime)
         {
             var int64Value = dateTime.ToFileTimeUtc();
@@ -30,12 +31,14 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Converts an IADsLargeInteger object into a date and time object
+        /// Converts an IADsLargeInteger object into a date and time object.
         /// </summary>
-        /// <param name="dateTimeObject">The IADsLargeInteger object</param>
-        /// <returns>The IADsLargeInteger object represented as a DateTime object</returns>
+        /// <param name="dateTimeObject">The IADsLargeInteger object.</param>
+        /// <returns>The IADsLargeInteger object represented as a DateTime object.</returns>
         public static DateTime ToDateTime(object dateTimeObject)
         {
+            Check.NotNull(dateTimeObject, nameof(dateTimeObject));
+
             var dateTime = dateTimeObject as LargeInteger;
 
             var high = (long)dateTime.HighPart;
@@ -53,7 +56,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 high++;
             }
 
-            high = high << 32;
+            high <<= 32;
 
             return DateTime.FromFileTime(high + low).ToUniversalTime();
         }
@@ -65,7 +68,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns>string containing an LDAP formatted date and time.</returns>
         public static string ToLdapDateTime(DateTime when)
         {
-            return String.Format(
+            return string.Format(
+                CultureInfo.InvariantCulture,
                 "{0:0000}{1:00}{2:00}{3:00}{4:00}{5:00}.0Z",
                 when.Year,
                 when.Month,

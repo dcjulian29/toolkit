@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
-using Common.Logging;
-using ToolKit;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
@@ -238,7 +236,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the the distinguished name of the contact.
+        /// Gets the distinguished name of the contact.
         /// </summary>
         /// <value>The distinguished name of the contact.</value>
         public string DistinguishedName

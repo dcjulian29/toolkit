@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
@@ -52,7 +52,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </summary>
         protected DirectoryObject()
         {
-            _distinguishedName = String.Empty;
+            _distinguishedName = string.Empty;
         }
 
         /// <summary>
@@ -62,8 +62,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="distinguishedName">string representation of the distinguished name.</param>
         protected DirectoryObject(string distinguishedName)
         {
-            _distinguishedName = String.Empty;
-            if (String.IsNullOrEmpty(distinguishedName))
+            _distinguishedName = string.Empty;
+            if (string.IsNullOrEmpty(distinguishedName))
             {
                 throw new ArgumentNullException(nameof(distinguishedName));
             }
@@ -78,7 +78,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="distinguishedName">DistinguishedName object of the distinguished name.</param>
         protected DirectoryObject(DistinguishedName distinguishedName)
         {
-            _distinguishedName = String.Empty;
+            _distinguishedName = string.Empty;
             if (distinguishedName == null)
             {
                 throw new ArgumentNullException(nameof(distinguishedName));
@@ -94,7 +94,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="result">A SearchResult Object.</param>
         protected DirectoryObject(SearchResult result)
         {
-            _distinguishedName = String.Empty;
+            _distinguishedName = string.Empty;
             if (result == null)
             {
                 throw new ArgumentNullException(nameof(result));
@@ -110,7 +110,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="entry">A DirectoryEntry Object.</param>
         protected DirectoryObject(DirectoryEntry entry)
         {
-            _distinguishedName = String.Empty;
+            _distinguishedName = string.Empty;
             if (entry == null)
             {
                 throw new ArgumentNullException(nameof(entry));
@@ -129,7 +129,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             {
                 var domainRoot = DistinguishedName.Parse(_distinguishedName).DomainRoot;
 
-                return !String.IsNullOrEmpty(domainRoot)
+                return !string.IsNullOrEmpty(domainRoot)
                     ? ResolveNetBios().ToUpper(CultureInfo.InvariantCulture) : null;
             }
         }
@@ -506,7 +506,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 {
                     if (node.Attributes?[0].InnerText == "System.String")
                     {
-                        if (!String.IsNullOrEmpty(node.InnerText))
+                        if (!string.IsNullOrEmpty(node.InnerText))
                         {
                             value = XmlEncoder.Decode(node.InnerText);
                         }
@@ -534,7 +534,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns>List of classes separated by a space</returns>
         protected string GetObjectClass()
         {
-            var objectClass = String.Empty;
+            var objectClass = string.Empty;
 
             try
             {
@@ -611,7 +611,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             }
 
             var objectClass = propertyCollection["objectclass"].Cast<object>()
-                .Aggregate(String.Empty, (current, property) => current + $"{property} ");
+                .Aggregate(string.Empty, (current, property) => current + $"{property} ");
 
             return objectClass.Contains(objectType);
         }
@@ -682,7 +682,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                     foreach (SearchResult result in results)
                     {
                         var contextName = (string)result.Properties["nCName"][0];
-                        if (String.Equals(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase))
                         {
                             netBiosName = (string)result.Properties["netBIOSName"][0];
                         }

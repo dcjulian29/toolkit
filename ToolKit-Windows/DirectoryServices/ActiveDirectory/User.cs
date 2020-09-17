@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
@@ -116,7 +116,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 try
                 {
                     var expiration = GetNodeValue("//DirectoryObject/accountexpires");
-                    return String.IsNullOrEmpty(expiration)
+                    return string.IsNullOrEmpty(expiration)
                         ? DateTime.MaxValue
                         : DateTime.FromFileTimeUtc(Convert.ToInt64(expiration, CultureInfo.InvariantCulture));
                 }
