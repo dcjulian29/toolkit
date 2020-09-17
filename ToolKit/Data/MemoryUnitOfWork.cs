@@ -16,7 +16,8 @@ namespace ToolKit.Data
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Attach<T>(T entity) where T : class
+        public void Attach<T>(T entity)
+            where T : class
         {
             Save<T>(entity);
         }
@@ -26,7 +27,8 @@ namespace ToolKit.Data
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Delete<T>(T entity) where T : class
+        public void Delete<T>(T entity)
+            where T : class
         {
             if (_list.Contains(entity))
             {
@@ -42,7 +44,8 @@ namespace ToolKit.Data
         /// An instance of the entity that can be used by the Repository implementation to further
         /// query the results.
         /// </returns>
-        public IQueryable<T> Get<T>() where T : class => _list.Cast<T>().AsQueryable();
+        public IQueryable<T> Get<T>()
+            where T : class => _list.Cast<T>().AsQueryable();
 
         /// <summary>
         /// Mark this unit of work to be rollback.
@@ -57,7 +60,8 @@ namespace ToolKit.Data
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Save<T>(T entity) where T : class
+        public void Save<T>(T entity)
+            where T : class
         {
             if (_list.Contains(entity))
             {

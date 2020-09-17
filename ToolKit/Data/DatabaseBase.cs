@@ -4,23 +4,29 @@ using System.Diagnostics.CodeAnalysis;
 namespace ToolKit.Data
 {
     /// <summary>
-    /// A Base Abstract Implementation of A Database Handler Class
+    /// A Base Abstract Implementation of A Database Handler Class.
     /// </summary>
     public abstract class DatabaseBase : IDatabase
     {
-        [SuppressMessage("Critical Code Smell",
+        /// <summary>
+        /// Allow derived classes direct access to the database instance.
+        /// </summary>
+        [SuppressMessage(
+            "Critical Code Smell",
             "S2223:Non-constant static fields should not be visible",
             Justification = "This field is used in UnitTest to 'mock' the underlying DB")]
-        [SuppressMessage("Usage",
+        [SuppressMessage(
+            "Usage",
             "CA2211:Non-constant fields should not be visible",
             Justification = "This field is used in UnitTest to 'mock' the underlying DB")]
-        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules",
+        [SuppressMessage(
+            "StyleCop.CSharp.MaintainabilityRules",
             "SA1401:FieldsMustBePrivate",
             Justification = "This field is used in UnitTest to 'mock' the underlying DB")]
         protected static IDatabase _instance;
 
         /// <summary>
-        /// Gets or sets the database instance.
+        /// Gets the database instance.
         /// </summary>
         public static IDatabase Instance => _instance;
 
