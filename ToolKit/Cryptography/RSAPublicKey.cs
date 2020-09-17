@@ -11,10 +11,12 @@ namespace ToolKit.Cryptography
     /// <summary>
     /// Represents a public encryption key. Intended to be shared, it contains only the Modulus and Exponent.
     /// </summary>
-    [SuppressMessage("Design",
+    [SuppressMessage(
+        "Design",
         "RCS1187:Use constant instead of field.",
         Justification = "This time the analysis rule don't make sense for this class")]
-    [SuppressMessage("Performance",
+    [SuppressMessage(
+        "Performance",
         "CA1802:Use literals where appropriate",
         Justification = "This time the analysis rule don't make sense for this class")]
     public class RsaPublicKey
@@ -115,7 +117,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Load public key from app.config or web.config file
+        /// Load public key from the application or web configuration file.
         /// </summary>
         /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
         public static RsaPublicKey LoadFromEnvironment()

@@ -39,14 +39,14 @@ namespace ToolKit.Cryptography
         /// Returns the pseudo-random key for this object.
         /// </summary>
         /// <param name="size">The number of pseudo-random key bytes to generate.</param>
-        /// <returns>The bytes of the derived key</returns>
+        /// <returns>The bytes of the derived key.</returns>
         public byte[] GetBytes(int size)
         {
             return _provider.GetBytes(size);
         }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
+        /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
         /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
@@ -69,7 +69,8 @@ namespace ToolKit.Cryptography
             _provider = null;
         }
 
-        [SuppressMessage("Security",
+        [SuppressMessage(
+            "Security",
             "CA5379:Do Not Use Weak Key Derivation Function Algorithm",
             Justification = "Rfc2898DeriveBytes type only supports HMACSHA1")]
         private void Initialize(EncryptionData password, EncryptionData salt)

@@ -12,10 +12,12 @@ namespace ToolKit.Cryptography
     /// Represents a private encryption key. Not intended to be shared, as it contains all the
     /// elements that make up the key.
     /// </summary>
-    [SuppressMessage("Design",
+    [SuppressMessage(
+        "Design",
         "RCS1187:Use constant instead of field.",
         Justification = "This time the analysis rule don't make sense for this class")]
-    [SuppressMessage("Performance",
+    [SuppressMessage(
+        "Performance",
         "CA1802:Use literals where appropriate",
         Justification = "This time the analysis rule don't make sense for this class")]
     public class RsaPrivateKey
@@ -146,7 +148,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Load private key from app.config or web.config file
+        /// Load private key from app.config or web.config file.
         /// </summary>
         /// <returns>an AsymmetricPrivateKey instance containing the private key, or null.</returns>
         public static RsaPrivateKey LoadFromEnvironment()
@@ -234,7 +236,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Converts this private key to an RSAParameters object
+        /// Converts this private key to an RSAParameters object.
         /// </summary>
         /// <returns>A RSAParameters instance containing the parameters from this key.</returns>
         public RSAParameters ToParameters()

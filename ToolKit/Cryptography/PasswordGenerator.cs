@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security;
 using System.Text;
 using Common.Logging;
@@ -8,7 +7,7 @@ using Common.Logging;
 namespace ToolKit.Cryptography
 {
     /// <summary>
-    /// A class to generate secure passwords
+    /// A class to generate secure passwords.
     /// </summary>
     /// <remarks>
     /// This code was originally based of some code that a colleague of mine wrote but has been
@@ -22,7 +21,7 @@ namespace ToolKit.Cryptography
         private const string Symbols = "~!@#$%^&*-=+";
         private const string UpperCaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        private static ILog _log = LogManager.GetLogger<PasswordGenerator>();
+        private static readonly ILog _log = LogManager.GetLogger<PasswordGenerator>();
 
         private readonly Random _randomGenerator;
         private char[] _passwordCharacterArray;
@@ -42,10 +41,10 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ToolKit.Cryptography.PasswordGenerator"/> class.
+        /// Initializes a new instance of the <see cref="PasswordGenerator"/> class.
         /// </summary>
         /// <param name="seed">The seed to use when generating the password.</param>
-        /// <param name="options">PasswordGenerator Generation Options</param>
+        /// <param name="options">PasswordGenerator Generation Options.</param>
         public PasswordGenerator(int seed, PasswordComplexities options)
             : this(seed)
         {
@@ -55,7 +54,7 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Gets or sets the exclusions to use when generating the password.
         /// </summary>
-        public string Exclusions { get; set; } = String.Empty;
+        public string Exclusions { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether inclusion of extended symbols is used.
@@ -108,12 +107,12 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the password options
+        /// Gets or sets the password options.
         /// </summary>
         public PasswordComplexities PasswordOptions { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to allow consecutive characters
+        /// Gets or sets a value indicating whether to allow consecutive characters.
         /// </summary>
         public bool ProhibitConsecutiveCharacters
         {
@@ -123,7 +122,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to allow any character to be used more than once
+        /// Gets or sets a value indicating whether to allow any character to be used more than once.
         /// </summary>
         public bool ProhibitRepeatingCharacters
         {
@@ -133,7 +132,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Disable All PasswordGenerator Option Flags
+        /// Disable All PasswordGenerator Option Flags.
         /// </summary>
         public void DisableAll()
         {
@@ -144,10 +143,10 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Generate a Password
+        /// Generate a Password.
         /// </summary>
-        /// <param name="length">Length of Password</param>
-        /// <returns>String representing the new password</returns>
+        /// <param name="length">Length of Password.</param>
+        /// <returns>String representing the new password.</returns>
         public string Generate(int length)
         {
             _passwordCharacterArray = BuildCharacterSet();
@@ -185,9 +184,9 @@ namespace ToolKit.Cryptography
                         charResult &= !usedCharacters.Contains(nextCharacter);
                     }
 
-                    if (Exclusions.Any())
+                    if (Exclusions.Length > 0)
                     {
-                        charResult &= Exclusions.IndexOf(nextCharacter) == -1;
+                        charResult &= !Exclusions.Contains(nextCharacter, StringComparison.Ordinal);
                     }
 
                     if (!charResult)
@@ -211,10 +210,10 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Generate a Password
+        /// Generate a Password.
         /// </summary>
-        /// <param name="length">Length of Password</param>
-        /// <returns>SecureString representing the new password</returns>
+        /// <param name="length">Length of Password.</param>
+        /// <returns>SecureString representing the new password.</returns>
         public SecureString GenerateSecureString(int length)
         {
             var password = Generate(length);
@@ -239,7 +238,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Enable All PasswordGenerator Option Flags
+        /// Enable All PasswordGenerator Option Flags.
         /// </summary>
         public void IncludeAll()
         {
@@ -294,7 +293,7 @@ namespace ToolKit.Cryptography
             return Convert.ToInt32(unsignedRandom % charArrayLength);
         }
 
-        private void SetPasswordOption(PasswordComplexities option, Boolean enabled)
+        private void SetPasswordOption(PasswordComplexities option, bool enabled)
         {
             if (enabled)
             {

@@ -14,7 +14,8 @@ namespace ToolKit.Cryptography
     /// represent a shared secret between two or more parties that can be used to maintain a private
     /// information link.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules",
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
         "SA1650:ElementDocumentationMustBeSpelledCorrectly",
         Justification = "Encryption tend to have names not in standard dictionaries...")]
     public class SymmetricEncryption : DisposableObject
@@ -32,24 +33,18 @@ namespace ToolKit.Cryptography
         /// specified provider.
         /// </summary>
         /// <param name="provider">The cryptographic provider.</param>
-        [SuppressMessage("Security",
+        [SuppressMessage(
+            "Security",
             "CA5350:Do Not Use Weak Cryptographic Algorithms",
             Justification = "While I wouldn't use weak algorithms, I don't want to break backward-compatibility.")]
         public SymmetricEncryption(Provider provider)
         {
-            switch (provider)
+            _crypto = provider switch
             {
-                case Provider.Rijndael:
-                    _crypto = new RijndaelManaged();
-                    break;
-
-                case Provider.TripleDES:
-                    _crypto = new TripleDESCryptoServiceProvider();
-                    break;
-
-                default:
-                    throw new ArgumentException("Invalid Provider Provided!");
-            }
+                Provider.Rijndael => new RijndaelManaged(),
+                Provider.TripleDES => new TripleDESCryptoServiceProvider(),
+                _ => throw new ArgumentException("Invalid Provider Provided!"),
+            };
 
             // Ensure that any IV or key can be used regardless of length
             _crypto.Padding = PaddingMode.Zeros;
@@ -69,7 +64,7 @@ namespace ToolKit.Cryptography
 
         /// <summary>
         /// Types of available symmetric encryption algorithms. Some are considered insecure as of
-        /// 2011 due the small key sizes
+        /// 2011 due the small key sizes..
         /// </summary>
         public enum Provider
         {
@@ -95,7 +90,7 @@ namespace ToolKit.Cryptography
         /// <remark>
         /// Using the default Cipher Block Chaining (CBC) mode, all data blocks are processed using
         /// the value derived from the previous block; the first data block has no previous data
-        /// block to use, so it needs an InitializationVector to feed the first block
+        /// block to use, so it needs an InitializationVector to feed the first block.
         /// </remark>
         public EncryptionData InitializationVector
         {
@@ -110,7 +105,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the key used to encrypt/decrypt data
+        /// Gets or sets the key used to encrypt/decrypt data.
         /// </summary>
         public EncryptionData Key
         {
@@ -126,7 +121,7 @@ namespace ToolKit.Cryptography
 
         /// <summary>
         /// Gets or sets the key size in bits. We use the default key size for any given provider;
-        /// if you want to force a specific key size, set this property
+        /// if you want to force a specific key size, set this property.
         /// </summary>
         public int KeySizeBits
         {
@@ -141,7 +136,7 @@ namespace ToolKit.Cryptography
 
         /// <summary>
         /// Gets or sets the key size in bytes. We use the default key size for any given provider;
-        /// if you want to force a specific key size, set this property
+        /// if you want to force a specific key size, set this property.
         /// </summary>
         public int KeySizeBytes
         {
@@ -155,7 +150,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified data using provided key and preset initialization vector
+        /// Decrypts the specified data using provided key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedData">The encrypted data.</param>
         /// <param name="key">The encryption key used to preform the cryptographic function on.</param>
@@ -168,7 +163,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified data using provided key and preset initialization vector
+        /// Decrypts the specified data using provided key and preset initialization vector..
         /// </summary>
         /// <param name="encryptedData">The encrypted data.</param>
         /// <param name="key">The encryption key used to preform the cryptographic function on.</param>
@@ -183,7 +178,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified data using preset key and preset initialization vector
+        /// Decrypts the specified data using preset key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedData">The encrypted data.</param>
         /// <returns>the decrypted data.</returns>
@@ -214,7 +209,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified stream using provided key and preset initialization vector
+        /// Decrypts the specified stream using provided key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedStream">The encrypted stream.</param>
         /// <param name="key">The encryption key used to preform the cryptographic function on.</param>
@@ -229,7 +224,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified stream using provided key and preset initialization vector
+        /// Decrypts the specified stream using provided key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedStream">The encrypted stream.</param>
         /// <param name="key">The encryption key used to preform the cryptographic function on.</param>
@@ -242,7 +237,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified stream using preset key and preset initialization vector
+        /// Decrypts the specified stream using preset key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedStream">The encrypted stream.</param>
         /// <returns>the decrypted data.</returns>
@@ -278,7 +273,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the specified Data using provided key
+        /// Encrypts the specified Data using provided key.
         /// </summary>
         /// <param name="d">The data to encrypt.</param>
         /// <param name="key">The encryption key used to preform the cryptographic function on.</param>
@@ -290,7 +285,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the specified Data using preset key and preset initialization vector
+        /// Encrypts the specified Data using preset key and preset initialization vector.
         /// </summary>
         /// <param name="d">The data to encrypt.</param>
         /// <returns>the encrypted data.</returns>
@@ -313,7 +308,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the specified Data using provided key and provided initialization vector
+        /// Encrypts the specified Data using provided key and provided initialization vector.
         /// </summary>
         /// <param name="d">The data to encrypt.</param>
         /// <param name="key">The encryption key used to preform the cryptographic function on.</param>
@@ -328,7 +323,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the stream to memory using provided key and provided initialization vector
+        /// Encrypts the stream to memory using provided key and provided initialization vector.
         /// </summary>
         /// <param name="s">The stream to preform the cryptographic function on.</param>
         /// <param name="key">The encryption key used to preform the cryptographic function on.</param>
@@ -343,7 +338,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the stream to memory using specified key
+        /// Encrypts the stream to memory using specified key.
         /// </summary>
         /// <param name="s">The stream to preform the cryptographic function on.</param>
         /// <param name="key">The encryption key used to preform the cryptographic function on.</param>
@@ -356,7 +351,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the specified stream to memory using preset key and preset initialization vector
+        /// Encrypts the specified stream to memory using preset key and preset initialization vector.
         /// </summary>
         /// <param name="s">The stream to preform the cryptographic function on.</param>
         /// <returns>the encrypted data.</returns>

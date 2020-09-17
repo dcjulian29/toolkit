@@ -6,9 +6,10 @@ using System.Text;
 namespace ToolKit.Cryptography
 {
     /// <summary>
-    /// Provides access to the Date Protection API Win32 subsystem
+    /// Provides access to the Date Protection API Win32 subsystem.
     /// </summary>
-    [SuppressMessage("Design",
+    [SuppressMessage(
+        "Design",
         "CA1060:Move pinvokes to native methods class",
         Justification = "This is a native methods class.")]
     public class DataProtectionApi
@@ -37,20 +38,20 @@ namespace ToolKit.Cryptography
         public DataProtectionKeyType KeyType { get; set; } = DataProtectionKeyType.UserKey;
 
         /// <summary>
-        /// Decrypts the specified data
+        /// Decrypts the specified data.
         /// </summary>
         /// <param name="cipherText">A string containing the encrypted data.</param>
-        /// <returns>A string containing the decrypted data</returns>
+        /// <returns>A string containing the decrypted data.</returns>
         public string Decrypt(string cipherText) => Encoding.Unicode.GetString(Decrypt(Convert.FromBase64String(cipherText)));
 
         /// <summary>
-        /// Decrypts the specified data
+        /// Decrypts the specified data.
         /// </summary>
-        /// <param name="cipherTextBytes">A byte array containing the encrypted data</param>
-        /// <returns>A byte array containing the decrypted data</returns>
+        /// <param name="cipherTextBytes">A byte array containing the encrypted data.</param>
+        /// <returns>A byte array containing the decrypted data.</returns>
         public byte[] Decrypt(byte[] cipherTextBytes)
         {
-            var plainTextBlob = new DataBlob();
+            var plainTextBlob = default(DataBlob);
             var cipherTextBlob = new DataBlob(cipherTextBytes);
             var entropyBlob = new DataBlob(Key.Bytes);
 
@@ -92,16 +93,16 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the specified data
+        /// Encrypts the specified data.
         /// </summary>
         /// <param name="plainText">A string containing the data to protect.</param>
-        /// <returns>A string containing the encrypted data</returns>
+        /// <returns>A string containing the encrypted data.</returns>
         public string Encrypt(string plainText) => Convert.ToBase64String(Encrypt(Encoding.Unicode.GetBytes(plainText)));
 
         /// <summary>
-        /// Encrypts the specified data
+        /// Encrypts the specified data.
         /// </summary>
-        /// <param name="plainTextBytes">A byte array containing data to protect</param>
+        /// <param name="plainTextBytes">A byte array containing data to protect.</param>
         /// <returns>A byte array representing the encrypted data.</returns>
         public byte[] Encrypt(byte[] plainTextBytes)
         {

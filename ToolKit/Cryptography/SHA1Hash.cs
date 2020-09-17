@@ -17,7 +17,8 @@ namespace ToolKit.Cryptography
     /// digital signatures and for data integrity.
     /// </remarks>
     [Obsolete("SHA-1 is no longer considered secure against well-funded opponents. You should use a stronger hash algorithm.")]
-    [SuppressMessage("Minor Code Smell",
+    [SuppressMessage(
+        "Minor Code Smell",
         "S101:Types should be named in PascalCase",
         Justification = "Class names contains an acronym.")]
     public sealed class SHA1Hash : DisposableObject, IHash
@@ -35,7 +36,7 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Creates an instance of the Hash Algorithm.
         /// </summary>
-        /// <returns>an instance of the SHA1 Hash object</returns>
+        /// <returns>an instance of the SHA1 Hash object.</returns>
         public static SHA1Hash Create()
         {
             return new SHA1Hash();

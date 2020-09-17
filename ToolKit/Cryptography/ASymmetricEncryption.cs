@@ -28,7 +28,7 @@ namespace ToolKit.Cryptography
         /// <param name="key">
         /// The private key that will be used to decrypt the password used to decrypt the password.
         /// </param>
-        /// <exception cref="ArgumentNullException">An RSA public key must be provided!</exception>
+        /// <exception cref="ArgumentNullException">An RSA public key must be provided.</exception>
         public ASymmetricEncryption(RsaPublicKey key)
         {
             _publicKey = key ?? throw
@@ -56,7 +56,7 @@ namespace ToolKit.Cryptography
         /// </param>
         /// <param name="password">The password to use during the symmetric part of the encryption.</param>
         /// <exception cref="ArgumentNullException">
-        /// password - A password must be provided! or key - An RSA public key must be provided!
+        /// password - A password must be provided! or key - An RSA public key must be provided.
         /// </exception>
         public ASymmetricEncryption(RsaPublicKey key, EncryptionData password)
         {
@@ -92,7 +92,7 @@ namespace ToolKit.Cryptography
         /// <param name="key">
         /// The private key that will be used to decrypt the password used to decrypt the payload.
         /// </param>
-        /// <exception cref="ArgumentNullException">An RSA private key must be provided!</exception>
+        /// <exception cref="ArgumentNullException">An RSA private key must be provided.</exception>
         public ASymmetricEncryption(RsaPrivateKey key)
         {
             _privateKey = key ?? throw
@@ -112,7 +112,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified data using preset key and preset initialization vector
+        /// Decrypts the specified data using preset key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedData">The encrypted data.</param>
         /// <exception cref="ArgumentOutOfRangeException">
@@ -158,7 +158,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified stream using preset key and preset initialization vector
+        /// Decrypts the specified stream using preset key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedStream">The encrypted stream.</param>
         /// <returns>the decrypted data.</returns>
@@ -180,7 +180,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the specified Data using preset key and preset initialization vector
+        /// Encrypts the specified Data using preset key and preset initialization vector.
         /// </summary>
         /// <param name="plainData">The data to encrypt.</param>
         /// <returns>the encrypted data.</returns>
@@ -223,7 +223,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts the stream to memory using provided key and provided initialization vector
+        /// Encrypts the stream to memory using provided key and provided initialization vector.
         /// </summary>
         /// <param name="plainStream">The stream to preform the cryptographic function on.</param>
         /// <returns>the encrypted data.</returns>

@@ -24,10 +24,12 @@ namespace ToolKit.Cryptography
         /// Initializes a new instance of the <see cref="Hash"/> class.
         /// </summary>
         /// <param name="provider">The Hash Algorithm Provider.</param>
-        [SuppressMessage("Security",
+        [SuppressMessage(
+            "Security",
             "CA5351:Do Not Use Broken Cryptographic Algorithms",
             Justification = "While I wouldn't use broken algorithms, I don't want to break backward-compatibility.")]
-        [SuppressMessage("Security",
+        [SuppressMessage(
+            "Security",
             "CA5350:Do Not Use Weak Cryptographic Algorithms",
             Justification = "While I wouldn't use weak algorithms, I don't want to break backward-compatibility.")]
         public Hash(Provider provider)
@@ -79,7 +81,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Type of hash; some are security oriented, others are fast and simple
+        /// Type of hash; some are security oriented, others are fast and simple.
         /// </summary>
         public enum Provider
         {
@@ -120,7 +122,7 @@ namespace ToolKit.Cryptography
         public EncryptionData Value { get; } = new EncryptionData();
 
         /// <summary>
-        /// Calculates hash on a stream of arbitrary length
+        /// Calculates hash on a stream of arbitrary length.
         /// </summary>
         /// <param name="stream">The stream of data to read.</param>
         /// <returns>the hash of the data provided.</returns>
@@ -131,7 +133,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Calculates hash for fixed length <see cref="EncryptionData"/>
+        /// Calculates hash for fixed length <see cref="EncryptionData"/>.
         /// </summary>
         /// <param name="data">The data to be used to hash.</param>
         /// <returns>the hash of the data provided.</returns>

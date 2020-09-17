@@ -15,7 +15,8 @@ namespace ToolKit.Cryptography
     /// two distinct inputs that hash to the same value. Hash functions are commonly used with
     /// digital signatures and for data integrity.
     /// </remarks>
-    [SuppressMessage("Minor Code Smell",
+    [SuppressMessage(
+        "Minor Code Smell",
         "S101:Types should be named in PascalCase",
         Justification = "Class names contains an acronym.")]
     public sealed class SHA256Hash : DisposableObject, IHash
@@ -33,7 +34,7 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Creates an instance of the Hash Algorithm.
         /// </summary>
-        /// <returns>an instance of the SHA256 Hash object</returns>
+        /// <returns>an instance of the SHA256 Hash object.</returns>
         public static SHA256Hash Create()
         {
             return new SHA256Hash();

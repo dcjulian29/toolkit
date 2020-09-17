@@ -9,7 +9,7 @@ namespace ToolKit.Cryptography
     /// of arbitrary length and produces as output a 128-bit "fingerprint" or "message digest" of
     /// the input. The MD5 algorithm is intended for digital signature applications, where a large
     /// file must be "compressed" in a secure manner before being encrypted with a private (secret)
-    /// key under a public-key crypto-system such as RSA. (RFC1321)
+    /// key under a public-key crypto-system such as RSA. (RFC1321).
     /// </summary>
     /// <remarks>
     /// Hash functions are fundamental to modern cryptography. These functions map binary strings of
@@ -36,7 +36,7 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Creates an instance of the Hash Algorithm.
         /// </summary>
-        /// <returns>an instance of the MD5 Hash object</returns>
+        /// <returns>an instance of the MD5 Hash object.</returns>
         public static MD5Hash Create()
         {
             return new MD5Hash();

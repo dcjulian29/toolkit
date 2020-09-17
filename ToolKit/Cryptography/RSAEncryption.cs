@@ -39,7 +39,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets the default private key as stored in the *.config file
+        /// Gets the default private key as stored in the application configuration file.
         /// </summary>
         public static RsaPrivateKey DefaultPrivateKey => RsaPrivateKey.LoadFromEnvironment();
 
@@ -108,7 +108,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts data using the default private key
+        /// Decrypts data using the default private key.
         /// </summary>
         /// <param name="encryptedData">The data to be decrypted.</param>
         /// <returns>The decrypted data.</returns>
@@ -118,7 +118,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts data using the provided private key
+        /// Decrypts data using the provided private key.
         /// </summary>
         /// <param name="encryptedData">The data to be decrypted.</param>
         /// <param name="privateKey">The private key.</param>
@@ -141,7 +141,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts data using the default public key
+        /// Encrypts data using the default public key.
         /// </summary>
         /// <param name="data">The data to be encrypted..</param>
         /// <returns>The encrypted data.</returns>
@@ -151,7 +151,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts data using the provided public key
+        /// Encrypts data using the provided public key.
         /// </summary>
         /// <param name="data">The data to be encrypted..</param>
         /// <param name="publicKey">The public key.</param>
@@ -202,7 +202,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Generates a new public/private key pair as objects
+        /// Generates a new public/private key pair as objects.
         /// </summary>
         /// <param name="publicKey">The public key.</param>
         /// <param name="privateKey">The private key.</param>
@@ -231,7 +231,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Signs data using the provided private key
+        /// Signs data using the provided private key.
         /// </summary>
         /// <param name="dataToSign">The data to be signed.</param>
         /// <param name="privateKey">The private key.</param>

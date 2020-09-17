@@ -16,7 +16,8 @@ namespace ToolKit.Cryptography
     /// digital signatures and for data integrity.
     /// </remarks>
     // ReSharper disable once InconsistentNaming
-    [SuppressMessage("Minor Code Smell",
+    [SuppressMessage(
+        "Minor Code Smell",
         "S101:Types should be named in PascalCase",
         Justification = "This class name is an acronym.")]
     public class CRC32 : DisposableObject, IHash
@@ -33,7 +34,7 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Creates an instance of the Hash Algorithm.
         /// </summary>
-        /// <returns>an instance of the CRC32 Hash object</returns>
+        /// <returns>an instance of the CRC32 Hash object.</returns>
         public static CRC32 Create()
         {
             return new CRC32();

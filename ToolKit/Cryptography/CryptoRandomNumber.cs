@@ -84,7 +84,7 @@ namespace ToolKit.Cryptography
         /// Fills the elements of a specified array of bytes with random numbers.
         /// </summary>
         /// <param name="bytes">An array of bytes to contain the random numbers.</param>
-        /// <exception cref="ArgumentNullException">Bytes is null!</exception>
+        /// <exception cref="ArgumentNullException">Bytes is null!.</exception>
         public static void NextBytes(byte[] bytes)
         {
             if (bytes == null)
@@ -101,7 +101,7 @@ namespace ToolKit.Cryptography
         /// </summary>
         /// <returns>
         /// A double-precision floating point number that is greater than or equal to 0.0, and less
-        /// than 1.0
+        /// than 1.0.
         /// </returns>
         public static double NextDouble()
         {
