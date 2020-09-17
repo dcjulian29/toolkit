@@ -12,7 +12,7 @@ namespace ToolKit.Data.EntityFramework
     /// </summary>
     public class EntityFrameworkUnitOfWork : DbContext, IUnitOfWork
     {
-        private static ILog _log = LogManager.GetLogger<EntityFrameworkUnitOfWork>();
+        private static readonly ILog _log = LogManager.GetLogger<EntityFrameworkUnitOfWork>();
 
         private readonly DbContextTransaction _transaction;
 
@@ -73,7 +73,7 @@ namespace ToolKit.Data.EntityFramework
         }
 
         /// <summary>
-        /// Gets a <see cref="T:System.Data.Entity.Infrastructure.DbEntityEntry" /> object for the
+        /// Gets a <see cref="DbEntityEntry" /> object for the
         /// given entity providing access to information about the entity and the ability to perform
         /// actions on the entity.
         /// </summary>

@@ -11,7 +11,7 @@ namespace ToolKit.Data.NHibernate
     /// </summary>
     public class NHibernateUnitOfWork : IUnitOfWork
     {
-        private static ILog _log = LogManager.GetLogger<NHibernateUnitOfWork>();
+        private static readonly ILog _log = LogManager.GetLogger<NHibernateUnitOfWork>();
 
         private readonly ISession _session;
         private readonly ITransaction _transaction;

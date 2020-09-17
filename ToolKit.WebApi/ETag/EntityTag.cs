@@ -1,5 +1,3 @@
-using System;
-
 namespace ToolKit.WebApi.ETag
 {
     /// <summary>
