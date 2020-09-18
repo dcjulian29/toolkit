@@ -39,12 +39,19 @@ namespace ToolKit.Cryptography
             Justification = "While I wouldn't use weak algorithms, I don't want to break backward-compatibility.")]
         public SymmetricEncryption(Provider provider)
         {
-            _crypto = provider switch
+            switch (provider)
             {
-                Provider.Rijndael => new RijndaelManaged(),
-                Provider.TripleDES => new TripleDESCryptoServiceProvider(),
-                _ => throw new ArgumentException("Invalid Provider Provided!"),
-            };
+                case Provider.Rijndael:
+                    _crypto = new RijndaelManaged();
+                    break;
+
+                case Provider.TripleDES:
+                    _crypto = new TripleDESCryptoServiceProvider();
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid Provider Provided!");
+            }
 
             // Ensure that any IV or key can be used regardless of length
             _crypto.Padding = PaddingMode.Zeros;

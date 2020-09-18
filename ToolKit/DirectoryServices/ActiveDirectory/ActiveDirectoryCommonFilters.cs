@@ -257,32 +257,74 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <returns>LdapFilter for User Account Control Search.</returns>
         public static LdapFilter UserAccessControl(ADS_USER_FLAG uac)
         {
-            return uac switch
+            switch (uac)
             {
-                ADS_USER_FLAG.SCRIPT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=1"),
-                ADS_USER_FLAG.ACCOUNTDISABLE => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2"),
-                ADS_USER_FLAG.HOMEDIR_REQUIRED => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8"),
-                ADS_USER_FLAG.LOCKOUT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=16"),
-                ADS_USER_FLAG.PASSWD_NOTREQD => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=32"),
-                ADS_USER_FLAG.PASSWD_CANT_CHANGE => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=64"),
-                ADS_USER_FLAG.ENCRYPTED_TEXT_PASSWORD_ALLOWED
-                    => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=128"),
-                ADS_USER_FLAG.TEMP_DUPLICATE_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=256"),
-                ADS_USER_FLAG.NORMAL_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=512"),
-                ADS_USER_FLAG.INTERDOMAIN_TRUST_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2048"),
-                ADS_USER_FLAG.WORKSTATION_TRUST_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=4096"),
-                ADS_USER_FLAG.SERVER_TRUST_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8192"),
-                ADS_USER_FLAG.DONT_EXPIRE_PASSWD => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=65536"),
-                ADS_USER_FLAG.MNS_LOGON_ACCOUNT => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=131072"),
-                ADS_USER_FLAG.SMARTCARD_REQUIRED => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=262144"),
-                ADS_USER_FLAG.TRUSTED_FOR_DELEGATION => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=524288"),
-                ADS_USER_FLAG.NOT_DELEGATED => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=1048576"),
-                ADS_USER_FLAG.USE_DES_KEY_ONLY => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2097152"),
-                ADS_USER_FLAG.DONT_REQUIRE_PREAUTH => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=4194304"),
-                ADS_USER_FLAG.PASSWORD_EXPIRED => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8388608"),
-                ADS_USER_FLAG.TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION => new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=16777216"),
-                _ => throw new InvalidOperationException("Invalid User Flag!"),
-            };
+                case ADS_USER_FLAG.SCRIPT:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=1");
+
+                case ADS_USER_FLAG.ACCOUNTDISABLE:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2");
+
+                case ADS_USER_FLAG.HOMEDIR_REQUIRED:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8");
+
+                case ADS_USER_FLAG.LOCKOUT:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=16");
+
+                case ADS_USER_FLAG.PASSWD_NOTREQD:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=32");
+
+                case ADS_USER_FLAG.PASSWD_CANT_CHANGE:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=64");
+
+                case ADS_USER_FLAG.ENCRYPTED_TEXT_PASSWORD_ALLOWED:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=128");
+
+                case ADS_USER_FLAG.TEMP_DUPLICATE_ACCOUNT:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=256");
+
+                case ADS_USER_FLAG.NORMAL_ACCOUNT:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=512");
+
+                case ADS_USER_FLAG.INTERDOMAIN_TRUST_ACCOUNT:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2048");
+
+                case ADS_USER_FLAG.WORKSTATION_TRUST_ACCOUNT:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=4096");
+
+                case ADS_USER_FLAG.SERVER_TRUST_ACCOUNT:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8192");
+
+                case ADS_USER_FLAG.DONT_EXPIRE_PASSWD:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=65536");
+
+                case ADS_USER_FLAG.MNS_LOGON_ACCOUNT:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=131072");
+
+                case ADS_USER_FLAG.SMARTCARD_REQUIRED:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=262144");
+
+                case ADS_USER_FLAG.TRUSTED_FOR_DELEGATION:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=524288");
+
+                case ADS_USER_FLAG.NOT_DELEGATED:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=1048576");
+
+                case ADS_USER_FLAG.USE_DES_KEY_ONLY:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=2097152");
+
+                case ADS_USER_FLAG.DONT_REQUIRE_PREAUTH:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=4194304");
+
+                case ADS_USER_FLAG.PASSWORD_EXPIRED:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=8388608");
+
+                case ADS_USER_FLAG.TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION:
+                    return new LdapFilter("userAccountControl:1.2.840.113556.1.4.803:=16777216");
+
+                default:
+                    throw new InvalidOperationException("Invalid User Flag!");
+            }
         }
 
         /// <summary>

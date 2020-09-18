@@ -186,7 +186,7 @@ namespace ToolKit.DirectoryServices
         /// <returns>a filter that contains a Not LDAP filter.</returns>
         public LdapFilter Not()
         {
-            if (_filter.Contains("(", StringComparison.Ordinal))
+            if (_filter.Contains("("))
             {
                 // This is a complex filter, enclose with parentheses
                 return new LdapFilter($"(!({_filter}))");
@@ -194,7 +194,7 @@ namespace ToolKit.DirectoryServices
 
             // This is a simple filter, no need to use parentheses unless it is a bitwise filter
             // Bitwise filter: attributename:ruleOID:=value
-            return _filter.Contains(":=", StringComparison.Ordinal)
+            return _filter.Contains(":=")
                 ? new LdapFilter($"(!({_filter}))")
                 : new LdapFilter($"(!{_filter})");
         }
@@ -294,7 +294,7 @@ namespace ToolKit.DirectoryServices
 
             if (returnFilter.EndsWith(")", StringComparison.InvariantCulture))
             {
-                returnFilter = returnFilter[0..^1];
+                returnFilter = returnFilter.Substring(0, returnFilter.Length - 1);
             }
 
             return returnFilter;

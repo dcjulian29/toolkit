@@ -24,14 +24,14 @@ namespace ToolKit.Xml
             inputText = Check.NotEmpty(inputText, nameof(inputText));
 
             // If the string doesn't have a & character, it doesn't have any entities.
-            if (inputText.IndexOf('&', StringComparison.Ordinal) < 0)
+            if (inputText.IndexOf('&') < 0)
             {
                 return inputText;
             }
 
             // If the string contains a & but not a ;, it doesn't have any entities.
-            if ((inputText.IndexOf('&', StringComparison.Ordinal) > -1)
-                && (inputText.IndexOf(';', StringComparison.Ordinal) < 0))
+            if ((inputText.IndexOf('&') > -1)
+                && (inputText.IndexOf(';') < 0))
             {
                 return inputText;
             }
@@ -56,11 +56,11 @@ namespace ToolKit.Xml
                     continue;
                 }
 
-                var entity = inputText[i.. (endOfEntity + 1)];
+                var entity = inputText.Substring(i, endOfEntity + 1 - i);
 
                 if ((entity.Length > 1) && (entity[1] == '#'))
                 {
-                    entity = entity[2..^1];
+                    entity = entity.Substring(2, entity.Length - 3);
                     try
                     {
                         if ((entity[0] == 'x') || (entity[0] == 'X'))
@@ -93,7 +93,7 @@ namespace ToolKit.Xml
                     // It's not an Entity Number but instead an Entity Name... Keep in mind that this
                     // is not the entire list of named entities. This Decode method is designed to
                     // decode only what was encoded with this class...
-                    switch (entity)
+                    switch (entity.ToString())
                     {
                         case "&amp;":
                             ch = '&';
@@ -181,7 +181,7 @@ namespace ToolKit.Xml
                 }
             }
 
-            return sb.ToString().Replace("  ", "&nbsp; ", StringComparison.Ordinal);
+            return sb.ToString().Replace("  ", "&nbsp; ");
         }
     }
 }

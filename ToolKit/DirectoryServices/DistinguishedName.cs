@@ -75,8 +75,8 @@ namespace ToolKit.DirectoryServices
                         builder.Append('/');
                         builder.Append(
                             _components[i].Value
-                                .Replace("\\", string.Empty, StringComparison.Ordinal)
-                                .Replace("/", "\\/", StringComparison.Ordinal));
+                                .Replace("\\", string.Empty)
+                                .Replace("/", "\\/"));
                     }
                 }
 
@@ -94,7 +94,7 @@ namespace ToolKit.DirectoryServices
             {
                 return (from rdn in _components
                         where rdn.Name.ToUpper(CultureInfo.InvariantCulture) == "CN"
-                        select rdn.Value.Replace("\\", string.Empty, StringComparison.Ordinal)).FirstOrDefault();
+                        select rdn.Value.Replace("\\", string.Empty)).FirstOrDefault();
             }
         }
 
@@ -304,7 +304,7 @@ namespace ToolKit.DirectoryServices
         /// <returns>A DistinguishedName object.</returns>
         public DistinguishedName Container()
         {
-            return new DistinguishedName(ToString().Replace($"CN={CommonName},", string.Empty, StringComparison.Ordinal));
+            return new DistinguishedName(ToString().Replace($"CN={CommonName},", string.Empty));
         }
 
         /// <summary>
@@ -373,7 +373,7 @@ namespace ToolKit.DirectoryServices
         /// Serves as a hash function for this instance.
         /// </summary>
         /// <returns>A hash code for the current instance.</returns>
-        public override int GetHashCode() => ToString().GetHashCode(StringComparison.OrdinalIgnoreCase);
+        public override int GetHashCode() => ToString().ToUpperInvariant().GetHashCode();
 
         /// <summary>
         /// Returns a <see cref="string" /> that represents the current Distinguished Name instance.
@@ -388,7 +388,7 @@ namespace ToolKit.DirectoryServices
                 sb.Append(rdn.Name).Append('=').Append(rdn.Value).Append(',');
             }
 
-            return sb.ToString().TrimEnd(',').Replace("+,", "+", StringComparison.Ordinal);
+            return sb.ToString().TrimEnd(',').Replace("+,", "+");
         }
 
         private static bool IsAlpha(char c)
@@ -894,7 +894,7 @@ namespace ToolKit.DirectoryServices
 
             if ((slash > -1) && (slash < equal))
             {
-                var serverPart = distinguishedName[startPosition..distinguishedName.IndexOf("/", startPosition, StringComparison.Ordinal)];
+                var serverPart = distinguishedName.Substring(startPosition, distinguishedName.IndexOf("/", startPosition, StringComparison.Ordinal) - startPosition);
                 var colon = serverPart.IndexOf(":", StringComparison.Ordinal);
 
                 if (colon == 0)

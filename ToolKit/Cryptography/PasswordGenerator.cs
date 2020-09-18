@@ -186,7 +186,7 @@ namespace ToolKit.Cryptography
 
                     if (Exclusions.Length > 0)
                     {
-                        charResult &= !Exclusions.Contains(nextCharacter, StringComparison.Ordinal);
+                        charResult &= !Exclusions.Contains(nextCharacter.ToString());
                     }
 
                     if (!charResult)
