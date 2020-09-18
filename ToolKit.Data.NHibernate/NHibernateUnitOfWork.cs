@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Common.Logging;
 using NHibernate;
@@ -34,7 +34,8 @@ namespace ToolKit.Data.NHibernate
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Attach<T>(T entity) where T : class
+        public void Attach<T>(T entity)
+            where T : class
         {
             _session.Update(entity);
         }
@@ -44,7 +45,8 @@ namespace ToolKit.Data.NHibernate
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <returns>An NHibernate Criteria instance.</returns>
-        public ICriteria CreateCriteria<T>() where T : class
+        public ICriteria CreateCriteria<T>()
+            where T : class
         {
             return _session.CreateCriteria<T>();
         }
@@ -55,7 +57,8 @@ namespace ToolKit.Data.NHibernate
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Delete<T>(T entity) where T : class
+        public void Delete<T>(T entity)
+            where T : class
         {
             _session.Delete(entity);
         }
@@ -76,7 +79,8 @@ namespace ToolKit.Data.NHibernate
         /// An instance of the entity that can be used by the Repository implementation to further
         /// query the results.
         /// </returns>
-        public IQueryable<T> Get<T>() where T : class
+        public IQueryable<T> Get<T>()
+            where T : class
         {
             return _session.Query<T>();
         }
@@ -96,7 +100,8 @@ namespace ToolKit.Data.NHibernate
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Save<T>(T entity) where T : class
+        public void Save<T>(T entity)
+            where T : class
         {
             _session.SaveOrUpdate(entity);
         }

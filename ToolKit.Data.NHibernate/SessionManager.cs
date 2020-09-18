@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NHibernate;
 using ToolKit.Data.NHibernate.SessionFactories;
 using ToolKit.Validation;
@@ -40,8 +40,8 @@ namespace ToolKit.Data.NHibernate
         {
         }
 
-        /// <summary>
-        /// Finalizes an instance of the SessionManager class.
+        /// <summary
+        /// >Finalizes an instance of the <see cref="SessionManager"/> class.
         /// </summary>
         ~SessionManager()
         {
@@ -73,7 +73,7 @@ namespace ToolKit.Data.NHibernate
         }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
+        /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
         /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only

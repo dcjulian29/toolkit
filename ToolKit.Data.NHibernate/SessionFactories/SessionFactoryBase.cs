@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
@@ -82,7 +82,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
         /// Gets the connection string used for this session.
         /// </summary>
         /// <value>
-        /// The connection string used for this session
+        /// The connection string used for this session.
         /// </value>
         public string ConnectionString { get; private set; }
 
@@ -118,7 +118,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
         }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
+        /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
         /// <c>true</c> to release both managed and unmanaged resources;
@@ -158,7 +158,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
 
                 while (baseType != null)
                 {
-                    if (!String.IsNullOrEmpty(baseType.FullName)
+                    if (!string.IsNullOrEmpty(baseType.FullName)
                       && baseType.FullName.Contains("FluentNHibernate.Mapping.ClassMap"))
                     {
                         _log.Debug($"{type} mapping found.");
@@ -176,7 +176,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
 
         private void CheckIfConnectionStringIsConnectionKey(string connectionString)
         {
-            if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings[connectionString]))
+            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[connectionString]))
             {
                 _log.Debug($"\"{connectionString}\" was loaded from Application Settings...");
                 ConnectionString = ConfigurationManager.AppSettings[connectionString];
@@ -184,13 +184,13 @@ namespace ToolKit.Data.NHibernate.SessionFactories
 
             var setting = ConfigurationManager.ConnectionStrings[connectionString];
 
-            if (!String.IsNullOrEmpty(setting?.ConnectionString))
+            if (!string.IsNullOrEmpty(setting?.ConnectionString))
             {
                 _log.Debug($"\"{connectionString}\" was loaded from Connection Settings...");
                 ConnectionString = setting.ConnectionString;
             }
 
-            if (!String.IsNullOrWhiteSpace(ConnectionString))
+            if (!string.IsNullOrWhiteSpace(ConnectionString))
             {
                 return;
             }

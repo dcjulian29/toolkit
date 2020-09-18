@@ -1,9 +1,9 @@
-﻿using NHibernate;
+using NHibernate;
 
 namespace ToolKit.Data.NHibernate
 {
     /// <summary>
-    /// Provides Extensions to NHibernate Session
+    /// Provides Extensions to NHibernate Session.
     /// </summary>
     public static class SessionExtensions
     {
@@ -12,9 +12,9 @@ namespace ToolKit.Data.NHibernate
         /// </summary>
         /// <param name="session">An NHibernate session.</param>
         /// <returns>A new Session Constraint instance.</returns>
-        public static SessionConstraint Is(this ISession session)
+        public static SessionConstraints Is(this ISession session)
         {
-            return new SessionConstraint(session);
+            return new SessionConstraints(session);
         }
     }
 }
