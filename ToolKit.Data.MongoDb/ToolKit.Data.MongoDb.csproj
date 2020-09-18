@@ -3,6 +3,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <Features>IOperation</Features>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <DocumentationFile>bin\Release\ToolKit.Data.MongoDb.xml</DocumentationFile>
@@ -12,21 +13,19 @@
       <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
+      <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Common.Logging" Version="3.4.1" />
         <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="MongoDB.Driver" Version="2.11.2" />
-        <PackageReference Include="StyleCop.MSBuild" Version="6.2.0">
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="MongoDB.Driver">
-            <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Driver.dll</HintPath>
-        </Reference>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
         <Compile Include="../.build/CommonAssemblyInfo.cs" Condition="Exists('../.build/CommonAssemblyInfo.cs')" />
