@@ -42,7 +42,8 @@ namespace ToolKit.Data.EntityFramework
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Attach<T>(T entity) where T : class
+        public void Attach<T>(T entity)
+            where T : class
         {
             Set<T>().Attach(entity);
             Entry(entity).State = EntityState.Modified;
@@ -53,7 +54,8 @@ namespace ToolKit.Data.EntityFramework
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Delete<T>(T entity) where T : class
+        public void Delete<T>(T entity)
+            where T : class
         {
             Set<T>().Remove(entity);
             Entry(entity).State = EntityState.Deleted;
@@ -92,7 +94,8 @@ namespace ToolKit.Data.EntityFramework
         /// An instance of the entity that can be used by the Repository implementation to further
         /// query the results.
         /// </returns>
-        public IQueryable<T> Get<T>() where T : class
+        public IQueryable<T> Get<T>()
+            where T : class
         {
             return Set<T>();
         }
@@ -110,7 +113,8 @@ namespace ToolKit.Data.EntityFramework
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Save<T>(T entity) where T : class
+        public void Save<T>(T entity)
+            where T : class
         {
             if (entity == null)
             {
