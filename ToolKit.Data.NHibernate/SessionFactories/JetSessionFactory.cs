@@ -1,9 +1,9 @@
-﻿using FluentNHibernate.Cfg.Db;
+using FluentNHibernate.Cfg.Db;
 
 namespace ToolKit.Data.NHibernate.SessionFactories
 {
     /// <summary>
-    /// NHibernate Session Factory using Jet Database Engine (ex. Microsoft Access)
+    /// NHibernate Session Factory using Jet Database Engine (ex. Microsoft Access).
     /// </summary>
     public class JetSessionFactory : SessionFactoryBase
     {

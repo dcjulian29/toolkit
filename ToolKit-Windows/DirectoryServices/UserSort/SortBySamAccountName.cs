@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ToolKit.DirectoryServices.UserSort
@@ -42,7 +42,7 @@ namespace ToolKit.DirectoryServices.UserSort
                 return 0;
             }
 
-            var compare = String.CompareOrdinal(x.SamAccountName, y.SamAccountName);
+            var compare = string.CompareOrdinal(x.SamAccountName, y.SamAccountName);
 
             switch (compare)
             {

@@ -16,8 +16,8 @@ namespace UnitTests.Cryptography
         public void Exponent_Should_ReturnExpectedResult()
         {
             // Arrange
-            var e = "AQAB";
-            var m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
+            const string e = "AQAB";
+            const string m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
                     + "r5KBCg1dySSNVFB5bJP9o9ob2GEL0dlbZtg0CiiWCwOFWBgakav3Va1+CUF6DbN"
                     + "g3gw2c/1WQaq73xB/WbKuLp5yk22HP/kVOUaG6H33Muv3s2/GxXClgnw8tOqLYbO"
                     + "A/tb9G9d0MIyhhEG/vOR8kkKrwZTeIECbT8vZl0B952leMKmoBN3AJVdnzmP43H"
@@ -37,8 +37,8 @@ namespace UnitTests.Cryptography
             // Arrange
             var guid = Guid.NewGuid();
             var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
-            var e = "AQAB";
-            var m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
+            const string e = "AQAB";
+            const string m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
                     + "r5KBCg1dySSNVFB5bJP9o9ob2GEL0dlbZtg0CiiWCwOFWBgakav3Va1+CUF6DbN"
                     + "g3gw2c/1WQaq73xB/WbKuLp5yk22HP/kVOUaG6H33Muv3s2/GxXClgnw8tOqLYbO"
                     + "A/tb9G9d0MIyhhEG/vOR8kkKrwZTeIECbT8vZl0B952leMKmoBN3AJVdnzmP43H"
@@ -60,8 +60,8 @@ namespace UnitTests.Cryptography
             // Arrange
             var guid = Guid.NewGuid();
             var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
-            var e = "AQAB";
-            var m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
+            const string e = "AQAB";
+            const string m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
                     + "r5KBCg1dySSNVFB5bJP9o9ob2GEL0dlbZtg0CiiWCwOFWBgakav3Va1+CUF6DbN"
                     + "g3gw2c/1WQaq73xB/WbKuLp5yk22HP/kVOUaG6H33Muv3s2/GxXClgnw8tOqLYbO"
                     + "A/tb9G9d0MIyhhEG/vOR8kkKrwZTeIECbT8vZl0B952leMKmoBN3AJVdnzmP43H"
@@ -82,8 +82,8 @@ namespace UnitTests.Cryptography
             // Arrange
             var guid = Guid.NewGuid();
             var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
-            var e = "AQAB";
-            var m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
+            const string e = "AQAB";
+            const string m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
                     + "r5KBCg1dySSNVFB5bJP9o9ob2GEL0dlbZtg0CiiWCwOFWBgakav3Va1+CUF6DbN"
                     + "g3gw2c/1WQaq73xB/WbKuLp5yk22HP/kVOUaG6H33Muv3s2/GxXClgnw8tOqLYbO"
                     + "A/tb9G9d0MIyhhEG/vOR8kkKrwZTeIECbT8vZl0B952leMKmoBN3AJVdnzmP43H"
@@ -93,10 +93,7 @@ namespace UnitTests.Cryptography
             key.ExportToXmlFile(file);
 
             // Act & Assert
-            Assert.Throws<IOException>(() =>
-            {
-                key.ExportToXmlFile(file);
-            });
+            Assert.Throws<IOException>(() => key.ExportToXmlFile(file));
         }
 
         [Fact]
@@ -129,37 +126,28 @@ namespace UnitTests.Cryptography
         public void LoadFromCertificateFile_Should_ThrowException_When_PublicKeyFileDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var publicKey = RsaPublicKey.LoadFromCertificateFile("nonexist.cer");
-            });
+            Assert.Throws<ArgumentException>(() => _ = RsaPublicKey.LoadFromCertificateFile("nonexist.cer"));
         }
 
         [Fact]
         public void LoadFromCertificateFile_Should_ThrowException_When_PublicKeyFileWithPasswordDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var publicKey = RsaPublicKey.LoadFromCertificateFile("nonexist.cer", "password");
-            });
+            Assert.Throws<ArgumentException>(() => _ = RsaPublicKey.LoadFromCertificateFile("nonexist.cer", "password"));
         }
 
         [Fact]
         public void LoadFromConfig_Should_ThrowExceptionWhenConfigAppSettingsEmpty()
         {
             // Arrange & Act & Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var key = RsaPublicKey.LoadFromEnvironment();
-            });
+            Assert.Throws<ArgumentException>(() => _ = RsaPublicKey.LoadFromEnvironment());
         }
 
         [Fact]
         public void LoadFromString_Should_ThrowException_When_XmlDoesntContainElements()
         {
             // Arrange
-            var xml = "<RSAKeyValue>" +
+            const string xml = "<RSAKeyValue>" +
                       "<SomeOtherValue>0D59Km2Eo9oopcm7Y2wOXx0TRRXQFybl9HHe/ve47Qcf2EoKbs9nkuMmhCJlJ" +
                       "zrq6ZJzgQSEbpVyaWn8OHq0I50rQ13dJsALEquhlfwVWw6Hit7qRvveKlOAGfj8xdkaXJ" +
                       "LYS1tA06tKHfYxgt6ysMBZd0DIedYoE1fe3VlLZyE=</SomeOtherValue>" +
@@ -167,17 +155,14 @@ namespace UnitTests.Cryptography
                       "</RSAKeyValue>";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var key = new RsaPublicKey(xml);
-            });
+            Assert.Throws<ArgumentException>(() => _ = new RsaPublicKey(xml));
         }
 
         [Fact]
         public void LoadFromXml_Should_ReturnExpectedResult()
         {
             // Arrange
-            var xml = "<RSAKeyValue>" +
+            const string xml = "<RSAKeyValue>" +
                       "<Modulus>0D59Km2Eo9oopcm7Y2wOXx0TRRXQFybl9HHe/ve47Qcf2EoKbs9nkuMmhCJlJ" +
                       "zrq6ZJzgQSEbpVyaWn8OHq0I50rQ13dJsALEquhlfwVWw6Hit7qRvveKlOAGfj8xdkaXJ" +
                       "LYS1tA06tKHfYxgt6ysMBZd0DIedYoE1fe3VlLZyE=</Modulus>" +
@@ -208,18 +193,15 @@ namespace UnitTests.Cryptography
         public void LoadFromXmlFile_Should_ThrowException_When_FileDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var key = RsaPublicKey.LoadFromXmlFile("nonexist.xml");
-            });
+            Assert.Throws<ArgumentException>(() => _ = RsaPublicKey.LoadFromXmlFile("nonexist.xml"));
         }
 
         [Fact]
         public void Modulus_Should_ReturnExpectedResult()
         {
             // Arrange
-            var e = "AQAB";
-            var m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
+            const string e = "AQAB";
+            const string m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
                     + "r5KBCg1dySSNVFB5bJP9o9ob2GEL0dlbZtg0CiiWCwOFWBgakav3Va1+CUF6DbN"
                     + "g3gw2c/1WQaq73xB/WbKuLp5yk22HP/kVOUaG6H33Muv3s2/GxXClgnw8tOqLYbO"
                     + "A/tb9G9d0MIyhhEG/vOR8kkKrwZTeIECbT8vZl0B952leMKmoBN3AJVdnzmP43H"

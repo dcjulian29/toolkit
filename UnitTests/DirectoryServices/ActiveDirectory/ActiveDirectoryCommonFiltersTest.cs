@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using ToolKit.DirectoryServices;
 using ToolKit.DirectoryServices.ActiveDirectory;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace UnitTests.DirectoryServices.ActiveDirectory
 {
@@ -20,7 +19,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Computers()
         {
             // Arrange
-            var expected = "(objectCategory=computer)";
+            const string expected = "(objectCategory=computer)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.Computers;
@@ -33,7 +32,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Computers_DomainControllers()
         {
             // Arrange
-            var expected = "(&(objectCategory=computer)"
+            const string expected = "(&(objectCategory=computer)"
                            + "(userAccountControl:1.2.840.113556.1.4.803:=8192))";
 
             // Act
@@ -47,7 +46,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Computers_Name_Containing()
         {
             // Arrange
-            var expected = "(&(objectCategory=computer)(name=*ex*))";
+            const string expected = "(&(objectCategory=computer)(name=*ex*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.ComputersNameContaining("ex");
@@ -60,7 +59,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Computers_With_Operating_System()
         {
             // Arrange
-            var expected = "(&(objectCategory=computer)(operatingSystem=*vista*))";
+            const string expected = "(&(objectCategory=computer)(operatingSystem=*vista*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.ComputersWithOS("vista");
@@ -73,7 +72,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Computers_With_Operating_System_And_Service_Pack()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=computer)"
+            const string expected = "(&(&(objectCategory=computer)"
                            + "(operatingSystem=*server*))"
                            + "(operatingSystemServicePack=*1*))";
 
@@ -88,22 +87,19 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Constructor_Should_ThrowInvalidOperationException_When_ProvideNullValue()
         {
             // Arrange
-            var invalid = (ADS_USER_FLAG)99;
+            const ADS_USER_FLAG invalid = (ADS_USER_FLAG)99;
 
             // Act and Assert
 
             Assert.Throws<InvalidOperationException>(
-                () =>
-            {
-                var uac = ActiveDirectoryCommonFilters.UserAccessControl(invalid);
-            });
+                () => _ = ActiveDirectoryCommonFilters.UserAccessControl(invalid));
         }
 
         [Fact]
         public void Contacts()
         {
             // Arrange
-            var expected = "(&(objectCategory=person)(objectClass=contact))";
+            const string expected = "(&(objectCategory=person)(objectClass=contact))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.Contacts;
@@ -116,7 +112,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Contacts_In_Group()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=contact))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=contact))"
                            + "(memberOf=CN=TEST,OU=Groups,OU=HDQRK,DC=COMPANY,DC=COM))";
 
             // Act
@@ -132,7 +128,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Group_With_Fuzzy_Search()
         {
             // Arrange
-            var expected = "(&(objectCategory=group)(sAMAccountName=*domain*))";
+            const string expected = "(&(objectCategory=group)(sAMAccountName=*domain*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.Group("domain", true);
@@ -145,7 +141,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Group_With_Strict_Search()
         {
             // Arrange
-            var expected = "(&(objectCategory=group)(sAMAccountName=domain))";
+            const string expected = "(&(objectCategory=group)(sAMAccountName=domain))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.Group("domain");
@@ -158,7 +154,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Groups()
         {
             // Arrange
-            var expected = "(objectCategory=group)";
+            const string expected = "(objectCategory=group)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.Groups;
@@ -171,7 +167,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Groups_Domain_Local()
         {
             // Arrange
-            var expected = "(&(objectCategory=group)(groupType:1.2.840.113556.1.4.803:=2147483652))";
+            const string expected = "(&(objectCategory=group)(groupType:1.2.840.113556.1.4.803:=2147483652))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.DomainLocalGroups;
@@ -184,7 +180,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Groups_Global()
         {
             // Arrange
-            var expected = "(&(objectCategory=group)(groupType:1.2.840.113556.1.4.803:=2147483650))";
+            const string expected = "(&(objectCategory=group)(groupType:1.2.840.113556.1.4.803:=2147483650))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.GlobalGroups;
@@ -197,7 +193,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Groups_Universal()
         {
             // Arrange
-            var expected = "(&(objectCategory=group)(groupType:1.2.840.113556.1.4.803:=2147483656))";
+            const string expected = "(&(objectCategory=group)(groupType:1.2.840.113556.1.4.803:=2147483656))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UniversalGroups;
@@ -210,7 +206,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Groups_With_Email_Address()
         {
             // Arrange
-            var expected = "(&(objectCategory=group)(mail=*))";
+            const string expected = "(&(objectCategory=group)(mail=*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.GroupsWithEmail;
@@ -223,7 +219,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Groups_With_No_Members()
         {
             // Arrange
-            var expected = "(&(objectCategory=group)(!member=*))";
+            const string expected = "(&(objectCategory=group)(!member=*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.EmptyGroups;
@@ -236,7 +232,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SAM_ALIAS_OBJECT()
         {
             // Arrange
-            var expected = "(sAMAcountType=536870912)";
+            const string expected = "(sAMAcountType=536870912)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.SAM_ALIAS_OBJECT;
@@ -249,7 +245,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SAM_GROUP_OBJECT()
         {
             // Arrange
-            var expected = "(sAMAcountType=268435456)";
+            const string expected = "(sAMAcountType=268435456)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.SAM_GROUP_OBJECT;
@@ -262,7 +258,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SAM_MACHINE_ACCOUNT()
         {
             // Arrange
-            var expected = "(sAMAcountType=805306369)";
+            const string expected = "(sAMAcountType=805306369)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.SAM_MACHINE_ACCOUNT;
@@ -275,7 +271,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SAM_NON_SECURITY_ALIAS_OBJECT()
         {
             // Arrange
-            var expected = "(sAMAcountType=536870913)";
+            const string expected = "(sAMAcountType=536870913)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.SAM_NON_SECURITY_ALIAS_OBJECT;
@@ -288,7 +284,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SAM_NON_SECURITY_GROUP_OBJECT()
         {
             // Arrange
-            var expected = "(sAMAcountType=268435457)";
+            const string expected = "(sAMAcountType=268435457)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.SAM_NON_SECURITY_GROUP_OBJECT;
@@ -301,7 +297,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SAM_NORMAL_USER_ACCOUNT()
         {
             // Arrange
-            var expected = "(sAMAcountType=805306368)";
+            const string expected = "(sAMAcountType=805306368)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.SAM_NORMAL_USER_ACCOUNT;
@@ -314,7 +310,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SAM_TRUST_ACCOUNT()
         {
             // Arrange
-            var expected = "(sAMAcountType=805306370)";
+            const string expected = "(sAMAcountType=805306370)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.SAM_TRUST_ACCOUNT;
@@ -327,7 +323,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SAM_USER_OBJECT()
         {
             // Arrange
-            var expected = "(sAMAcountType=805306368)";
+            const string expected = "(sAMAcountType=805306368)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.SAM_USER_OBJECT;
@@ -340,7 +336,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_ACCOUNTDISABLE()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=2)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=2)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -354,7 +350,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_DONT_EXPIRE_PASSWORD()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=65536)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=65536)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -368,7 +364,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_DONT_REQ_PREAUTH()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=4194304)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=4194304)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -382,7 +378,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_ENCRYPTED_TEXT_PWD_ALLOWED()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=128)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=128)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -396,7 +392,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_HOMEDIR_REQUIRED()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=8)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=8)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -410,7 +406,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_INTERDOMAIN_TRUST_ACCOUNT()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=2048)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=2048)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -424,7 +420,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_LOCKOUT()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=16)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=16)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -438,7 +434,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_MNS_LOGON_ACCOUNT()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=131072)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=131072)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -452,7 +448,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_NORMAL_ACCOUNT()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=512)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=512)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -466,7 +462,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_NOT_DELEGATED()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=1048576)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=1048576)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -480,7 +476,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_PASSWD_CANT_CHANGE()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=64)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=64)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -494,7 +490,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_PASSWD_NOTREQD()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=32)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=32)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -508,7 +504,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_PASSWORD_EXPIRED()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=8388608)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=8388608)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -522,7 +518,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_SCRIPT()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=1)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=1)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -536,7 +532,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_SERVER_TRUST_ACCOUNT()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=8192)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=8192)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -550,7 +546,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_SMARTCARD_REQUIRED()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=262144)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=262144)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -564,7 +560,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_TEMP_DUPLICATE_ACCOUNT()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=256)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=256)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -578,7 +574,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_TRUSTED_FOR_DELEGATION()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=524288)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=524288)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -592,7 +588,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_TRUSTED_TO_AUTH_FOR_DELEGATION()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=16777216)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=16777216)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -606,7 +602,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_USE_DES_KEY_ONLY()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=2097152)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=2097152)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -620,7 +616,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UAC_WORKSTATION_TRUST_ACCOUNT()
         {
             // Arrange
-            var expected = "(userAccountControl:1.2.840.113556.1.4.803:=4096)";
+            const string expected = "(userAccountControl:1.2.840.113556.1.4.803:=4096)";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UserAccessControl(
@@ -634,7 +630,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users()
         {
             // Arrange
-            var expected = "(&(objectCategory=person)(objectClass=user))";
+            const string expected = "(&(objectCategory=person)(objectClass=user))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.Users;
@@ -647,7 +643,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Administrative_Users()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))(sAMAccountName=*-adm))";
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))(sAMAccountName=*-adm))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.AdministrativeUsers;
@@ -660,7 +656,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_And_Contacts_Who_Are_Members_Of_A_Group()
         {
             // Arrange
-            var expected = "(&(objectCategory=person)"
+            const string expected = "(&(objectCategory=person)"
                            + "(|(objectClass=contact)(objectClass=user))"
                            + "(memberOf=CN=TEST,OU=Groups,OU=HDQRK,DC=COMPANY,DC=COM))";
 
@@ -678,7 +674,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Created_After_Date()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))"
                            + "(whenCreated>=20090501000000.0Z))";
             var theDate = new DateTime(2009, 5, 1);
 
@@ -693,7 +689,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Created_Before_Date()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))"
                            + "(whenCreated<=20090501000000.0Z))";
             var theDate = new DateTime(2009, 5, 1);
 
@@ -708,7 +704,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Created_Between_Dates()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))"
                            + "(&(whenCreated>=20090501000000.0Z)(whenCreated<=20090501000000.0Z)))";
             var firstDate = new DateTime(2009, 5, 1);
             var secondDate = new DateTime(2009, 5, 1);
@@ -725,7 +721,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Normal_Account()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))"
                            + "(!sAMAccountName=*-adm)(!sAMAccountName=*svc))";
 
             // Act
@@ -739,7 +735,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Service_Accounts()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))(sAMAccountName=*svc))";
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))(sAMAccountName=*svc))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.ServiceAccounts;
@@ -752,7 +748,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Who_Are_Disabled()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))"
                            + "(userAccountControl:1.2.840.113556.1.4.803:=2))";
 
             // Act
@@ -768,7 +764,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Who_Are_Locked_Out()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))"
                            + "(userAccountControl:1.2.840.113556.1.4.803:=16))";
 
             // Act
@@ -784,7 +780,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Who_Are_Not_Disabled_And_Must_Change_Password()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))"
                            + "(pwdLastSet=0)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))";
 
             // Act
@@ -798,7 +794,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_Whose_Passwords_Do_Not_Expire()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))"
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))"
                            + "(userAccountControl:1.2.840.113556.1.4.803:=65536))";
 
             // Act
@@ -814,7 +810,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_With_Email_Address()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))(mail=*))";
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))(mail=*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UsersWithEmail;
@@ -827,7 +823,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_With_No_Email_Address()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))(!mail=*))";
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))(!mail=*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UsersWithoutEmail;
@@ -840,7 +836,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_With_No_Logon_Script()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))(!scriptPath=*))";
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))(!scriptPath=*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UsersWithoutLogonScript;
@@ -853,7 +849,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Users_With_No_Profile_Path()
         {
             // Arrange
-            var expected = "(&(&(objectCategory=person)(objectClass=user))(!profilePath=*))";
+            const string expected = "(&(&(objectCategory=person)(objectClass=user))(!profilePath=*))";
 
             // Act
             var filter = ActiveDirectoryCommonFilters.UsersWithoutProfilePath;

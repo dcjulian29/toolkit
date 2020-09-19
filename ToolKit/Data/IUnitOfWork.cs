@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ToolKit.Data
 {
@@ -18,14 +16,16 @@ namespace ToolKit.Data
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        void Attach<T>(T entity) where T : class;
+        void Attach<T>(T entity)
+            where T : class;
 
         /// <summary>
         /// Deletes the specified entity from the persistence context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        void Delete<T>(T entity) where T : class;
+        void Delete<T>(T entity)
+            where T : class;
 
         /// <summary>
         /// Gets this instance from the persistence context.
@@ -34,7 +34,12 @@ namespace ToolKit.Data
         /// <returns>
         /// An instance of the entity that can be used by the Repository implementation to further query the results.
         /// </returns>
-        IQueryable<T> Get<T>() where T : class;
+        [SuppressMessage(
+            "Naming",
+            "CA1716:Identifiers should not match keywords",
+            Justification = "Really? Get off your high horse")]
+        IQueryable<T> Get<T>()
+            where T : class;
 
         /// <summary>
         /// Mark this unit of work to be rollback.
@@ -46,6 +51,7 @@ namespace ToolKit.Data
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        void Save<T>(T entity) where T : class;
+        void Save<T>(T entity)
+            where T : class;
     }
 }

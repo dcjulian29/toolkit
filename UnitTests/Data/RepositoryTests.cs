@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using ToolKit.Data;
 using Xunit;
 
@@ -15,11 +15,13 @@ namespace UnitTests.Data
         {
             // Arrange
             var repository = new TestRepository();
-            var entity = new TestEntity();
+            var entity = new TestEntity
+            {
+                Id = 1,
+                Name = "Test"
+            };
 
             // Act
-            entity.Id = 1;
-            entity.Name = "Test";
             repository.Save(entity);
 
             var entityFromDatabase = repository.FindById(1);
@@ -37,7 +39,7 @@ namespace UnitTests.Data
         {
             public TestRepository()
             {
-                this.Context = new MemoryUnitOfWork();
+                Context = new MemoryUnitOfWork();
             }
         }
     }

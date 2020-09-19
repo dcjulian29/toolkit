@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit
 {
     /// <summary>
-    /// Represents the abstract definition of an object which may be suspended. 
+    /// Represents the abstract definition of an object which may be suspended.
     /// </summary>
     public abstract class SuspendableObject
     {
@@ -29,6 +27,10 @@ namespace ToolKit
         /// <summary>
         /// Resumes this instance.
         /// </summary>
+        [SuppressMessage(
+            "Naming",
+            "CA1716:Identifiers should not match keywords",
+            Justification = "This usage makes sense for this object.")]
         public abstract void Resume();
 
         /// <summary>

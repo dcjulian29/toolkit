@@ -84,9 +84,9 @@ namespace ToolKit.Data.NHibernate.UnitTests
         }
 
         /// <summary>
-        /// Contains the details about the NHibernate Configuration
+        /// Contains the details about the NHibernate Configuration.
         /// </summary>
-        /// <returns>the NHibernate Configuration</returns>
+        /// <returns>the NHibernate Configuration.</returns>
         protected override IPersistenceConfigurer DatabaseConfigurer()
         {
             _databaseCreated = true;

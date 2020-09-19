@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
@@ -10,7 +10,7 @@ using DN = ToolKit.DirectoryServices.DistinguishedName;
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
     /// <summary>
-    /// This class represents an ActiveDirectory Computer
+    /// This class represents an ActiveDirectory Computer.
     /// </summary>
     public class Computer : DirectoryObject, IComputer
     {
@@ -86,7 +86,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// </summary>
         /// <param name="properties">A Dictionary of properties.</param>
         /// <remarks>This constructor is primarily used for unit tests.</remarks>
-        internal Computer(Dictionary<string, object> properties) : base(properties)
+        internal Computer(Dictionary<string, object> properties)
+            : base(properties)
         {
             CheckType();
         }
@@ -101,8 +102,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             {
                 try
                 {
-                    string expiration = GetNodeValue("//DirectoryObject/accountexpires");
-                    if (String.IsNullOrEmpty(expiration))
+                    var expiration = GetNodeValue("//DirectoryObject/accountexpires");
+                    if (string.IsNullOrEmpty(expiration))
                     {
                         return DateTime.MaxValue;
                     }
@@ -191,7 +192,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the country code for the computer account
+        /// Gets the country code for the computer account.
         /// </summary>
         /// <value>The country code for the computer account.</value>
         public int CountryCode
@@ -294,7 +295,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the computer object.
         /// </summary>
         /// <value>The GUID of the computer object.</value>
-        [SuppressMessage("Naming",
+        [SuppressMessage(
+            "Naming",
             "CA1720:Identifier contains type name",
             Justification = "Too Bad. It is what it is.")]
         public Guid Guid => new Guid(HexEncoding.ToBytes(GetNodeValue("//DirectoryObject/objectguid")));
@@ -307,7 +309,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                string nodeValue = GetNodeValue("//DirectoryObject/lastlogoff");
+                var nodeValue = GetNodeValue("//DirectoryObject/lastlogoff");
                 return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
@@ -320,7 +322,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                string nodeValue = GetNodeValue("//DirectoryObject/lastlogontimestamp");
+                var nodeValue = GetNodeValue("//DirectoryObject/lastlogontimestamp");
                 return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
@@ -432,7 +434,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                string nodeValue = GetNodeValue("//DirectoryObject/pwdlastset");
+                var nodeValue = GetNodeValue("//DirectoryObject/pwdlastset");
                 return DateTime.FromFileTimeUtc(Convert.ToInt64(nodeValue, CultureInfo.InvariantCulture));
             }
         }
@@ -481,7 +483,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                string nodeValue = GetNodeValue("//DirectoryObject/objectsid");
+                var nodeValue = GetNodeValue("//DirectoryObject/objectsid");
                 return Security.Sid.ToString(HexEncoding.ToBytes(nodeValue));
             }
         }

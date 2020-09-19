@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using ToolKit.DirectoryServices.ActiveDirectory;
 using ToolKit.DirectoryServices.ServiceInterfaces;
@@ -6,14 +6,14 @@ using ToolKit.DirectoryServices.ServiceInterfaces;
 namespace ToolKit.DirectoryServices
 {
     /// <summary>
-    ///   This Interface is an alias for a generic list of User objects
+    ///   This Interface is an alias for a generic list of User objects.
     /// </summary>
     public partial class Users : List<IUser>
     {
         /// <summary>
         ///   Initializes a new instance of the <see cref="Users" /> class.
         /// </summary>
-        /// <param name="capacity">Integer representing the</param>
+        /// <param name="capacity">Integer representing the.</param>
         public Users(int capacity)
             : base(capacity)
         {
@@ -36,7 +36,7 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
-        ///   Disable All Users within this collection
+        ///   Disable All Users within this collection.
         /// </summary>
         public void DisableAll()
         {
@@ -49,15 +49,23 @@ namespace ToolKit.DirectoryServices
                     userFlags.SetFlag(ADS_USER_FLAG.ACCOUNTDISABLE);
 
                     var entry = (user as User)?.ToDirectoryEntry();
-                    entry.Properties["userAccessControl"].Value = userFlags;
-                    entry.CommitChanges();
-                    entry.Close();
+
+                    if (entry != null)
+                    {
+                        entry.Properties["userAccessControl"].Value = userFlags;
+                        entry.CommitChanges();
+                        entry.Close();
+                    }
+                    else
+                    {
+                        throw new InvalidCastException($"Unable to cast {user} to a directory entry");
+                    }
                 }
             });
         }
 
         /// <summary>
-        ///   Enable All Users within this collection
+        ///   Enable All Users within this collection.
         /// </summary>
         public void EnableAll()
         {
@@ -70,9 +78,17 @@ namespace ToolKit.DirectoryServices
                     userFlags.ClearFlag(ADS_USER_FLAG.ACCOUNTDISABLE);
 
                     var entry = (user as User)?.ToDirectoryEntry();
-                    entry.Properties["userAccessControl"].Value = userFlags;
-                    entry.CommitChanges();
-                    entry.Close();
+
+                    if (entry != null)
+                    {
+                        entry.Properties["userAccessControl"].Value = userFlags;
+                        entry.CommitChanges();
+                        entry.Close();
+                    }
+                    else
+                    {
+                        throw new InvalidCastException($"Unable to cast {user} to a directory entry");
+                    }
                 }
             });
         }

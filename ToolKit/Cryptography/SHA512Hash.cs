@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace ToolKit.Cryptography
@@ -15,7 +15,11 @@ namespace ToolKit.Cryptography
     /// two distinct inputs that hash to the same value. Hash functions are commonly used with
     /// digital signatures and for data integrity.
     /// </remarks>
-    public class SHA512Hash : IHash
+    [SuppressMessage(
+        "Minor Code Smell",
+        "S101:Types should be named in PascalCase",
+        Justification = "Class names contains an acronym.")]
+    public sealed class SHA512Hash : DisposableObject, IHash
     {
         private Hash _algorithm = new Hash(Hash.Provider.SHA512);
 
@@ -30,7 +34,7 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Creates an instance of the Hash Algorithm.
         /// </summary>
-        /// <returns>an instance of the SHA512 Hash object</returns>
+        /// <returns>an instance of the SHA512 Hash object.</returns>
         public static SHA512Hash Create()
         {
             return new SHA512Hash();
@@ -140,6 +144,22 @@ namespace ToolKit.Cryptography
         public byte[] ComputeToBytes(EncryptionData data, EncryptionData salt)
         {
             return _algorithm.Calculate(data, salt).Bytes;
+        }
+
+        /// <summary>
+        /// Disposes the resources used by the inherited class.
+        /// </summary>
+        /// <param name="disposing">
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+        /// only unmanaged resources.
+        /// </param>
+        protected override void DisposeResources(bool disposing)
+        {
+            if (_algorithm != null)
+            {
+                _algorithm.Dispose();
+                _algorithm = null;
+            }
         }
     }
 }

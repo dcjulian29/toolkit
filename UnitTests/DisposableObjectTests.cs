@@ -1,4 +1,4 @@
-﻿using ToolKit;
+using ToolKit;
 using Xunit;
 
 namespace UnitTests
@@ -33,7 +33,7 @@ namespace UnitTests
 
             // Act
             o.Open();
-            o.Dispose(false);
+            o.DisposeUnitTest(false);
 
             // Assert
             Assert.False(o.DisposeCalled);
@@ -46,6 +46,11 @@ namespace UnitTests
             public void Open()
             {
                 DisposeCalled = false;
+            }
+
+            public void DisposeUnitTest(bool disposing)
+            {
+                base.Dispose(disposing);
             }
 
             protected override void DisposeResources(bool disposing)

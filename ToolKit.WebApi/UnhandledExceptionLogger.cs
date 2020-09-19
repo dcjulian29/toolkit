@@ -9,7 +9,7 @@ namespace ToolKit.WebApi
     /// </summary>
     public class UnhandledExceptionLogger : ExceptionLogger
     {
-        private static ILog _log = LogManager.GetLogger<UnhandledExceptionLogger>();
+        private static readonly ILog _log = LogManager.GetLogger<UnhandledExceptionLogger>();
 
         /// <summary>
         /// Adds an logger to the <see cref="HttpConfiguration"/> instance to log unhandled exceptions.

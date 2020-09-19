@@ -23,21 +23,21 @@ namespace ToolKit.Data.MongoDb
         /// <param name="database">The Mongo Database instance.</param>
         public MongoDbUnitOfWork(MongoDatabaseBase database) => _database = database;
 
-        /// <inheritdoc />
         /// <summary>
         /// Attaches the specified detached entity to the persistence context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Attach<T>(T entity) where T : class => Save(entity);
+        public void Attach<T>(T entity)
+            where T : class => Save(entity);
 
-        /// <inheritdoc />
         /// <summary>
         /// Deletes the specified entity from the persistence context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Delete<T>(T entity) where T : class
+        public void Delete<T>(T entity)
+            where T : class
         {
             if (entity == null)
             {
@@ -64,7 +64,6 @@ namespace ToolKit.Data.MongoDb
             GC.SuppressFinalize(this);
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// Gets this instance from the persistence context.
         /// </summary>
@@ -73,21 +72,22 @@ namespace ToolKit.Data.MongoDb
         /// An instance of the entity that can be used by the Repository implementation to further
         /// query the results.
         /// </returns>
-        public IQueryable<T> Get<T>() where T : class => (IQueryable<T>)GetCollection<T>().Find(new BsonDocument());
+        public IQueryable<T> Get<T>()
+            where T : class
+            => (IQueryable<T>)GetCollection<T>().Find(new BsonDocument());
 
-        /// <inheritdoc />
         /// <summary>
         /// Mark this unit of work to be rollback.
         /// </summary>
         public void Rollback() => _log.Warn("MongoDB does not support transactions...");
 
-        /// <inheritdoc />
         /// <summary>
         /// Saves the specified entity to the persistence context.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        public void Save<T>(T entity) where T : class
+        public void Save<T>(T entity)
+            where T : class
         {
             if (entity == null)
             {
@@ -110,7 +110,8 @@ namespace ToolKit.Data.MongoDb
             // Method intentionally left empty.
         }
 
-        private static IMongoEntity GetMongoEntity<T>(T entity) where T : class
+        private static IMongoEntity GetMongoEntity<T>(T entity)
+            where T : class
         {
             var entityType = entity.GetType();
 

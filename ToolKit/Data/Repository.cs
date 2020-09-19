@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using ToolKit.Validation;
 
 namespace ToolKit.Data
 {
@@ -10,12 +11,12 @@ namespace ToolKit.Data
     /// </summary>
     /// <typeparam name="T">The entity type this repository supports.</typeparam>
     /// <typeparam name="TId">The type of the id.</typeparam>
-    public class Repository<T, TId> : IRepository<T, TId>
+    public class Repository<T, TId> : DisposableObject, IRepository<T, TId>
         where T : class, IEntityWithTypedId<TId>
         where TId : IEquatable<TId>, IComparable<TId>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Repository&lt;T, TId&gt;"/> class.
+        /// Initializes a new instance of the <see cref="Repository&lt;T, TId&gt;" /> class.
         /// </summary>
         /// <param name="unitOfWorkContext">The unit of work context.</param>
         public Repository(IUnitOfWork unitOfWorkContext)
@@ -24,18 +25,10 @@ namespace ToolKit.Data
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Repository&lt;T, TId&gt;"/> class.
+        /// Initializes a new instance of the <see cref="Repository&lt;T, TId&gt;" /> class.
         /// </summary>
         protected Repository()
         {
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="Repository&lt;T, TId&gt;" /> class.
-        /// </summary>
-        ~Repository()
-        {
-            Dispose(false);
         }
 
         /// <summary>
@@ -48,10 +41,12 @@ namespace ToolKit.Data
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>
-        ///   <c>true</c> if the specified entity exists within the repository; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified entity exists within the repository; otherwise, <c>false</c>.
         /// </returns>
         public bool Contains(T entity)
         {
+            Check.NotNull(entity, nameof(entity));
+
             if (entity.IsTransient())
             {
                 return false;
@@ -75,37 +70,11 @@ namespace ToolKit.Data
         /// <param name="entities">The list of entities.</param>
         public void Delete(IEnumerable<T> entities)
         {
+            Check.NotNull(entities, nameof(entities));
+
             foreach (var entity in entities)
             {
                 Context.Delete(entity);
-            }
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
-        /// </summary>
-        /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources;
-        /// <c>false</c> to release only unmanaged resources.
-        /// </param>
-        public void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (Context != null)
-                {
-                    Context.Dispose();
-                    Context = null;
-                }
             }
         }
 
@@ -147,8 +116,8 @@ namespace ToolKit.Data
             }
             catch (NotSupportedException)
             {
-                // ID is a struct type so we need to cast it to an object type
-                // in order to pass it down to the underlying context.
+                // ID is a struct type so we need to cast it to an object type in order to pass it
+                // down to the underlying context.
                 var entities = from e in Context.Get<T>()
                                where (object)e.Id == (object)id
                                select e;
@@ -187,9 +156,27 @@ namespace ToolKit.Data
         /// <param name="entities">The list of entities.</param>
         public void Save(IEnumerable<T> entities)
         {
+            Check.NotNull(entities, nameof(entities));
+
             foreach (var entity in entities)
             {
                 Context.Save(entity);
+            }
+        }
+
+        /// <summary>
+        /// Disposes the resources used by the inherited class.
+        /// </summary>
+        /// <param name="disposing">
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+        /// only unmanaged resources.
+        /// </param>
+        protected override void DisposeResources(bool disposing)
+        {
+            if (disposing && Context != null)
+            {
+                Context.Dispose();
+                Context = null;
             }
         }
     }

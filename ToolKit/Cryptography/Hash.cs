@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using Common.Logging;
+using ToolKit.Validation;
 
 namespace ToolKit.Cryptography
 {
@@ -13,17 +14,24 @@ namespace ToolKit.Cryptography
     /// two distinct inputs that hash to the same value. Hash functions are commonly used with
     /// digital signatures and for data integrity.
     /// </summary>
-    public class Hash
+    public class Hash : DisposableObject
     {
-        private static ILog _log = LogManager.GetLogger<Hash>();
+        private static readonly ILog _log = LogManager.GetLogger<Hash>();
 
-        private readonly HashAlgorithm _hashAlgorithm;
-        private readonly EncryptionData _hashData = new EncryptionData();
+        private HashAlgorithm _hashAlgorithm;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Hash"/> class.
         /// </summary>
         /// <param name="provider">The Hash Algorithm Provider.</param>
+        [SuppressMessage(
+            "Security",
+            "CA5351:Do Not Use Broken Cryptographic Algorithms",
+            Justification = "While I wouldn't use broken algorithms, I don't want to break backward-compatibility.")]
+        [SuppressMessage(
+            "Security",
+            "CA5350:Do Not Use Weak Cryptographic Algorithms",
+            Justification = "While I wouldn't use weak algorithms, I don't want to break backward-compatibility.")]
         public Hash(Provider provider)
         {
             switch (provider)
@@ -73,78 +81,66 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Type of hash; some are security oriented, others are fast and simple
+        /// Type of hash; some are security oriented, others are fast and simple.
         /// </summary>
         public enum Provider
         {
             /// <summary>
             /// Cyclic Redundancy Check provider, 32-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             CRC32,
 
             /// <summary>
             /// Message Digest algorithm 5, 128-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             MD5,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-1 variant, 160-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             SHA1,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-2 variant, 256-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             SHA256,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-2 variant, 384-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             SHA384,
 
             /// <summary>
             /// Secure Hashing Algorithm provider, SHA-2 variant, 512-bit
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             SHA512
         }
 
         /// <summary>
         /// Gets the previously calculated hash.
         /// </summary>
-        public EncryptionData Value
-        {
-            get
-            {
-                return _hashData;
-            }
-        }
+        public EncryptionData Value { get; } = new EncryptionData();
 
         /// <summary>
-        /// Calculates hash on a stream of arbitrary length
+        /// Calculates hash on a stream of arbitrary length.
         /// </summary>
         /// <param name="stream">The stream of data to read.</param>
         /// <returns>the hash of the data provided.</returns>
         public EncryptionData Calculate(Stream stream)
         {
-            _hashData.Bytes = _hashAlgorithm.ComputeHash(stream);
-            return _hashData;
+            Value.Bytes = _hashAlgorithm.ComputeHash(stream);
+            return Value;
         }
 
         /// <summary>
-        /// Calculates hash for fixed length <see cref="EncryptionData"/>
+        /// Calculates hash for fixed length <see cref="EncryptionData"/>.
         /// </summary>
         /// <param name="data">The data to be used to hash.</param>
         /// <returns>the hash of the data provided.</returns>
         public EncryptionData Calculate(EncryptionData data)
         {
-            _hashData.Bytes = _hashAlgorithm.ComputeHash(data.Bytes);
-            return _hashData;
+            Value.Bytes = _hashAlgorithm.ComputeHash(Check.NotNull(data, nameof(data)).Bytes);
+            return Value;
         }
 
         /// <summary>
@@ -156,12 +152,28 @@ namespace ToolKit.Cryptography
         /// <returns>the hash of the data provided.</returns>
         public EncryptionData Calculate(EncryptionData data, EncryptionData salt)
         {
+            data = Check.NotNull(data, nameof(data));
+            salt = Check.NotNull(salt, nameof(salt));
+
             var nb = new byte[data.Bytes.Length + salt.Bytes.Length];
             salt.Bytes.CopyTo(nb, 0);
             data.Bytes.CopyTo(nb, salt.Bytes.Length);
 
-            _hashData.Bytes = _hashAlgorithm.ComputeHash(nb);
-            return _hashData;
+            Value.Bytes = _hashAlgorithm.ComputeHash(nb);
+            return Value;
+        }
+
+        /// <summary>Disposes the resources used by the inherited class.</summary>
+        /// <param name="disposing">
+        ///   <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
+        /// unmanaged resources.</param>
+        protected override void DisposeResources(bool disposing)
+        {
+            if (_hashAlgorithm != null)
+            {
+                _hashAlgorithm.Dispose();
+                _hashAlgorithm = null;
+            }
         }
 
         /// <summary>
@@ -169,7 +181,6 @@ namespace ToolKit.Cryptography
         /// </summary>
         private sealed class Crc32Algorithm : HashAlgorithm
         {
-            private const uint DefaultPolynomial = 0xEDB88320;
             private uint _hash;
             private uint[] _table;
 
@@ -183,8 +194,7 @@ namespace ToolKit.Cryptography
 
             /// <inheritdoc/>
             /// <summary>
-            /// Initializes an implementation of the <see
-            /// cref="T:System.Security.Cryptography.HashAlgorithm"/> class.
+            /// Initializes an implementation of the <see cref="HashAlgorithm"/> class.
             /// </summary>
             public override void Initialize()
             {
@@ -201,7 +211,7 @@ namespace ToolKit.Cryptography
 
                     for (var j = 0; j < 8; j++)
                     {
-                        entry = (entry & 1) == 1 ? (entry >> 1) ^ DefaultPolynomial : entry >> 1;
+                        entry = (entry & 1) == 1 ? (entry >> 1) ^ 0xEDB88320 : entry >> 1;
                     }
 
                     _table[i] = entry;
@@ -246,7 +256,7 @@ namespace ToolKit.Cryptography
                 {
                     unchecked
                     {
-                        crc = (crc >> 8) ^ table[buffer[i] ^ crc & 0xff];
+                        crc = (crc >> 8) ^ table[buffer[i] ^ (crc & 0xff)];
                     }
                 }
 

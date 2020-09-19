@@ -3,7 +3,7 @@ using System;
 namespace ToolKit.Data
 {
     /// <summary>
-    /// A implementation of a Database handler class
+    /// A implementation of a Database handler class.
     /// </summary>
     public interface IDatabase
     {

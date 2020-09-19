@@ -8,7 +8,7 @@ namespace ToolKit.Cryptography
     /// <summary>
     /// Represents Hex, Byte, Base64, or String data to encrypt/decrypt; use the .Text property to
     /// set/get a string representation use the .Hex property to set/get a string-based Hexadecimal
-    /// representation use the .Base64 to set/get a string-based Base64 representation
+    /// representation use the .Base64 to set/get a string-based Base64 representation.
     /// </summary>
     /// <remarks>
     /// Adapted from code originally written by Jeff Atwood. The original code had no explicit
@@ -73,12 +73,16 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the byte representation of the data;
+        /// Gets or sets the byte representation of the data.
         /// </summary>
         /// <value>
         /// The byte representation of the data; This will be padded to MinBytes and trimmed to
         /// MaxBytes as necessary.
         /// </value>
+        [SuppressMessage(
+            "Performance",
+            "CA1819:Properties should not return arrays",
+            Justification = "Not Going To Change This.")]
         public byte[] Bytes
         {
             get
@@ -104,7 +108,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets or sets the text encoding for this instance
+        /// Gets or sets the text encoding for this instance.
         /// </summary>
         public Encoding EncodingToUse { get; set; }
 
@@ -169,7 +173,7 @@ namespace ToolKit.Cryptography
             {
                 if (Bytes == null)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
 
                 // Need to handle nulls here; oddly, C# will happily convert nulls into the string
@@ -228,9 +232,9 @@ namespace ToolKit.Cryptography
         public string ToHex() => Hex;
 
         /// <summary>
-        /// Returns text representation of bytes using the default text encoding
+        /// Returns text representation of bytes using the default text encoding.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents this instance.</returns>
+        /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString() => Text;
 
         private void Initialize()

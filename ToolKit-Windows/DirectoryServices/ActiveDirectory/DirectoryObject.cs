@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Common.Logging;
+using ToolKit.Validation;
 using ToolKit.Xml;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
@@ -19,9 +20,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
     public class DirectoryObject
     {
         // This class can do a lot a debug logging. No need to do most of it if running in release mode.
-        private static bool _debugMode = AssemblyProperties.IsDebugMode(typeof(DirectoryObject).Assembly.Location);
+        private static readonly bool _debugMode =
+            AssemblyProperties.IsDebugMode(typeof(DirectoryObject).Assembly.Location);
 
-        private static ILog _log = LogManager.GetLogger<DirectoryObject>();
+        private static readonly ILog _log = LogManager.GetLogger<DirectoryObject>();
 
         private string _distinguishedName;
 
@@ -30,7 +32,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         private int _propertiesCount;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DirectoryObject"/> class.
+        /// Initializes a new instance of the <see cref="DirectoryObject" /> class.
         /// </summary>
         /// <param name="properties">A Dictionary of properties.</param>
         /// <remarks>This constructor is primarily used for unit tests.</remarks>
@@ -43,25 +45,25 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject"/> class. This
+        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject" /> class. This
         /// constructor is not public and should only be used when the derived class wants to add an
         /// additional constructor. At some point though, the derived classes' constructor needs to
         /// call the "Initialize" method to load up the internal data structures.
         /// </summary>
         protected DirectoryObject()
         {
-            _distinguishedName = String.Empty;
+            _distinguishedName = string.Empty;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject"/> class.
+        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject" /> class.
         /// </summary>
         /// <param name="distinguishedName">string representation of the distinguished name.</param>
         protected DirectoryObject(string distinguishedName)
         {
-            _distinguishedName = String.Empty;
-            if (String.IsNullOrEmpty(distinguishedName))
+            _distinguishedName = string.Empty;
+            if (string.IsNullOrEmpty(distinguishedName))
             {
                 throw new ArgumentNullException(nameof(distinguishedName));
             }
@@ -71,12 +73,12 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject"/> class.
+        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject" /> class.
         /// </summary>
         /// <param name="distinguishedName">DistinguishedName object of the distinguished name.</param>
         protected DirectoryObject(DistinguishedName distinguishedName)
         {
-            _distinguishedName = String.Empty;
+            _distinguishedName = string.Empty;
             if (distinguishedName == null)
             {
                 throw new ArgumentNullException(nameof(distinguishedName));
@@ -87,12 +89,12 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject"/> class.
+        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject" /> class.
         /// </summary>
         /// <param name="result">A SearchResult Object.</param>
         protected DirectoryObject(SearchResult result)
         {
-            _distinguishedName = String.Empty;
+            _distinguishedName = string.Empty;
             if (result == null)
             {
                 throw new ArgumentNullException(nameof(result));
@@ -103,12 +105,12 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject"/> class.
+        /// cref="ToolKit.DirectoryServices.ActiveDirectory.DirectoryObject" /> class.
         /// </summary>
         /// <param name="entry">A DirectoryEntry Object.</param>
         protected DirectoryObject(DirectoryEntry entry)
         {
-            _distinguishedName = String.Empty;
+            _distinguishedName = string.Empty;
             if (entry == null)
             {
                 throw new ArgumentNullException(nameof(entry));
@@ -127,13 +129,13 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             {
                 var domainRoot = DistinguishedName.Parse(_distinguishedName).DomainRoot;
 
-                return !String.IsNullOrEmpty(domainRoot)
+                return !string.IsNullOrEmpty(domainRoot)
                     ? ResolveNetBios().ToUpper(CultureInfo.InvariantCulture) : null;
             }
         }
 
         /// <summary>
-        /// Gets The Number of Properties
+        /// Gets The Number of Properties.
         /// </summary>
         /// <value>The number of properties in this object.</value>
         public int NumberOfProperties => _propertiesCount;
@@ -142,7 +144,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Determines if the specified distinguished name exists.
         /// </summary>
         /// <param name="distinguishedName">The distinguished Name of the object.</param>
-        /// <returns><c>True</c> if the object exists, otherwise <c>False</c></returns>
+        /// <returns><c>True</c> if the object exists, otherwise <c>False</c>.</returns>
         public static bool Exists(string distinguishedName)
         {
             return DirectoryEntry.Exists(DistinguishedName.Parse(distinguishedName).LdapPath);
@@ -161,7 +163,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Determines whether the specified distinguished name is a computer object.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
+        /// <param name="distinguishedName">The distinguished name representing the ADSI object.</param>
         /// <returns>
         /// <c>true</c> if the specified distinguished name is a computer; otherwise, <c>false</c>.
         /// </returns>
@@ -186,7 +188,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Determines whether the specified distinguished name is a computer object.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
+        /// <param name="distinguishedName">The distinguished name representing the ADSI object.</param>
         /// <returns>
         /// <c>true</c> if the specified distinguished name is a computer; otherwise, <c>false</c>.
         /// </returns>
@@ -208,7 +210,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Determines whether the specified distinguished name is a contact object.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
+        /// <param name="distinguishedName">The distinguished name representing the ADSI object.</param>
         /// <returns>
         /// <c>true</c> if the specified distinguished name is a contact; otherwise, <c>false</c>.
         /// </returns>
@@ -233,7 +235,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Determines whether the specified distinguished name is a contact object.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
+        /// <param name="distinguishedName">The distinguished name representing the ADSI object.</param>
         /// <returns>
         /// <c>true</c> if the specified distinguished name is a contact; otherwise, <c>false</c>.
         /// </returns>
@@ -255,7 +257,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Determines whether the specified distinguished name is a group object.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
+        /// <param name="distinguishedName">The distinguished name representing the ADSI object.</param>
         /// <returns><c>true</c> if the specified distinguished name is a group; otherwise, <c>false</c>.</returns>
         public static bool IsGroup(DistinguishedName distinguishedName)
         {
@@ -278,7 +280,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Determines whether the specified distinguished name is a group object.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
+        /// <param name="distinguishedName">The distinguished name representing the ADSI object.</param>
         /// <returns><c>true</c> if the specified distinguished name is a group; otherwise, <c>false</c>.</returns>
         public static bool IsGroup(string distinguishedName)
         {
@@ -298,7 +300,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Determines whether the specified distinguished name is a user object.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
+        /// <param name="distinguishedName">The distinguished name representing the ADSI object.</param>
         /// <returns><c>true</c> if the specified distinguished name is a user; otherwise, <c>false</c>.</returns>
         public static bool IsUser(DistinguishedName distinguishedName)
         {
@@ -321,7 +323,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Determines whether the specified distinguished name is a user object.
         /// </summary>
-        /// <param name="distinguishedName">The distinguished name representing the ADSI object</param>
+        /// <param name="distinguishedName">The distinguished name representing the ADSI object.</param>
         /// <returns><c>true</c> if the specified distinguished name is a user; otherwise, <c>false</c>.</returns>
         public static bool IsUser(string distinguishedName)
         {
@@ -343,7 +345,9 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <param name="newLocation">The distinguished name of the new parent container.</param>
         public void Move(DistinguishedName newLocation)
         {
-            if (!Exists(newLocation?.GcPath))
+            newLocation = Check.NotNull(newLocation, nameof(newLocation));
+
+            if (!Exists(newLocation.GcPath))
             {
                 throw new ArgumentException("Destination does not exists!");
             }
@@ -360,12 +364,16 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Converts this object to a DirectoryEntry.
         /// </summary>
-        /// <returns>This object as a DirectoryEntry</returns>
+        /// <returns>This object as a DirectoryEntry.</returns>
         public DirectoryEntry ToDirectoryEntry()
         {
             return new DirectoryEntry(DistinguishedName.Parse(_distinguishedName).LdapPath);
         }
 
+        /// <summary>
+        /// Initializes the internal collection of properties.
+        /// </summary>
+        /// <param name="collection">The collection of properties.</param>
         internal void Initialize(ResultPropertyCollection collection)
         {
             var extracted = new Dictionary<string, object>();
@@ -390,6 +398,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             Initialize(extracted);
         }
 
+        /// <summary>
+        /// Initializes the internal collection of properties.
+        /// </summary>
+        /// <param name="collection">The collection of properties.</param>
         internal void Initialize(Dictionary<string, object> collection)
         {
             _properties = new XmlDocument()
@@ -397,9 +409,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 XmlResolver = null
             };
 
-            var xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><DirectoryObject></DirectoryObject>";
             using (var reader = XmlReader.Create(
-                new StringReader(xml),
+                new StringReader("<?xml version=\"1.0\" encoding=\"utf-8\" ?><DirectoryObject></DirectoryObject>"),
                 new XmlReaderSettings() { XmlResolver = null }))
             {
                 _properties.Load(reader);
@@ -435,10 +446,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Returns the values contained in the _properties using an XPath query
+        /// Returns the values contained in the _properties using an XPath query.
         /// </summary>
-        /// <param name="xpathQuery">an XPath Query</param>
-        /// <returns>List of string values of the nodes</returns>
+        /// <param name="xpathQuery">an XPath Query.</param>
+        /// <returns>List of string values of the nodes.</returns>
         protected List<string> GetNodeListValues(string xpathQuery)
         {
             var nodeListValues = new List<string>();
@@ -456,7 +467,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 {
                     string value;
 
-                    if (node.Attributes != null && node.Attributes[0].InnerText == "System.String")
+                    if (node.Attributes?[0].InnerText == "System.String")
                     {
                         value = XmlEncoder.Decode(node.InnerText);
                     }
@@ -483,10 +494,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Returns the value in the node using an XPath query
+        /// Returns the value in the node using an XPath query.
         /// </summary>
-        /// <param name="xpathQuery">an XPath Query</param>
-        /// <returns>value of the node</returns>
+        /// <param name="xpathQuery">an XPath Query.</param>
+        /// <returns>value of the node.</returns>
         protected string GetNodeValue(string xpathQuery)
         {
             string value = null;
@@ -501,15 +512,19 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 }
                 else
                 {
-                    if (node.Attributes != null && node.Attributes[0].InnerText == "System.String")
+                    if (node.Attributes?[0].InnerText == "System.String")
                     {
-                        value = XmlEncoder.Decode(node.InnerText);
-                        _log.Debug($"{xpathQuery} --> {value}");
+                        if (!string.IsNullOrEmpty(node.InnerText))
+                        {
+                            value = XmlEncoder.Decode(node.InnerText);
+                        }
+
+                        _log.Debug($"{xpathQuery} --> \"{value}\"");
                     }
                     else
                     {
                         value = node.InnerText;
-                        _log.Debug($"{xpathQuery} --> {value}");
+                        _log.Debug($"{xpathQuery} --> \"{value}\"");
                     }
                 }
             }
@@ -524,10 +539,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Gets the object class or classes of this object.
         /// </summary>
-        /// <returns>List of classes separated by a space</returns>
+        /// <returns>List of classes separated by a space.</returns>
         protected string GetObjectClass()
         {
-            var objectClass = String.Empty;
+            var objectClass = string.Empty;
 
             try
             {
@@ -604,7 +619,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             }
 
             var objectClass = propertyCollection["objectclass"].Cast<object>()
-                .Aggregate(String.Empty, (current, property) => current + $"{property.ToString()} ");
+                .Aggregate(string.Empty, (current, property) => current + $"{property} ");
 
             return objectClass.Contains(objectType);
         }
@@ -675,7 +690,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                     foreach (SearchResult result in results)
                     {
                         var contextName = (string)result.Properties["nCName"][0];
-                        if (String.Compare(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase) == 0)
+                        if (string.Equals(contextName, dn.DomainRoot, StringComparison.OrdinalIgnoreCase))
                         {
                             netBiosName = (string)result.Properties["netBIOSName"][0];
                         }

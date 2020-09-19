@@ -3,14 +3,16 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <Features>IOperation</Features>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DocumentationFile>bin\Release\ToolKit.Data.NHibernate.xml</DocumentationFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\ToolKit.Data.NHibernate.XML</DocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <DebugType>full</DebugType>
       <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="../stylecop.json" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Common.Logging" Version="3.4.1" />
         <PackageReference Include="FluentNHibernate" Version="2.1.2" />
@@ -19,10 +21,11 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="NHibernate" Version="5.1.2" />
-        <PackageReference Include="StyleCop.MSBuild" Version="6.2.0">
-          <PrivateAssets>all</PrivateAssets>
+      <PackageReference Include="StyleCop.Analyzers">
+          <Version>1.1.118</Version>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+          <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
         <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">

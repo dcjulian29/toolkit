@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Security;
 using System.Reflection;
@@ -93,10 +94,7 @@ namespace UnitTests.Cryptography
             SslAcceptPolicy.AcceptAll();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                SslAcceptPolicy.AcceptAll();
-            });
+            Assert.Throws<InvalidOperationException>(() => SslAcceptPolicy.AcceptAll());
         }
 
         [Fact]
@@ -156,17 +154,13 @@ namespace UnitTests.Cryptography
 
         private X509Certificate2 LoadCertificate()
         {
-            X509Certificate2 cert = null;
-
             var pfx = $"{Assembly.GetExecutingAssembly().GetName().Name}.SelfSign.pfx";
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(pfx);
 
             var bytes = new byte[stream.Length];
             stream.Read(bytes, 0, bytes.Length);
 
-            cert = new X509Certificate2(bytes, String.Empty);
-
-            return cert;
+            return new X509Certificate2(bytes, string.Empty);
         }
 
         private static class AnotherCertificatePolicy
@@ -177,6 +171,11 @@ namespace UnitTests.Cryptography
                 X509Chain chain,
                 SslPolicyErrors sslPolicyErrors)
             {
+                Debug.Print(sender.ToString());
+                Debug.Print(certificate.ToString());
+                Debug.Print(chain.ToString());
+                Debug.Print(sslPolicyErrors.ToString());
+
                 return false;
             }
         }

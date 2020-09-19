@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -45,7 +45,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void BadPasswordCount_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = 2;
+            const int expected = 2;
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -73,7 +73,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Category_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "CN=Computer,CN=Schema,CN=Configuration,DC=company,DC=local";
+            const string expected = "CN=Computer,CN=Schema,CN=Configuration,DC=company,DC=local";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -101,7 +101,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void CommonName_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "COMPUTER01";
+            const string expected = "COMPUTER01";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -115,7 +115,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void ComputerAccountControl_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = 4096;
+            const int expected = 4096;
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -129,7 +129,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void CountryCode_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = 42;
+            const int expected = 42;
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -173,17 +173,14 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
             var obj = NotAComputer();
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var computer = new Computer(obj);
-            });
+            Assert.Throws<ArgumentException>(() => _ = new Computer(obj));
         }
 
         [Fact]
         public void Description_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "Computer For Stuff";
+            const string expected = "Computer For Stuff";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -197,7 +194,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Disabled_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = false;
+            const bool expected = false;
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -211,7 +208,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void DistinguishedName_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "CN=COMPUTER01,CN=Computers,DC=company,DC=local";
+            const string expected = "CN=COMPUTER01,CN=Computers,DC=company,DC=local";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -225,7 +222,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void DnsHostName_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "computer01.company.local";
+            const string expected = "computer01.company.local";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -364,7 +361,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Location_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "Ashburn";
+            const string expected = "Ashburn";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -378,7 +375,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void LogonCount_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = 60;
+            const int expected = 60;
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -392,7 +389,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void ManagedBy_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "CN=user1,CN=Users,DC=company,DC=local";
+            const string expected = "CN=user1,CN=Users,DC=company,DC=local";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -420,7 +417,8 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Name_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "COMPUTER01";
+
+            const string expected = "COMPUTER01";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -434,7 +432,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void OperatingSystem_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "Windows 10 Pro";
+            const string expected = "Windows 10 Pro";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -448,7 +446,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void OperatingSystemServicePack_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "1";
+            const string expected = "1";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -462,7 +460,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void OperatingSystemVersion_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "10.0 (10240)";
+            const string expected = "10.0 (10240)";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -490,7 +488,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void PrimaryGroupId_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = 515;
+            const int expected = 515;
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -504,7 +502,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void SamAccountName_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "COMPUTER01$";
+            const string expected = "COMPUTER01$";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -541,7 +539,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void Sid_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = "S-1-5-21-1501611499-78517565-1004253924-2105";
+            const string expected = "S-1-5-21-1501611499-78517565-1004253924-2105";
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -555,7 +553,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UpdateSequenceNumberCreated_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = 43640;
+            const int expected = 43640;
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -569,7 +567,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         public void UpdateSequenceNumberCurrent_Should_ReturnExpectedResult()
         {
             // Arrange
-            var expected = 129204;
+            const int expected = 129204;
             var computer = new Computer(InitializeProperties());
 
             // Act
@@ -583,16 +581,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
         {
             var properties = InitializeProperties();
 
-            properties["accountexpires"] = String.Empty;
-
-            return properties;
-        }
-
-        private Dictionary<string, object> ComputerAccountExpireNot()
-        {
-            var properties = InitializeProperties();
-
-            properties["accountexpires"] = 9223372036854775807;
+            properties["accountexpires"] = string.Empty;
 
             return properties;
         }
@@ -633,7 +622,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
                 { "distinguishedname", "CN=COMPUTER01,CN=Computers,DC=company,DC=local" },
                 { "dnshostname", "computer01.company.local" },
                 { "memberof", "CN=group1,CN=Users,DC=company,DC=local" },
-                { "objectguid", new Byte[]
+                { "objectguid", new byte[]
                     {
                         0x8B, 0x41, 0x29, 0xCD, 0xD7, 0x45, 0x55, 0x4D,
                         0x95, 0x2E, 0xE4, 0xDA, 0x71, 0x71, 0x72, 0xAF
@@ -662,7 +651,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
                         "HOST/COMPUTER01.company.local"
                     }
                 },
-                { "objectsid", new Byte[]
+                { "objectsid", new byte[]
                     {
                         0x01, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05,
                         0x15, 0x00, 0x00, 0x00, 0xEB, 0xC5, 0x80, 0x59,
@@ -670,8 +659,8 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
                         0x39, 0x08, 0x00, 0x00
                     }
                 },
-                { "usncreated", (Int64)43640 },
-                { "usnchanged", (Int64)129204 },
+                { "usncreated", (long)43640 },
+                { "usnchanged", (long)129204 },
                 { "objectclass", new[] { "top", "person", "user", "computer" } }
             };
         }
@@ -681,16 +670,6 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
             var properties = InitializeProperties();
 
             properties["objectclass"] = new[] { "top", "person", "user" };
-
-            return properties;
-        }
-
-        private Dictionary<string, object> Server()
-        {
-            var properties = InitializeProperties();
-
-            properties["operatingsystem"] = "Windows Server 2012 R2 Standard";
-            properties["operatingsystemversion"] = "6.3 (9600)";
 
             return properties;
         }

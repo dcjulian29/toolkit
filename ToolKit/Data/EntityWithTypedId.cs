@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
@@ -37,13 +37,13 @@ namespace ToolKit.Data
         /// </returns>
         public static bool operator ==(EntityWithTypedId<TId> a, EntityWithTypedId<TId> b)
         {
-            if (Object.ReferenceEquals(a, b))
+            if (object.ReferenceEquals(a, b))
             {
                 return true;
             }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
+            if ((a is null) || (b is null))
             {
                 return false;
             }
@@ -119,12 +119,12 @@ namespace ToolKit.Data
 
         /// <summary>
         /// Determines whether the specified
-        /// <see cref="System.Object"/> is equal to this instance.
+        /// <see cref="object"/> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/>
+        /// <param name="obj">The <see cref="object"/>
         /// to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object"/>
+        ///   <c>true</c> if the specified <see cref="object"/>
         ///   is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Runtime.Caching;
 using Common.Logging;
@@ -11,7 +11,7 @@ using NHibernate.Tool.hbm2ddl;
 namespace ToolKit.Data.NHibernate
 {
     /// <summary>
-    /// A Abstract Implementation of A Database Handler Class Using NHibernate
+    /// A Abstract Implementation of A Database Handler Class Using NHibernate.
     /// </summary>
     public abstract class NHibernateDatabaseBase : DatabaseBase
     {
@@ -44,7 +44,7 @@ namespace ToolKit.Data.NHibernate
         public Assembly AssemblyContainingMappings { get; }
 
         /// <summary>
-        /// Gets or sets the cache of Session Factories
+        /// Gets or sets the cache of Session Factories.
         /// </summary>
         protected static ObjectCache Cache { get; set; } = MemoryCache.Default;
 
@@ -58,7 +58,7 @@ namespace ToolKit.Data.NHibernate
         /// Find and Return the Session Factory for the specified session name.
         /// </summary>
         /// <param name="sessionName">The name of the database session.</param>
-        /// <returns>the Session Factory for the specified session name</returns>
+        /// <returns>the Session Factory for the specified session name.</returns>
         public ISessionFactory SessionFactory(string sessionName)
             => GetOrCreateSessionFactory(sessionName);
 
@@ -70,9 +70,9 @@ namespace ToolKit.Data.NHibernate
                             new SchemaExport(config).Create(false, UnitTests);
 
         /// <summary>
-        /// contains the details about the NHibernate Configuration
+        /// contains the details about the NHibernate Configuration.
         /// </summary>
-        /// <returns>the NHibernate Configuration</returns>
+        /// <returns>the NHibernate Configuration.</returns>
         protected abstract IPersistenceConfigurer DatabaseConfigurer();
 
         private ISessionFactory GetOrCreateSessionFactory(string sessionName)

@@ -1,9 +1,9 @@
-﻿using FluentNHibernate.Cfg.Db;
+using FluentNHibernate.Cfg.Db;
 
 namespace ToolKit.Data.NHibernate.SessionFactories
 {
     /// <summary>
-    /// NHibernate Session Factory using Microsoft SQL Server 2012
+    /// NHibernate Session Factory using Microsoft SQL Server 2012.
     /// </summary>
     public class MsSqlSessionFactory : SessionFactoryBase
     {

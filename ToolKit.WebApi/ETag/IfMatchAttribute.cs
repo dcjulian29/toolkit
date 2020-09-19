@@ -11,7 +11,8 @@ namespace ToolKit.WebApi.ETag
         /// <summary>
         ///   Initializes a new instance of the <see cref="IfMatchAttribute" /> class.
         /// </summary>
-        public IfMatchAttribute() : base(ETagMatch.IfMatch)
+        public IfMatchAttribute()
+            : base(ETagMatch.IfMatch)
         {
         }
     }

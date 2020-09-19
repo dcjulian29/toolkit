@@ -2,6 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using Common.Logging;
+using ToolKit.Validation;
 
 namespace ToolKit.Cryptography
 {
@@ -19,7 +20,7 @@ namespace ToolKit.Cryptography
     /// </remarks>
     public class RsaEncryption
     {
-        private static ILog _log = LogManager.GetLogger<RsaEncryption>();
+        private static readonly ILog _log = LogManager.GetLogger<RsaEncryption>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RsaEncryption"/> class.
@@ -38,14 +39,14 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Gets the default private key as stored in the *.config file
+        /// Gets the default private key as stored in the application configuration file.
         /// </summary>
-        public RsaPrivateKey DefaultPrivateKey => RsaPrivateKey.LoadFromEnvironment();
+        public static RsaPrivateKey DefaultPrivateKey => RsaPrivateKey.LoadFromEnvironment();
 
         /// <summary>
         /// Gets the default public key as stored in the *.config file.
         /// </summary>
-        public RsaPublicKey DefaultPublicKey => RsaPublicKey.LoadFromEnvironment();
+        public static RsaPublicKey DefaultPublicKey => RsaPublicKey.LoadFromEnvironment();
 
         /// <summary>
         /// Gets the name of the key container used to store this key on disk; this is an
@@ -68,6 +69,7 @@ namespace ToolKit.Cryptography
                 var rsa = GetRsaProvider();
                 var keyMaxSize = rsa.LegalKeySizes[0].MaxSize;
                 rsa.Clear();
+                rsa.Dispose();
 
                 return keyMaxSize;
             }
@@ -83,6 +85,7 @@ namespace ToolKit.Cryptography
                 var rsa = GetRsaProvider();
                 var keyMinSize = rsa.LegalKeySizes[0].MinSize;
                 rsa.Clear();
+                rsa.Dispose();
 
                 return keyMinSize;
             }
@@ -98,13 +101,14 @@ namespace ToolKit.Cryptography
                 var rsa = GetRsaProvider();
                 var keyStepBits = rsa.LegalKeySizes[0].SkipSize;
                 rsa.Clear();
+                rsa.Dispose();
 
                 return keyStepBits;
             }
         }
 
         /// <summary>
-        /// Decrypts data using the default private key
+        /// Decrypts data using the default private key.
         /// </summary>
         /// <param name="encryptedData">The data to be decrypted.</param>
         /// <returns>The decrypted data.</returns>
@@ -114,7 +118,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts data using the provided private key
+        /// Decrypts data using the provided private key.
         /// </summary>
         /// <param name="encryptedData">The data to be decrypted.</param>
         /// <param name="privateKey">The private key.</param>
@@ -122,21 +126,22 @@ namespace ToolKit.Cryptography
         public EncryptionData Decrypt(EncryptionData encryptedData, RsaPrivateKey privateKey)
         {
             var rsa = GetRsaProvider();
-            rsa.ImportParameters(privateKey.ToParameters());
+            rsa.ImportParameters(Check.NotNull(privateKey, nameof(privateKey)).ToParameters());
 
             // Be aware the RSACryptoServiceProvider reverses the order of encrypted bytes after
             // encryption and before decryption. In order to provide compatibility with other
             // providers, we reverse the order of the bytes to match what other providers output.
-            Array.Reverse(encryptedData.Bytes);
+            Array.Reverse(Check.NotNull(encryptedData, nameof(encryptedData)).Bytes);
 
             var decrypted = new EncryptionData(rsa.Decrypt(encryptedData.Bytes, true));
             rsa.Clear();
+            rsa.Dispose();
 
             return decrypted;
         }
 
         /// <summary>
-        /// Encrypts data using the default public key
+        /// Encrypts data using the default public key.
         /// </summary>
         /// <param name="data">The data to be encrypted..</param>
         /// <returns>The encrypted data.</returns>
@@ -146,7 +151,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Encrypts data using the provided public key
+        /// Encrypts data using the provided public key.
         /// </summary>
         /// <param name="data">The data to be encrypted..</param>
         /// <param name="publicKey">The public key.</param>
@@ -154,11 +159,11 @@ namespace ToolKit.Cryptography
         public EncryptionData Encrypt(EncryptionData data, RsaPublicKey publicKey)
         {
             var rsa = GetRsaProvider();
-            rsa.ImportParameters(publicKey.ToParameters());
+            rsa.ImportParameters(Check.NotNull(publicKey, nameof(publicKey)).ToParameters());
 
             try
             {
-                var encryptedBytes = rsa.Encrypt(data.Bytes, true);
+                var encryptedBytes = rsa.Encrypt(Check.NotNull(data, nameof(data)).Bytes, true);
 
                 // Be aware the RSACryptoServiceProvider reverses the order of encrypted bytes after
                 // encryption and before decryption. In order to provide compatibility with other
@@ -192,11 +197,12 @@ namespace ToolKit.Cryptography
             finally
             {
                 rsa.Clear();
+                rsa.Dispose();
             }
         }
 
         /// <summary>
-        /// Generates a new public/private key pair as objects
+        /// Generates a new public/private key pair as objects.
         /// </summary>
         /// <param name="publicKey">The public key.</param>
         /// <param name="privateKey">The private key.</param>
@@ -218,13 +224,14 @@ namespace ToolKit.Cryptography
             var privateKeyXml = rsa.ToXmlString(true);
 
             rsa.Clear();
+            rsa.Dispose();
 
             publicKey = new RsaPublicKey(publicKeyXml);
             privateKey = new RsaPrivateKey(privateKeyXml);
         }
 
         /// <summary>
-        /// Signs data using the provided private key
+        /// Signs data using the provided private key.
         /// </summary>
         /// <param name="dataToSign">The data to be signed.</param>
         /// <param name="privateKey">The private key.</param>
@@ -232,10 +239,13 @@ namespace ToolKit.Cryptography
         public EncryptionData Sign(EncryptionData dataToSign, RsaPrivateKey privateKey)
         {
             var rsa = GetRsaProvider();
-            rsa.ImportParameters(privateKey.ToParameters());
+            rsa.ImportParameters(Check.NotNull(privateKey, nameof(privateKey)).ToParameters());
 
-            var sig = rsa.SignData(dataToSign.Bytes, new SHA256Managed());
+            var hash = new SHA256Managed();
+            var sig = rsa.SignData(Check.NotNull(dataToSign, nameof(dataToSign)).Bytes, hash);
             rsa.Clear();
+            rsa.Dispose();
+            hash.Dispose();
 
             return new EncryptionData(sig);
         }
@@ -252,10 +262,16 @@ namespace ToolKit.Cryptography
         public bool Verify(EncryptionData data, EncryptionData signature, RsaPublicKey publicKey)
         {
             var rsa = GetRsaProvider();
-            rsa.ImportParameters(publicKey.ToParameters());
+            rsa.ImportParameters(Check.NotNull(publicKey, nameof(publicKey)).ToParameters());
 
-            var valid = rsa.VerifyData(data.Bytes, new SHA256Managed(), signature.Bytes);
+            var hash = new SHA256Managed();
+            var valid = rsa.VerifyData(
+                Check.NotNull(data, nameof(data)).Bytes,
+                hash,
+                Check.NotNull(signature, nameof(signature)).Bytes);
             rsa.Clear();
+            rsa.Dispose();
+            hash.Dispose();
 
             return valid;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -10,26 +11,38 @@ namespace ToolKit.Cryptography
     /// <summary>
     /// Represents a public encryption key. Intended to be shared, it contains only the Modulus and Exponent.
     /// </summary>
+    [SuppressMessage(
+        "Design",
+        "RCS1187:Use constant instead of field.",
+        Justification = "This time the analysis rule don't make sense for this class")]
+    [SuppressMessage(
+        "Performance",
+        "CA1802:Use literals where appropriate",
+        Justification = "This time the analysis rule don't make sense for this class")]
     public class RsaPublicKey
     {
-        private const string ElementExponent = "Exponent";
-        private const string ElementModulus = "Modulus";
-        private const string ElementParent = "RSAKeyValue";
-        private const string KeyExponent = "PublicKey.Exponent";
-        private const string KeyModulus = "PublicKey.Modulus";
+        private static readonly string _elementExponent = "Exponent";
+
+        private static readonly string _elementModulus = "Modulus";
+
+        private static readonly string _elementParent = "RSAKeyValue";
+
+        private static readonly string _keyExponent = "PublicKey.Exponent";
+
+        private static readonly string _keyModulus = "PublicKey.Modulus";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RsaPublicKey"/> class.
+        /// Initializes a new instance of the <see cref="RsaPublicKey" /> class.
         /// </summary>
         /// <param name="keyXml">The public key represented as a XML string.</param>
         public RsaPublicKey(string keyXml)
         {
-            Modulus = ReadXmlElement(keyXml, ElementModulus);
-            Exponent = ReadXmlElement(keyXml, ElementExponent);
+            Modulus = ReadXmlElement(keyXml, _elementModulus);
+            Exponent = ReadXmlElement(keyXml, _elementExponent);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RsaPublicKey"/> class.
+        /// Initializes a new instance of the <see cref="RsaPublicKey" /> class.
         /// </summary>
         /// <param name="exponent">The exponent.</param>
         /// <param name="modulus">The modulus.</param>
@@ -40,7 +53,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RsaPublicKey"/> class.
+        /// Initializes a new instance of the <see cref="RsaPublicKey" /> class.
         /// </summary>
         public RsaPublicKey()
         {
@@ -72,11 +85,12 @@ namespace ToolKit.Cryptography
 
             var rawCert = File.ReadAllBytes(certificateFileName);
 
-            var cert = new X509Certificate2();
+            using (var cert = new X509Certificate2())
+            {
+                cert.Import(rawCert);
 
-            cert.Import(rawCert);
-
-            return new RsaPublicKey(cert.PublicKey.Key.ToXmlString(false));
+                return new RsaPublicKey(cert.PublicKey.Key.ToXmlString(false));
+            }
         }
 
         /// <summary>
@@ -94,23 +108,24 @@ namespace ToolKit.Cryptography
 
             var rawCert = File.ReadAllBytes(certificateFileName);
 
-            var cert = new X509Certificate2();
+            using (var cert = new X509Certificate2())
+            {
+                cert.Import(rawCert, filePassword, X509KeyStorageFlags.DefaultKeySet);
 
-            cert.Import(rawCert, filePassword, X509KeyStorageFlags.DefaultKeySet);
-
-            return new RsaPublicKey(cert.PublicKey.Key.ToXmlString(false));
+                return new RsaPublicKey(cert.PublicKey.Key.ToXmlString(false));
+            }
         }
 
         /// <summary>
-        /// Load public key from app.config or web.config file
+        /// Load public key from the application or web configuration file.
         /// </summary>
         /// <returns>an RSA Public Key instance containing the public key, or null.</returns>
         public static RsaPublicKey LoadFromEnvironment()
         {
             var key = new RsaPublicKey
             {
-                Modulus = ReadKeyFromEnvironment(KeyModulus),
-                Exponent = ReadKeyFromEnvironment(KeyExponent)
+                Modulus = ReadKeyFromEnvironment(_keyModulus),
+                Exponent = ReadKeyFromEnvironment(_keyExponent)
             };
 
             return key;
@@ -161,13 +176,22 @@ namespace ToolKit.Cryptography
                 mode = FileMode.Create;
             }
 
-            using (var stream = new FileStream(filePath, mode))
+            FileStream stream = null;
+
+            try
             {
-                using (var sw = new StreamWriter(stream))
+                stream = new FileStream(filePath, mode);
+                using (var writer = new StreamWriter(stream))
                 {
-                    sw.Write(ToXml());
-                    sw.Close();
+                    stream = null;
+
+                    writer.Write(ToXml());
+                    writer.Close();
                 }
+            }
+            finally
+            {
+                stream?.Dispose();
             }
         }
 
@@ -194,10 +218,10 @@ namespace ToolKit.Cryptography
         {
             var sb = new StringBuilder();
 
-            sb.Append(WriteXmlNode(ElementParent));
-            sb.Append(WriteXmlElement(ElementModulus, Modulus));
-            sb.Append(WriteXmlElement(ElementExponent, Exponent));
-            sb.Append(WriteXmlNode(ElementParent, true));
+            sb.Append(WriteXmlNode(_elementParent));
+            sb.Append(WriteXmlElement(_elementModulus, Modulus));
+            sb.Append(WriteXmlElement(_elementExponent, Exponent));
+            sb.Append(WriteXmlNode(_elementParent, true));
 
             return sb.ToString();
         }
@@ -206,7 +230,7 @@ namespace ToolKit.Cryptography
         {
             var s = Environment.GetEnvironmentVariable(key);
 
-            if (!String.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s))
             {
                 return s;
             }

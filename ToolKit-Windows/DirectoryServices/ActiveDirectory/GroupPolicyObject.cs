@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Common.Logging;
 
@@ -19,18 +20,18 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         private static ILog _log = LogManager.GetLogger<GroupPolicyObject>();
 
         /// <summary>
-        /// Initializes a new instance of the GroupPolicyObject class
+        /// Initializes a new instance of the <see cref="GroupPolicyObject"/> class.
         /// </summary>
-        /// <param name="domainName">The Name of the Domain where the GPO resides</param>
-        /// <param name="nameOfGpo">The name of the GPO</param>
+        /// <param name="domainName">The Name of the Domain where the GPO resides.</param>
+        /// <param name="nameOfGpo">The name of the GPO.</param>
         public GroupPolicyObject(string domainName, string nameOfGpo)
         {
-            if (String.IsNullOrEmpty(domainName))
+            if (string.IsNullOrEmpty(domainName))
             {
                 throw new ArgumentNullException(nameof(domainName));
             }
 
-            if (String.IsNullOrEmpty(nameOfGpo))
+            if (string.IsNullOrEmpty(nameOfGpo))
             {
                 throw new ArgumentNullException(nameof(nameOfGpo));
             }
@@ -79,27 +80,27 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the Distinguished Name of the Group Policy Object
+        /// Gets the Distinguished Name of the Group Policy Object.
         /// </summary>
-        /// <returns>A string representing the Distinguished Name</returns>
+        /// <returns>A string representing the Distinguished Name.</returns>
         public string DistinguishedName { get; private set; }
 
         /// <summary>
-        /// Gets the name of the domain where the GPO resides
+        /// Gets the name of the domain where the GPO resides.
         /// </summary>
-        /// <returns>The domain name</returns>
+        /// <returns>The domain name.</returns>
         public string DomainName { get; private set; }
 
         /// <summary>
-        /// Gets the friendly name of the Group Policy Object
+        /// Gets the friendly name of the Group Policy Object.
         /// </summary>
-        /// <returns>The Name of the GPO</returns>
+        /// <returns>The Name of the GPO.</returns>
         public string Name { get; private set; }
 
         /// <summary>
         /// Append the GPO at the end of the list. This GPO will be applied first.
         /// </summary>
-        /// <param name="distinguishedNameOfOu">The Distinguished Name of the Organizational Unit</param>
+        /// <param name="distinguishedNameOfOu">The Distinguished Name of the Organizational Unit.</param>
         public void Append(string distinguishedNameOfOu)
         {
             InsertAt(distinguishedNameOfOu, -1);
@@ -108,7 +109,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// <summary>
         /// Insert the GPO as the first entry. This GPO will be applied last.
         /// </summary>
-        /// <param name="distinguishedNameOfOu">The Distinguished Name of the Organizational Unit</param>
+        /// <param name="distinguishedNameOfOu">The Distinguished Name of the Organizational Unit.</param>
         public void Insert(string distinguishedNameOfOu)
         {
             InsertAt(distinguishedNameOfOu, 0);
@@ -118,13 +119,13 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Insert the GPO at a specific place. GPO are applied from the last entry to the first
         /// entry. This is reverse of the way they are listed in this attribute.
         /// </summary>
-        /// <param name="distinguishedNameOfOu">The Distinguished Name of the Organizational Unit</param>
-        /// <param name="place">The place(index) to insert the GPO at</param>
+        /// <param name="distinguishedNameOfOu">The Distinguished Name of the Organizational Unit.</param>
+        /// <param name="place">The place(index) to insert the GPO at.</param>
         public void InsertAt(string distinguishedNameOfOu, int place)
         {
             var thisLink = $"[LDAP://{DistinguishedName};0]";
             string oldGpLink;
-            var newGpLink = String.Empty;
+            var newGpLink = string.Empty;
 
             // Let's get the existing gpLink attribute
             var path = DirectoryServices.DistinguishedName.Parse(distinguishedNameOfOu);
@@ -133,7 +134,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
                 var pathOfOu = entry.Path;
                 _log.Debug($"OU Distinguished Name: {pathOfOu}");
 
-                var link = (entry.Properties["GPLink"].Value as string) ?? String.Empty;
+                var link = (entry.Properties["GPLink"].Value as string) ?? string.Empty;
 
                 _log.Debug($"oldGPLink: {link}");
 
@@ -154,22 +155,25 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             if (links.Count > 0)
             {
                 var tmpGpLink = links.ToArray();
+                var builder = new StringBuilder();
 
                 for (var i = 0; i < links.Count; i++)
                 {
                     if (i == place)
                     {
-                        newGpLink += thisLink;
+                        builder.Append(thisLink);
                     }
 
-                    newGpLink += tmpGpLink[i];
+                    builder.Append(tmpGpLink[i]);
 
                     if ((place == -1) && (i == links.Count - 1))
                     {
                         // Append the GPO
-                        newGpLink += thisLink;
+                        builder.Append(thisLink);
                     }
                 }
+
+                newGpLink = builder.ToString();
             }
             else
             {
@@ -178,7 +182,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
 
             _log.Debug($"newGPLink: {newGpLink}");
 
-            // Commit the change back to to the OU
+            // Commit the change back to the OU
             using (var entry = new DirectoryEntry(path.LdapPath))
             {
                 if (entry.Properties.Contains("GPLink"))

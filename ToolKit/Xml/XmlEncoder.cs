@@ -1,29 +1,27 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Text;
 using Common.Logging;
+using ToolKit.Validation;
 
 namespace ToolKit.Xml
 {
     /// <summary>
     /// This class contains two static methods to encode and decode text to be compatible with being
-    /// put into an XML document
+    /// put into an XML document.
     /// </summary>
     public static class XmlEncoder
     {
-        private static ILog _log = LogManager.GetLogger(typeof(XmlEncoder));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(XmlEncoder));
 
         /// <summary>
-        /// Decodes a string to remove XML entity markups
+        /// Decodes a string to remove XML entity markups.
         /// </summary>
-        /// <param name="inputText">Input text containing entity markups</param>
-        /// <returns>an decoded string</returns>
+        /// <param name="inputText">Input text containing entity markups.</param>
+        /// <returns>an decoded string.</returns>
         public static string Decode(string inputText)
         {
-            if (String.IsNullOrEmpty(inputText))
-            {
-                throw new ArgumentNullException("inputText");
-            }
+            inputText = Check.NotEmpty(inputText, nameof(inputText));
 
             // If the string doesn't have a & character, it doesn't have any entities.
             if (inputText.IndexOf('&') < 0)
@@ -32,7 +30,8 @@ namespace ToolKit.Xml
             }
 
             // If the string contains a & but not a ;, it doesn't have any entities.
-            if ((inputText.IndexOf('&') > -1) && (inputText.IndexOf(';') < 0))
+            if ((inputText.IndexOf('&') > -1)
+                && (inputText.IndexOf(';') < 0))
             {
                 return inputText;
             }
@@ -44,7 +43,7 @@ namespace ToolKit.Xml
                 var ch = inputText[i];
                 if (ch != '&')
                 {
-                    sb.AppendFormat("{0}", ch);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", ch);
                     continue;
                 }
 
@@ -53,7 +52,7 @@ namespace ToolKit.Xml
                 // If the end marker is not ; then ignore this "entity" and continue on
                 if ((endOfEntity > 0) && (inputText[endOfEntity] == '&'))
                 {
-                    sb.AppendFormat("{0}", ch);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", ch);
                     continue;
                 }
 
@@ -67,17 +66,20 @@ namespace ToolKit.Xml
                         if ((entity[0] == 'x') || (entity[0] == 'X'))
                         {
                             // It's encoded in hexadecimal
-                            ch = (char)Int32.Parse(entity.Substring(2), NumberStyles.AllowHexSpecifier);
+                            ch = (char)int.Parse(
+                                entity.Substring(2),
+                                NumberStyles.AllowHexSpecifier,
+                                CultureInfo.InvariantCulture);
                         }
                         else
                         {
                             // It's encoded in decimal
-                            ch = (char)Int32.Parse(entity);
+                            ch = (char)int.Parse(entity, CultureInfo.InvariantCulture);
                         }
                     }
                     catch (FormatException fex)
                     {
-                        _log.Warn(inputText + ": " + fex.Message, fex);
+                        _log.Warn($"{inputText}: {fex.Message}", fex);
                         continue;
                     }
                     catch (ArgumentException aex)
@@ -91,7 +93,7 @@ namespace ToolKit.Xml
                     // It's not an Entity Number but instead an Entity Name... Keep in mind that this
                     // is not the entire list of named entities. This Decode method is designed to
                     // decode only what was encoded with this class...
-                    switch (entity)
+                    switch (entity.ToString())
                     {
                         case "&amp;":
                             ch = '&';
@@ -126,19 +128,20 @@ namespace ToolKit.Xml
                 }
 
                 i = endOfEntity;
-                sb.AppendFormat("{0}", ch);
+                sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", ch);
             }
 
             return sb.ToString();
         }
 
         /// <summary>
-        /// Encodes a string to replace certain types of characters that are not "XML-Friendly"
+        /// Encodes a string to replace certain types of characters that are not "XML-Friendly".
         /// </summary>
         /// <param name="inputText">Input text to be encoded.</param>
-        /// <returns>an encoded string</returns>
+        /// <returns>an encoded string.</returns>
         public static string Encode(string inputText)
         {
+            inputText = Check.NotNull(inputText, nameof(inputText));
             var sb = new StringBuilder();
 
             foreach (var item in inputText)
@@ -168,13 +171,13 @@ namespace ToolKit.Xml
                             break;
 
                         default:
-                            sb.Append(item.ToString());
+                            sb.Append(item.ToString(CultureInfo.InvariantCulture));
                             break;
                     }
                 }
                 else
                 {
-                    sb.AppendFormat("&#{0};", ((int)item).ToString());
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "&#{0};", (int)item);
                 }
             }
 

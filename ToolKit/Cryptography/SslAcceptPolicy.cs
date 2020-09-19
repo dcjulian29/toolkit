@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -12,18 +13,23 @@ namespace ToolKit.Cryptography
     /// </summary>
     public static class SslAcceptPolicy
     {
-        private static ILog _log = LogManager.GetLogger(typeof(SslAcceptPolicy));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(SslAcceptPolicy));
 
         /// <summary>
         /// Gets a value indicating whether <see cref="SslAcceptPolicy"/> is enabled.
         /// </summary>
         public static bool Enabled { get; private set; }
 
+        /// <summary>Gets the original SSL Acceptance Policy.</summary>
         internal static RemoteCertificateValidationCallback OriginalPolicy { get; private set; }
 
         /// <summary>
         /// Set the SSL Acceptance Policy to accept all certificates even self-signed certificates.
         /// </summary>
+        [SuppressMessage(
+            "Security",
+            "CA5359:Do Not Disable Certificate Validation",
+            Justification = "Sometimes you just need to accept self-signed certificates.")]
         public static void AcceptAll()
         {
             if (Enabled)
@@ -33,9 +39,7 @@ namespace ToolKit.Cryptography
 
             OriginalPolicy = ServicePointManager.ServerCertificateValidationCallback;
 
-#pragma warning disable SG0004 // Certificate Validation has been disabled
             ServicePointManager.ServerCertificateValidationCallback = AcceptCertificatePolicy.Validate;
-#pragma warning restore SG0004 // Certificate Validation has been disabled
 
             Enabled = true;
         }
@@ -50,9 +54,7 @@ namespace ToolKit.Cryptography
                 return;
             }
 
-#pragma warning disable SG0004
             ServicePointManager.ServerCertificateValidationCallback = OriginalPolicy;
-#pragma warning restore SG0004
 
             OriginalPolicy = null;
             Enabled = false;
@@ -63,6 +65,14 @@ namespace ToolKit.Cryptography
         /// </summary>
         internal static class AcceptCertificatePolicy
         {
+            /// <summary>Validates the SSL Certificate.</summary>
+            /// <param name="sender">The sender.</param>
+            /// <param name="certificate">The certificate.</param>
+            /// <param name="chain">The chain.</param>
+            /// <param name="sslPolicyErrors">The SSL policy errors.</param>
+            /// <returns>
+            ///   <c>true</c> telling the sender to always accept the certificate.
+            /// </returns>
             internal static bool Validate(
                 object sender,
                 X509Certificate certificate,
@@ -70,6 +80,9 @@ namespace ToolKit.Cryptography
                 SslPolicyErrors sslPolicyErrors)
             {
                 _log.Debug($"Accepting Certificate: {certificate.Subject}\nFrom: {certificate.Issuer}");
+                _log.Debug($"Sender: {sender}");
+                _log.Debug($"Chain: {chain}");
+                _log.Debug($"SSL Policy Errors: {sslPolicyErrors}");
 
                 return true;
             }

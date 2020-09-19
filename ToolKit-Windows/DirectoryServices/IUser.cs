@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -46,7 +46,7 @@ namespace ToolKit.DirectoryServices
         string City { get; }
 
         /// <summary>
-        /// Gets the company that the user account belongs to
+        /// Gets the company that the user account belongs to.
         /// </summary>
         /// <value>The company that the user account belongs to.</value>
         string Company { get; }
@@ -58,7 +58,7 @@ namespace ToolKit.DirectoryServices
         string Country { get; }
 
         /// <summary>
-        /// Gets the country code for the user account
+        /// Gets the country code for the user account.
         /// </summary>
         /// <value>The country code for the user account.</value>
         int CountryCode { get; }
@@ -121,7 +121,8 @@ namespace ToolKit.DirectoryServices
         /// Gets the GUID of the user object.
         /// </summary>
         /// <value>The GUID of the user object.</value>
-        [SuppressMessage("Naming",
+        [SuppressMessage(
+            "Naming",
             "CA1720:Identifier contains type name",
             Justification = "Too Bad. It is what it is.")]
         Guid Guid { get; }
