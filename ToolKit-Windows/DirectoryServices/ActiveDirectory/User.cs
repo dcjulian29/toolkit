@@ -5,13 +5,12 @@ using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using Common.Logging;
-using ToolKit;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
     /// <summary>
-    /// This class represents an ActiveDirectory User
+    /// This class represents an ActiveDirectory User.
     /// </summary>
     public class User : DirectoryObject, IUser
     {
@@ -96,10 +95,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="User"></see> class. This constructor is not
-        /// public and should only be used when the derived class wants to add an additional
-        /// constructor. At some point though, the derived classes' constructor needs to call the
-        /// "Initialize" method to load up the internal data structures.
+        /// Initializes a new instance of the <see cref="User"/> class.
         /// </summary>
         protected User()
         {
@@ -202,7 +198,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the company that the user account belongs to
+        /// Gets the company that the user account belongs to.
         /// </summary>
         /// <value>The company that the user account belongs to.</value>
         public string Company
@@ -226,7 +222,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the country code for the user account
+        /// Gets the country code for the user account.
         /// </summary>
         /// <value>The country code for the user account.</value>
         public int CountryCode
@@ -365,7 +361,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the user object.
         /// </summary>
         /// <value>The GUID of the user object.</value>
-        [SuppressMessage("Naming",
+        [SuppressMessage(
+            "Naming",
             "CA1720:Identifier contains type name",
             Justification = "Too Bad. It is what it is.")]
         public Guid Guid
@@ -829,7 +826,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Disables this account in Active Directory
+        /// Disables this account in Active Directory.
         /// </summary>
         public void Disable()
         {

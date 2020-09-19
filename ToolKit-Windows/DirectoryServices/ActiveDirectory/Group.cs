@@ -9,7 +9,7 @@ using ToolKit.DirectoryServices.ServiceInterfaces;
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
     /// <summary>
-    /// This class represents an ActiveDirectory Group
+    /// This class represents an ActiveDirectory Group.
     /// </summary>
     public class Group : DirectoryObject, IGroup
     {
@@ -92,10 +92,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Group"></see> class. This constructor is
-        /// not public and should only be used when the derived class wants to add an additional
-        /// constructor. At some point though, the derived classes' constructor needs to call the
-        /// "Initialize" method to load up the internal data structures.
+        /// Initializes a new instance of the <see cref="Group" /> class.
         /// </summary>
         protected Group()
         {
@@ -204,7 +201,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the group object.
         /// </summary>
         /// <value>The GUID of the group object.</value>
-        [SuppressMessage("Naming",
+        [SuppressMessage(
+            "Naming",
             "CA1720:Identifier contains type name",
             Justification = "Too Bad. It is what it is.")]
         public Guid Guid
@@ -279,7 +277,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the name of the sam account name of the group
+        /// Gets the name of the sam account name of the group.
         /// </summary>
         /// <value>The sam account name of the group.</value>
         public string SamAccountName

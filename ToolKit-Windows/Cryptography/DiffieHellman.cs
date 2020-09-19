@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
@@ -10,7 +10,8 @@ namespace ToolKit.Cryptography
     /// A class to simplify Diffie-Hellman key exchange.
     /// </summary>
     /// <seealso cref="ToolKit.DisposableObject"/>
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules",
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
         "SA1650:ElementDocumentationMustBeSpelledCorrectly",
         Justification = "Can't change the person's name")]
     public class DiffieHellman : DisposableObject
@@ -18,7 +19,9 @@ namespace ToolKit.Cryptography
         private readonly ECDiffieHellmanCng _dh;
         private readonly Aes _encryptor;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiffieHellman"/> class.
+        /// </summary>
         public DiffieHellman()
         {
             _encryptor = new AesCryptoServiceProvider()
@@ -52,7 +55,8 @@ namespace ToolKit.Cryptography
         /// <param name="encrypted">The encrypted data.</param>
         /// <param name="iv">The initialization vector of the other side.</param>
         /// <returns>The decrypted data.</returns>
-        [SuppressMessage("Microsoft.Usage",
+        [SuppressMessage(
+            "Microsoft.Usage",
             "CA2202:Do not dispose objects multiple times",
             Justification = "Why does it think it gets disposed multiple times?")]
         public EncryptionData Decrypt(EncryptionData publicKey, EncryptionData encrypted, EncryptionData iv)
@@ -113,7 +117,8 @@ namespace ToolKit.Cryptography
         /// <param name="publicKey">The public key.</param>
         /// <param name="secretMessage">The secret.</param>
         /// <returns>The encrypted data.</returns>
-        [SuppressMessage("Microsoft.Usage",
+        [SuppressMessage(
+            "Microsoft.Usage",
             "CA2202:Do not dispose objects multiple times",
             Justification = "Why does it think it gets disposed multiple times?")]
         public EncryptionData Encrypt(EncryptionData publicKey, EncryptionData secretMessage)
@@ -156,13 +161,12 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
+        /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
         /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
         /// unmanaged resources.
         /// </param>
-        [ExcludeFromCodeCoverage]
         protected override void DisposeResources(bool disposing)
         {
             if (!disposing)

@@ -8,7 +8,7 @@ using System.Globalization;
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
     /// <summary>
-    /// This class represents an Active Directory Contact
+    /// This class represents an Active Directory Contact.
     /// </summary>
     public class Contact : DirectoryObject
     {
@@ -91,10 +91,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Contact"></see> class. This constructor is
-        /// not public and should only be used when the derived class wants to add an additional
-        /// constructor. At some point though, the derived classes' constructor needs to call the
-        /// "Initialize" method to load up the internal data structures.
+        /// Initializes a new instance of the <see cref="Contact"/> class.
         /// </summary>
         protected Contact()
         {
@@ -149,7 +146,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the company that the contact belongs to
+        /// Gets the company that the contact belongs to.
         /// </summary>
         /// <value>The company that the contact belongs to.</value>
         public string Company
@@ -173,7 +170,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the country code for the contact
+        /// Gets the country code for the contact.
         /// </summary>
         /// <value>The country code for the contact.</value>
         public int CountryCode
@@ -287,7 +284,8 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the contact object.
         /// </summary>
         /// <value>The GUID of the contact object.</value>
-        [SuppressMessage("Naming",
+        [SuppressMessage(
+            "Naming",
             "CA1720:Identifier contains type name",
             Justification = "Too Bad. It is what it is.")]
         public Guid Guid

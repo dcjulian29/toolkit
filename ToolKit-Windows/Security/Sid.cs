@@ -1,10 +1,9 @@
-﻿using System.Security.Principal;
-using ToolKit;
+using System.Security.Principal;
 
 namespace ToolKit.Security
 {
     /// <summary>
-    /// This class provides functions related to Security Identifiers (SIDs)
+    /// This class provides functions related to Security Identifiers (SIDs).
     /// </summary>
     public static class Sid
     {
@@ -169,7 +168,7 @@ namespace ToolKit.Security
         /// Convert the string SID to binary.
         /// </summary>
         /// <param name="stringSid">The string SID.</param>
-        /// <returns>byte array of the SID</returns>
+        /// <returns>byte array of the SID.</returns>
         public static byte[] ToBinary(string stringSid)
         {
             var sid = new SecurityIdentifier(stringSid);
@@ -180,40 +179,40 @@ namespace ToolKit.Security
         }
 
         /// <summary>
-        /// Convert the binary SID to a string in Hexadecimal format
+        /// Convert the binary SID to a string in Hexadecimal format.
         /// </summary>
         /// <param name="binarySid">The binary SID.</param>
-        /// <returns>string in Hexadecimal format</returns>
+        /// <returns>string in Hexadecimal format.</returns>
         public static string ToHex(byte[] binarySid)
         {
             return HexEncoding.ToString(binarySid);
         }
 
         /// <summary>
-        /// Convert the string formatted SID to a string in Hexadecimal format
+        /// Convert the string formatted SID to a string in Hexadecimal format.
         /// </summary>
         /// <param name="stringSid">The string sid.</param>
-        /// <returns>string in Hexadecimal format</returns>
+        /// <returns>string in Hexadecimal format.</returns>
         public static string ToHex(string stringSid)
         {
             return ToHex(ToBinary(stringSid));
         }
 
         /// <summary>
-        /// Translates the SID into its name in the DOMAIN\USER format
+        /// Translates the SID into its name in the DOMAIN\USER format.
         /// </summary>
         /// <param name="binarySid">The binary SID.</param>
-        /// <returns>string containing the name of the SID</returns>
+        /// <returns>string containing the name of the SID.</returns>
         public static string ToName(byte[] binarySid)
         {
             return ToName(ToString(binarySid));
         }
 
         /// <summary>
-        /// Translates the SID into its name in the DOMAIN\USER format
+        /// Translates the SID into its name in the DOMAIN\USER format.
         /// </summary>
         /// <param name="stringSid">The string SID.</param>
-        /// <returns>string containing the name of the SID</returns>
+        /// <returns>string containing the name of the SID.</returns>
         public static string ToName(string stringSid)
         {
             var sid = new SecurityIdentifier(stringSid);
@@ -223,10 +222,10 @@ namespace ToolKit.Security
         }
 
         /// <summary>
-        /// Convert the binary SID to a string format
+        /// Convert the binary SID to a string format.
         /// </summary>
         /// <param name="binarySid">The binary sid.</param>
-        /// <returns>string containing a string representation of the SID</returns>
+        /// <returns>string containing a string representation of the SID.</returns>
         public static string ToString(byte[] binarySid)
         {
             var sid = new SecurityIdentifier(binarySid, 0);
