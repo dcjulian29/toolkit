@@ -3,7 +3,7 @@ using System.Windows.Controls;
 namespace ToolBox.Wpf
 {
     /// <summary>
-    /// Interaction logic for CircularProgressBar
+    /// Interaction logic for CircularProgressBar.
     /// </summary>
     public partial class CircularProgressBar : UserControl
     {
