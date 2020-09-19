@@ -221,7 +221,7 @@ namespace ToolKit.Data.NHibernate.UserTypes
         /// unmanaged resources.</param>
         protected override void DisposeResources(bool disposing)
         {
-            _encryptor.Dispose();
+            _encryptor?.Dispose();
         }
     }
 }

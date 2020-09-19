@@ -398,7 +398,7 @@ namespace ToolKit.Cryptography
         /// </param>
         protected override void DisposeResources(bool disposing)
         {
-            _crypto.Dispose();
+            _crypto?.Dispose();
         }
 
         private EncryptionData RandomInitializationVector()
