@@ -49,7 +49,7 @@ namespace ToolKit.Data.NHibernate
         /// <returns><c>true</c> if the session is in an active transaction; otherwise, <c>false</c>.</returns>
         public bool InTransaction()
         {
-            var sessionInTransaction = _session.Transaction?.IsActive == true;
+            var sessionInTransaction = _session.GetCurrentTransaction()?.IsActive == true;
 
             return _nextBooleanValue ? sessionInTransaction : !sessionInTransaction;
         }
