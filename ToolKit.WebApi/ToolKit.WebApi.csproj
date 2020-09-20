@@ -4,7 +4,7 @@
         <Features>IOperation</Features>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <DocumentationFile>bin\$(Configuration)\ToolKit.Data.NHibernate.XML</DocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\ToolKit.WebApi.xml</DocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <DebugType>full</DebugType>
