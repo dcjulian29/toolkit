@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <Features>IOperation</Features>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DocumentationFile>bin\$(Configuration)\ToolKit.Data.NHibernate.XML</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\ToolKit.Wpf.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
