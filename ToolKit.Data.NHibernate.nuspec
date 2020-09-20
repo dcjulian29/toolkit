@@ -12,15 +12,15 @@
     <tags>toolkit nhibernate</tags>
     <dependencies>
       <group targetFramework="netstandard2.0">
-        <dependency id="NHibernate" version="5.1.2" />
+        <dependency id="NHibernate" version="5.3.3" />
         <dependency id="FluentNHibernate" version="2.1.2" />
         <dependency id="ToolKit" version="2019.1.15.1" />
       </group>
     </dependencies>
   </metadata>
-    <files>
-        <file src=".build\output\ToolKit.Data.NHibernate.dll" target="lib\netstandard2.0" />
-        <file src=".build\output\ToolKit.Data.NHibernate.pdb" target="lib\netstandard2.0" />
-        <file src=".build\output\ToolKit.Data.NHibernate.xml" target="lib\netstandard2.0" />
-    </files>
+  <files>
+    <file src=".build\output\ToolKit.Data.NHibernate.dll" target="lib\netstandard2.0" />
+    <file src=".build\output\ToolKit.Data.NHibernate.pdb" target="lib\netstandard2.0" />
+    <file src=".build\output\ToolKit.Data.NHibernate.xml" target="lib\netstandard2.0" />
+  </files>
 </package>
