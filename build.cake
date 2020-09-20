@@ -158,6 +158,7 @@ Task("Version")
 
 Task("Compile")
     .IsDependentOn("Compile.ToolKit")
+    .IsDependentOn("Compile.ToolKit-Windows")
     .IsDependentOn("Compile.ToolKit.Data.EFCore")
     .IsDependentOn("Compile.ToolKit.Data.EntityFramework")
     .IsDependentOn("Compile.ToolKit.Data.MongoDb")
@@ -284,11 +285,24 @@ Task("Compile.ToolKit.Data.NHibernate.UnitTests")
         DotNetCoreBuild("ToolKit.Data.NHibernate.UnitTests/ToolKit.Data.NHibernate.UnitTests.csproj", settings);
     });
 
+Task("Compile.UnitTests")
+    .IsDependentOn("Compile")
+    .Does(() =>
+    {
+        var buildSettings = msbuildSettings.WithTarget("ReBuild");
+        buildSettings.AddFileLogger(
+                new MSBuildFileLogger {
+                    LogFile = buildDirectory + "/msbuild-UnitTests.log" });
+
+        NuGetRestore("UnitTests/UnitTests.csproj");
+        MSBuild("UnitTests/UnitTests.csproj", buildSettings);
+    });
+
 Task("Test")
     .IsDependentOn("UnitTest");
 
 Task("UnitTest")
-    .IsDependentOn("Compile")
+    .IsDependentOn("Compile.UnitTests")
     .Does(() =>
     {
         XUnit2(outputDirectory + "\\UnitTests.dll",
@@ -388,7 +402,7 @@ Task("Package")
         CreateDirectory(buildDirectory + "\\packages");
 
         var nuGetPackSettings = new NuGetPackSettings {
-            Version = version,
+            Version = version.Replace('/', '.'),
             OutputDirectory = buildDirectory + "\\packages"
         };
 
