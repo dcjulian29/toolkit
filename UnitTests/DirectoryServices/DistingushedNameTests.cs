@@ -381,7 +381,7 @@ namespace UnitTests.DirectoryServices
 
             // Act
 
-             // Assert
+            // Assert
             Assert.Throws<InvalidDistinguishedNameException>(() => _ = new DistinguishedName("03.23.1=Jay"));
         }
 

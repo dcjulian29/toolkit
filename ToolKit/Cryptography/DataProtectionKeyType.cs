@@ -1,4 +1,4 @@
-﻿namespace ToolKit.Cryptography
+namespace ToolKit.Cryptography
 {
     /// <summary>
     /// Abstraction of Data Protection API Protection Scopes.
