@@ -73,6 +73,7 @@
     <Compile Include="Data\EntityFrameworkRepositoryTests.cs" />
     <Compile Include="Data\EntityTests.cs" />
     <Compile Include="Data\EntityWithTypedIdTests.cs" />
+    <Compile Include="Data\NameValueTests.cs" />
     <Compile Include="Data\NHibernateDatabaseBaseTests.cs" />
     <Compile Include="Data\NHibernateRepositoryTests.cs" />
     <Compile Include="Data\NHibernateSymmetricEncryptedStringTests.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace ToolKit.Network
     public class IpV4Network
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="IpV4Network"/> class.
+        /// Initializes a new instance of the <see cref="IpV4Network" /> class.
         /// </summary>
         /// <param name="address">The IPV4 address.</param>
         /// <param name="mask">The subnet mask in IPV4 format.</param>
@@ -23,7 +24,7 @@ namespace ToolKit.Network
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IpV4Network"/> class.
+        /// Initializes a new instance of the <see cref="IpV4Network" /> class.
         /// </summary>
         /// <param name="address">The IPV4 address.</param>
         /// <param name="mask">The subnet mask in IPV4 format.</param>
@@ -69,8 +70,9 @@ namespace ToolKit.Network
         }
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="IpV4Network"/> class from being created.
+        /// Prevents a default instance of the <see cref="IpV4Network" /> class from being created.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         private IpV4Network()
         {
         }

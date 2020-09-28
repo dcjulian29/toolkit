@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using ToolKit.Validation;
 
@@ -15,7 +16,7 @@ namespace ToolKit.DirectoryServices
         private readonly string _filter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LdapFilter"/> class.
+        /// Initializes a new instance of the <see cref="LdapFilter" /> class.
         /// </summary>
         /// <param name="attributeType">The attribute of the filter.</param>
         /// <param name="filterType">The type of the filter.</param>
@@ -26,7 +27,7 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LdapFilter"/> class.
+        /// Initializes a new instance of the <see cref="LdapFilter" /> class.
         /// </summary>
         /// <param name="ldapFilter">A LDAP Filter.</param>
         public LdapFilter(string ldapFilter)
@@ -34,6 +35,10 @@ namespace ToolKit.DirectoryServices
             _filter = Strip(Check.NotEmpty(ldapFilter, nameof(ldapFilter)));
         }
 
+        /// <summary>
+        /// Prevents a default instance of the <see cref="LdapFilter" /> class from being created.
+        /// </summary>
+        [ExcludeFromCodeCoverage]
         private LdapFilter()
         {
         }
@@ -275,9 +280,9 @@ namespace ToolKit.DirectoryServices
         }
 
         /// <summary>
-        /// Returns a <see cref="string"/> that represents the current <see cref="object"/>.
+        /// Returns a <see cref="string" /> that represents the current <see cref="object" />.
         /// </summary>
-        /// <returns>A <see cref="string"/> that represents the current <see cref="object"/>.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="object" />.</returns>
         public override string ToString()
         {
             return $"({_filter})";

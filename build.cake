@@ -20,11 +20,9 @@ var projectName = "toolkit";
 
 var baseDirectory = MakeAbsolute(Directory("."));
 
-var buildDirectory = baseDirectory + "\\.build";
-var outputDirectory = buildDirectory + "\\output";
-var packageDirectory = baseDirectory + "\\packages";
-
-var solutionFile = String.Format("{0}\\{1}.sln", baseDirectory, projectName);
+var buildDirectory = baseDirectory + "/.build";
+var outputDirectory = buildDirectory + "/output";
+var packageDirectory = baseDirectory + "/packages";
 
 IEnumerable<string> stdout;
 StartProcess ("git", new ProcessSettings {
@@ -146,7 +144,7 @@ Task("Version")
             assemblyVersion = version;
         }
 
-        CreateAssemblyInfo(buildDirectory + @"\CommonAssemblyInfo.cs", new AssemblyInfoSettings {
+        CreateAssemblyInfo(buildDirectory + "/CommonAssemblyInfo.cs", new AssemblyInfoSettings {
             Version = assemblyVersion,
             FileVersion = assemblyVersion,
             InformationalVersion = version,
@@ -305,34 +303,40 @@ Task("UnitTest")
     .IsDependentOn("Compile.UnitTests")
     .Does(() =>
     {
-        XUnit2(outputDirectory + "\\UnitTests.dll",
+        XUnit2(outputDirectory + "/UnitTests.dll",
             new XUnit2Settings {
-                Parallelism = ParallelismOption.All,
+                Parallelism = ParallelismOption.None,
                 ShadowCopy = false
             });
     });
 
 Task("Coverage")
-    .IsDependentOn("Compile")
+    .IsDependentOn("Compile.UnitTests")
     .Does(() =>
     {
-        CreateDirectory(buildDirectory + "\\coverage");
+        CreateDirectory(buildDirectory + "/coverage");
 
         OpenCover(tool => {
-            tool.XUnit2(outputDirectory + "\\UnitTests.dll",
+            tool.XUnit2(outputDirectory + "/UnitTests.dll",
                 new XUnit2Settings {
-                    Parallelism = ParallelismOption.All,
+                    Parallelism = ParallelismOption.None,
                     ShadowCopy = false });
             },
-            new FilePath(buildDirectory + "\\coverage\\coverage.xml"),
+            new FilePath(buildDirectory + "/coverage/coverage.xml"),
             new OpenCoverSettings() { Register = "user" }
                 .WithFilter(@"+[*]*")
                 .WithFilter(@"-[UnitTests]*")
                 .WithFilter(@"-[xunit.*]*")
+                .WithFilter(@"-[Common.*]*")
                 .ExcludeByAttribute("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")
-                .ExcludeByFile(@"*\\*Designer.cs;*\\*.g.cs;*.*.g.i.cs"));
+                .ExcludeByFile("*/*Designer.cs;*/*.g.cs;*.*.g.i.cs"));
+    });
 
-        ReportGenerator(buildDirectory + "\\coverage\\coverage.xml", buildDirectory + "\\coverage");
+Task("Coverage.Report")
+    .IsDependentOn("Coverage")
+    .Does(() =>
+    {
+        ReportGenerator(buildDirectory + "/coverage/coverage.xml", buildDirectory + "/coverage");
     });
 
 Task("TeamCity")
