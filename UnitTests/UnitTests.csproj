@@ -98,6 +98,7 @@
     <Compile Include="Network\Ipv4AddressTests.cs" />
     <Compile Include="Network\IpV4NetworkTests.cs" />
     <Compile Include="OData\OdataEntryTests.cs" />
+    <Compile Include="OData\ODataRequestTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\SidTests.cs" />
     <Compile Include="SuspendableObjectTests.cs" />
