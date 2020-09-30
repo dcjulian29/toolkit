@@ -109,7 +109,7 @@ namespace ToolKit.OData
         /// </summary>
         /// <param name="field">The name of the property.</param>
         /// <param name="value">The value.</param>
-        /// <param name="index">The index of the value in the</param>
+        /// <param name="index">The index of the value in the contents of the field.</param>
         /// <returns>This OData filter.</returns>
         public ODataFilter IndexOf(string field, string value, int index)
             => AppendFilter($"indexof({field}, '{value}') eq {index}");
@@ -200,7 +200,7 @@ namespace ToolKit.OData
         /// <param name="value">The value.</param>
         /// <returns>This OData filter.</returns>
         public ODataFilter ToLower(string field, string value)
-            => AppendFilter($"tolower({field}) eq '{value.ToLower(CultureInfo.CurrentCulture)}'");
+            => AppendFilter($"tolower({field}) eq '{value?.ToLower(CultureInfo.CurrentCulture)}'");
 
         /// <summary>
         /// Returns a string that represents the filter.
@@ -215,7 +215,7 @@ namespace ToolKit.OData
         /// <param name="value">The value.</param>
         /// <returns>This OData filter.</returns>
         public ODataFilter ToUpper(string field, string value)
-            => AppendFilter($"toupper({field}) eq '{value.ToUpper(CultureInfo.CurrentCulture)}'");
+            => AppendFilter($"toupper({field}) eq '{value?.ToUpper(CultureInfo.CurrentCulture)}'");
 
         /// <summary>
         /// Add to this filter an expression where the value is equal the field's content trimmed.
