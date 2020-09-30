@@ -97,6 +97,10 @@
     <Compile Include="HexEncodingTest.cs" />
     <Compile Include="Network\Ipv4AddressTests.cs" />
     <Compile Include="Network\IpV4NetworkTests.cs" />
+    <Compile Include="OData\OdataEntryTests.cs" />
+    <Compile Include="OData\ODataFilterTests.cs" />
+    <Compile Include="OData\ODataRequestTests.cs" />
+    <Compile Include="OData\ODataResponseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\SidTests.cs" />
     <Compile Include="SuspendableObjectTests.cs" />
@@ -166,6 +170,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="ASymmetricEncryptionWrong.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="odata.response.workitem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="RSAEncrypt.cer">
