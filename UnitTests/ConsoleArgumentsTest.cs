@@ -137,6 +137,28 @@ namespace UnitTests
         }
 
         [Fact]
+        public void GetEnumerator_Should_EnumerateArguments()
+        {
+            // Arrange
+            string[] args =
+            {
+                "/Load",
+                "file1.ext",
+                "/Save",
+                "file2.ext"
+            };
+
+            // Act
+            var param = new ConsoleArguments(args);
+
+            // Assert
+            foreach (var item in param)
+            {
+                Assert.NotNull(item);
+            }
+        }
+
+        [Fact]
         public void Invalid_Arguments_Should_Return_Zero_Count()
         {
             // Arrange
@@ -183,6 +205,16 @@ namespace UnitTests
 
             // Assert
             Assert.Null(param["NotExist"]);
+        }
+
+        [Fact]
+        public void NullArguments_Should_ParseCorrectly()
+        {
+            // Arrange & Act
+            var param = new ConsoleArguments(null);
+
+            // Assert
+            Assert.Empty(param);
         }
 
         [Fact]

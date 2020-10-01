@@ -29,29 +29,21 @@ namespace ToolKit
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleArguments" /> class.
         /// </summary>
-        public ConsoleArguments()
-        {
-            Initialize();
-        }
+        public ConsoleArguments() => Initialize();
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        IEnumerator<ConsoleArguments> IEnumerable<ConsoleArguments>.GetEnumerator()
-        {
-            return (IEnumerator<ConsoleArguments>)GetEnumerator();
-        }
+        public new IEnumerator<ConsoleArguments> GetEnumerator()
+            => (IEnumerator<ConsoleArguments>)base.GetEnumerator();
 
         /// <summary>
         /// Checks if the parameter exist.
         /// </summary>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns><c>true</c> is the parameter exist; otherwise, <c>false</c>.</returns>
-        public bool IsPresent(string parameterName)
-        {
-            return ContainsKey(parameterName);
-        }
+        public bool IsPresent(string parameterName) => ContainsKey(parameterName);
 
         /// <summary>
         /// Parses the specified arguments.
@@ -134,9 +126,8 @@ namespace ToolKit
         /// <c>true</c> is the parameter exist and its string representation is true; otherwise, <c>false</c>.
         /// </returns>
         public bool ToBoolean(string parameterName)
-        {
-            return ContainsKey(parameterName) && Convert.ToBoolean(this[parameterName], CultureInfo.InvariantCulture);
-        }
+            => ContainsKey(parameterName)
+                && Convert.ToBoolean(this[parameterName], CultureInfo.InvariantCulture);
 
         private void Initialize()
         {
