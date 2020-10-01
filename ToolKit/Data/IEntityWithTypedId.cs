@@ -15,13 +15,11 @@ namespace ToolKit.Data
         TId Id { get; }
 
         /// <summary>
-        /// Determines whether this instance is transient. Transient objects are not
-        /// associated with an item already in storage. More specifically, if the Id
-        /// is the default value, the entity is transient.
+        /// Determines whether this instance is transient. Transient objects are not associated with
+        /// an item already in storage. More specifically, if the Id is the default value, the
+        /// entity is transient.
         /// </summary>
-        /// <returns>
-        ///   <c>true</c> if this entity is transient; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if this entity is transient; otherwise, <c>false</c>.</returns>
         bool IsTransient();
     }
 }
