@@ -125,7 +125,7 @@ namespace UnitTests
             // Arrange
             string[] args =
             {
-                "-Load",
+                "--Load",
                 "FileName.ext"
             };
 
