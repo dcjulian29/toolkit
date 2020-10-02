@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ToolKit.Data;
 using Xunit;
 
@@ -209,6 +205,19 @@ namespace UnitTests.Data
         }
 
         [Fact]
+        public void Equals_Should_BeFalse_When_OtherEntityIsNull()
+        {
+            // Arrange
+            var entity1 = new Patient();
+
+            // Act
+            entity1.Id = "patient/-1";
+
+            // Assert
+            Assert.False(entity1.Equals(null));
+        }
+
+        [Fact]
         public void Equals_Should_BeTrue_When_EntityIdIsSame()
         {
             // Arrange
@@ -221,6 +230,22 @@ namespace UnitTests.Data
 
             // Assert
             Assert.Equal(entity1, entity2);
+        }
+
+        [Fact]
+        public void Equals_Should_BeTrue_When_OtherEntityIsSameInstance()
+        {
+            // Arrange
+            var entity1 = new Patient
+            {
+                Id = "patient/-1"
+            };
+
+            // Act
+            var entity2 = entity1;
+
+            // Assert
+            Assert.True(entity1.Equals(entity2));
         }
 
         [Fact]
