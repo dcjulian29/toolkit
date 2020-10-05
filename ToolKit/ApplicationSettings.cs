@@ -26,8 +26,8 @@ namespace ToolKit
         /// <returns>a de-serialized object containing the application settings.</returns>
         public T Load(string fileName)
         {
-            // Check to make sure that the fileName is not a relative file and/or path name This will
-            // become important when the calling process is a Windows Service or other type of
+            // Check to make sure that the fileName is not a relative file and/or path name This
+            // will become important when the calling process is a Windows Service or other type of
             // hosting process...
             if (!File.Exists(fileName))
             {
@@ -40,11 +40,10 @@ namespace ToolKit
                 {
                     fileName = potentialFileName;
                 }
-            }
-
-            if (!File.Exists(fileName))
-            {
-                return default;
+                else
+                {
+                    return default;
+                }
             }
 
             _log.Debug($"Loading application settings from {fileName}");

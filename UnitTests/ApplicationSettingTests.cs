@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using ToolKit;
 using Xunit;
 
@@ -11,6 +12,23 @@ namespace UnitTests
         Justification = "Test Suites do not need XML Documentation.")]
     public class ApplicationSettingTests
     {
+        [Fact]
+        public void Load_Should_Returne_ExpectedResult_When_CurrentDirectoryIsNotAssemblyPath()
+        {
+            // Arrange
+            var parameters = new MyParameters();
+            parameters.MyProperty1 = 10;
+            var filename = Guid.NewGuid().ToString() + ".xml";
+            parameters.Save(filename);
+
+            // Act
+            Directory.SetCurrentDirectory(Environment.GetEnvironmentVariable("TEMP"));
+            var loadParameters = new MyParameters().Load(filename);
+
+            // Assert
+            Assert.Equal(loadParameters.MyProperty1, parameters.MyProperty1);
+        }
+
         [Fact]
         public void MyProperty1_Should_Returne_ExpectedResult()
         {
