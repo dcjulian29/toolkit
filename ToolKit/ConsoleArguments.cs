@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -10,7 +10,11 @@ namespace ToolKit
     /// This Class will parse the command line arguments and provide a dictionary that can be used
     /// to determine the arguments that were passed to the program.
     /// </summary>
-    public class ConsoleArguments : StringDictionary, IEnumerable<ConsoleArguments>
+    [SuppressMessage(
+        "Design",
+        "CA1010:Generic interface should also be implemented",
+        Justification = "The StringDictionary implements enumerator but doesn't allow generic implementation.")]
+    public class ConsoleArguments : StringDictionary
     {
         private Regex _removeQuotes;
 
@@ -30,13 +34,6 @@ namespace ToolKit
         /// Initializes a new instance of the <see cref="ConsoleArguments" /> class.
         /// </summary>
         public ConsoleArguments() => Initialize();
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public new IEnumerator<ConsoleArguments> GetEnumerator()
-            => (IEnumerator<ConsoleArguments>)base.GetEnumerator();
 
         /// <summary>
         /// Checks if the parameter exist.
