@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using ToolKit.Cryptography;
 using Xunit;
 
@@ -11,6 +12,10 @@ namespace UnitTests.Cryptography
         Justification = "Test Suites do not need XML Documentation.")]
     public class CRC32Test
     {
+        private static readonly string _assemblyPath =
+            Path.GetDirectoryName(Assembly.GetAssembly(typeof(CRC32Test)).Location)
+            + Path.DirectorySeparatorChar;
+
         [Fact]
         public void CRC32_Should_CalculateCorrectHash()
         {
@@ -46,7 +51,7 @@ namespace UnitTests.Cryptography
             var actual = String.Empty;
 
             // Act
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{_assemblyPath}gettysburg.txt"))
             {
                 actual = CRC32.Create().Compute(sr.BaseStream);
             }
@@ -132,7 +137,7 @@ namespace UnitTests.Cryptography
             byte[] actual;
 
             // Act
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{ _assemblyPath }gettysburg.txt"))
             {
                 actual = CRC32.Create().ComputeToBytes(sr.BaseStream);
             }

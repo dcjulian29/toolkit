@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using ToolKit.OData;
 using Xunit;
 
@@ -11,13 +12,17 @@ namespace UnitTests.OData
             Justification = "Test Suites do not need XML Documentation.")]
     public class ODataResponseTests
     {
+        private static readonly string _assemblyPath =
+            Path.GetDirectoryName(Assembly.GetAssembly(typeof(ODataResponseTests)).Location)
+            + Path.DirectorySeparatorChar;
+
         [Fact]
         public void Context_Should_ContainExpectedValue()
         {
             // Arrange
             const string expected
                 = "https://analytics.dev.azure.com/Contoso/Enterprise/_odata/v3.0-preview/$metadata#WorkItems";
-            var json = File.ReadAllText("odata.response.workitem.json");
+            var json = File.ReadAllText($"{_assemblyPath}odata.response.workitem.json");
 
             // Act
             var actual = ODataResponse.Create(json);
@@ -30,7 +35,7 @@ namespace UnitTests.OData
         public void Status_Should_ContainExpectedValue()
         {
             // Arrange
-            var json = File.ReadAllText("odata.response.workitem.json");
+            var json = File.ReadAllText($"{_assemblyPath}odata.response.workitem.json");
 
             // Act
             var actual = ODataResponse.Create(json);
@@ -43,7 +48,7 @@ namespace UnitTests.OData
         public void Values_Should_ContainExpectedNumberOfValues()
         {
             // Arrange
-            var json = File.ReadAllText("odata.response.workitem.json");
+            var json = File.ReadAllText($"{_assemblyPath}odata.response.workitem.json");
 
             // Act
             var actual = ODataResponse.Create(json);
@@ -56,7 +61,7 @@ namespace UnitTests.OData
         public void Warning_Should_ContainExpectedNumberOfValues()
         {
             // Arrange
-            var json = File.ReadAllText("odata.response.workitem.json");
+            var json = File.ReadAllText($"{_assemblyPath}odata.response.workitem.json");
 
             // Act
             var actual = ODataResponse.Create(json);

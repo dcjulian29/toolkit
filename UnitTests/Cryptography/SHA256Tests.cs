@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using ToolKit.Cryptography;
 using Xunit;
 
@@ -11,6 +12,10 @@ namespace UnitTests.Cryptography
         Justification = "Test Suites do not need XML Documentation.")]
     public class SHA256Tests
     {
+        private static readonly string _assemblyPath =
+            Path.GetDirectoryName(Assembly.GetAssembly(typeof(SHA256Tests)).Location)
+            + Path.DirectorySeparatorChar;
+
         [Fact]
         public void SHA256_Should_CalculateCorrectHash()
         {
@@ -46,7 +51,7 @@ namespace UnitTests.Cryptography
             var actual = String.Empty;
 
             // Act
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{_assemblyPath}gettysburg.txt"))
             {
                 actual = SHA256Hash.Create().Compute(sr.BaseStream);
             }
@@ -141,7 +146,7 @@ namespace UnitTests.Cryptography
             byte[] actual;
 
             // Act
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{ _assemblyPath }gettysburg.txt"))
             {
                 actual = SHA256Hash.Create().ComputeToBytes(sr.BaseStream);
             }

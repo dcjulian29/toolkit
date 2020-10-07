@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using ToolKit.Cryptography;
 using Xunit;
@@ -13,6 +14,10 @@ namespace UnitTests.Cryptography
     public class HashTests
     {
         public readonly string TargetString;
+
+        private static readonly string _assemblyPath =
+            Path.GetDirectoryName(Assembly.GetAssembly(typeof(HashTests)).Location)
+            + Path.DirectorySeparatorChar;
 
         public HashTests()
         {
@@ -29,10 +34,7 @@ namespace UnitTests.Cryptography
             var provider = (Hash.Provider)8;
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var hash = new Hash(provider);
-            });
+            Assert.Throws<ArgumentException>(() => new Hash(provider));
         }
 
         [Fact]
@@ -59,7 +61,7 @@ namespace UnitTests.Cryptography
             var actual = String.Empty;
 
             // Act
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{_assemblyPath}gettysburg.txt"))
             {
                 actual = hash.Calculate(sr.BaseStream).Hex;
             }
@@ -107,7 +109,7 @@ namespace UnitTests.Cryptography
             var actual = String.Empty;
 
             // Act
-            using (var sr = new StreamReader("sample.doc"))
+            using (var sr = new StreamReader($"{_assemblyPath}sample.doc"))
             {
                 actual = hash.Calculate(sr.BaseStream).Hex;
             }
@@ -125,7 +127,7 @@ namespace UnitTests.Cryptography
             var actual = String.Empty;
 
             // Act
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{_assemblyPath}gettysburg.txt"))
             {
                 actual = hash.Calculate(sr.BaseStream).Hex;
             }

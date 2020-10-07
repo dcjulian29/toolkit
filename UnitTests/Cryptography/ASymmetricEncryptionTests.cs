@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using ToolKit.Cryptography;
 using Xunit;
@@ -17,13 +18,23 @@ namespace UnitTests.Cryptography
         Justification = "Unused local variables should be removed")]
     public class ASymmetricEncryptionTests
     {
+        private readonly string _assemblyPath;
+
         private readonly RsaPrivateKey _privateKey;
+
         private readonly RsaPublicKey _publicKey;
+
         private readonly EncryptionData _targetData;
+
         private readonly string _targetString;
 
         public ASymmetricEncryptionTests()
         {
+            var fullPath = Assembly.GetAssembly(typeof(ASymmetricEncryptionTests)).Location;
+            var pathDirectory = Path.GetDirectoryName(fullPath);
+            var separator = Path.DirectorySeparatorChar;
+            _assemblyPath = $"{pathDirectory}{separator}";
+
             _targetString = "Did you know that some of the most famous inventions would "
                             + "never have been made if the inventors had stopped at their "
                             + "first failure? For instance, Thomas Edison, inventor of "
@@ -33,11 +44,11 @@ namespace UnitTests.Cryptography
             _targetData = new EncryptionData(_targetString);
 
             _privateKey = RsaPrivateKey.LoadFromCertificateFile(
-                $@"{Directory.GetCurrentDirectory()}\ASymmetricEncryption.pfx",
+                $"{_assemblyPath}ASymmetricEncryption.pfx",
                 "password");
 
             _publicKey = RsaPublicKey.LoadFromCertificateFile(
-                $@"{Directory.GetCurrentDirectory()}\ASymmetricEncryption.pfx",
+                $"{_assemblyPath}ASymmetricEncryption.pfx",
                 "password");
         }
 
@@ -180,20 +191,15 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void Decrypt_Should_ThrowException_When_ProvidedWrongPrivateKey()
+        public void Decrypt_Should_ThrowException_When_ImproperEncryptedDataProvided()
         {
             // Arrange
-            var wrongKey = RsaPrivateKey.LoadFromCertificateFile(
-                $@"{Directory.GetCurrentDirectory()}\ASymmetricEncryptionWrong.pfx",
-                "password");
+            var e2 = new ASymmetricEncryption(_privateKey);
 
-            var e1 = new ASymmetricEncryption(_publicKey);
-            var e2 = new ASymmetricEncryption(wrongKey);
-
-            var encrypted = e1.Encrypt(_targetData);
+            var encrypted = new EncryptionData(new byte[100]);
 
             // Act & Assert
-            Assert.Throws<CryptographicException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 var decrypted = e2.Decrypt(encrypted);
             });
@@ -215,15 +221,20 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void Decrypt_Should_ThrowException_When_ImproperEncryptedDataProvided()
+        public void Decrypt_Should_ThrowException_When_ProvidedWrongPrivateKey()
         {
             // Arrange
-            var e2 = new ASymmetricEncryption(_privateKey);
+            var wrongKey = RsaPrivateKey.LoadFromCertificateFile(
+                $"{_assemblyPath}ASymmetricEncryptionWrong.pfx",
+                "password");
 
-            var encrypted = new EncryptionData(new byte[100]);
+            var e1 = new ASymmetricEncryption(_publicKey);
+            var e2 = new ASymmetricEncryption(wrongKey);
+
+            var encrypted = e1.Encrypt(_targetData);
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<CryptographicException>(() =>
             {
                 var decrypted = e2.Decrypt(encrypted);
             });
@@ -254,7 +265,7 @@ namespace UnitTests.Cryptography
             Assert.Throws<InvalidOperationException>(
                 () =>
                 {
-                    using (var sr = new StreamReader("sample.doc"))
+                    using (var sr = new StreamReader($"{_assemblyPath}sample.doc"))
                     {
                         encrypted = e1.Decrypt(sr.BaseStream);
                     }
@@ -301,7 +312,7 @@ namespace UnitTests.Cryptography
             EncryptionData encrypted;
 
             // Act
-            using (var sr = new StreamReader("sample.doc"))
+            using (var sr = new StreamReader($"{_assemblyPath}sample.doc"))
             {
                 encrypted = e1.Encrypt(sr.BaseStream);
             }
@@ -387,20 +398,6 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void Encrypt_Should_ThrowException_When_RSAPrivateKeyIsProvided()
-        {
-            // Arrange
-            var e1 = new ASymmetricEncryption(_privateKey);
-
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(
-                () =>
-                {
-                    var encrypted = e1.Encrypt(_targetData);
-                });
-        }
-
-        [Fact]
         public void Encrypt_Should_ThrowException_When_NoDataForPayloadProvided()
         {
             // Arrange
@@ -416,22 +413,17 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void Encrypt_Should_ThrowException_When_StreamIsNotReadable()
+        public void Encrypt_Should_ThrowException_When_RSAPrivateKeyIsProvided()
         {
             // Arrange
-            var fileName = Guid.NewGuid().ToString();
             var e1 = new ASymmetricEncryption(_privateKey);
-            var stream = new FileStream(fileName, FileMode.CreateNew, FileAccess.Write);
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(
+            Assert.Throws<InvalidOperationException>(
                 () =>
                 {
-                    var encrypted = e1.Encrypt(stream);
+                    var encrypted = e1.Encrypt(_targetData);
                 });
-
-            stream.Close();
-            stream.Dispose();
         }
 
         [Fact]
@@ -445,11 +437,30 @@ namespace UnitTests.Cryptography
             Assert.Throws<InvalidOperationException>(
                 () =>
                 {
-                    using (var sr = new StreamReader("sample.doc"))
+                    using (var sr = new StreamReader($"{_assemblyPath}sample.doc"))
                     {
                         encrypted = e1.Encrypt(sr.BaseStream);
                     }
                 });
+        }
+
+        [Fact]
+        public void Encrypt_Should_ThrowException_When_StreamIsNotReadable()
+        {
+            // Arrange
+            var fileName = $"{_assemblyPath}{Guid.NewGuid()}";
+            var e1 = new ASymmetricEncryption(_privateKey);
+            var stream = new FileStream(fileName, FileMode.CreateNew, FileAccess.Write);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(
+                () =>
+                {
+                    var encrypted = e1.Encrypt(stream);
+                });
+
+            stream.Close();
+            stream.Dispose();
         }
 
         [Fact]

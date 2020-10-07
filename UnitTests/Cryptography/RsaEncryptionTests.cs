@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using ToolKit.Cryptography;
 using Xunit;
@@ -19,13 +20,17 @@ namespace UnitTests.Cryptography
             + "If this fails too, they finish by loading honors on your head."
             + " - Jean Cocteau (1889-1963)";
 
+        private static readonly string _assemblyPath =
+                    Path.GetDirectoryName(Assembly.GetAssembly(typeof(RsaEncryptionTests)).Location)
+            + Path.DirectorySeparatorChar;
+
         public static string Secret { get; } = SHA256Hash.Create().Compute(_targetString);
 
         [Fact]
         public void Decrypt_Should_ReturnExpectedResult_When_KeyIsStoredInCertificate()
         {
             // Arrange
-            var cert = Directory.GetCurrentDirectory() + @"\RsaEncrypt";
+            var cert = $"{_assemblyPath}RsaEncrypt";
 
             var publicKey = RsaPublicKey.LoadFromCertificateFile(cert + ".cer");
             var privateKey = RsaPrivateKey.LoadFromCertificateFile(cert + ".pfx", "password");
@@ -295,7 +300,7 @@ namespace UnitTests.Cryptography
             // Arrange
             var secretData = new EncryptionData(Secret);
 
-            var xml = File.ReadAllText("privateKey.xml");
+            var xml = File.ReadAllText($"{_assemblyPath}privateKey.xml");
             var privateKey = RsaPrivateKey.LoadFromXml(xml);
 
             const string expected = "kZmV1cUO91lpOQkgz5HLbWsfeXabJOPfcWjH72EytH95AAJEVq+nonJm9A"

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using ToolKit.Cryptography;
 using Xunit;
 
@@ -12,6 +13,10 @@ namespace UnitTests.Cryptography
          Justification = "Test Suites do not need XML Documentation.")]
     public class RsaPublicKeyTests
     {
+        private static readonly string _assemblyPath =
+            Path.GetDirectoryName(Assembly.GetAssembly(typeof(RsaPublicKeyTests)).Location)
+            + Path.DirectorySeparatorChar;
+
         [Fact]
         public void Exponent_Should_ReturnExpectedResult()
         {
@@ -36,7 +41,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var guid = Guid.NewGuid();
-            var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
+            var file = $"{_assemblyPath}{guid}.xml";
             const string e = "AQAB";
             const string m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
                     + "r5KBCg1dySSNVFB5bJP9o9ob2GEL0dlbZtg0CiiWCwOFWBgakav3Va1+CUF6DbN"
@@ -59,7 +64,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var guid = Guid.NewGuid();
-            var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
+            var file = $"{_assemblyPath}{guid}.xml";
             const string e = "AQAB";
             const string m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
                     + "r5KBCg1dySSNVFB5bJP9o9ob2GEL0dlbZtg0CiiWCwOFWBgakav3Va1+CUF6DbN"
@@ -81,7 +86,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var guid = Guid.NewGuid();
-            var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
+            var file = $"{_assemblyPath}{guid}.xml";
             const string e = "AQAB";
             const string m = "z8FBNlJQrn4rEKhGlNvQDKgKDlHHOVu2hlWkP0pRrxTyp1/h/dJsBN4dfASY2A1"
                     + "r5KBCg1dySSNVFB5bJP9o9ob2GEL0dlbZtg0CiiWCwOFWBgakav3Va1+CUF6DbN"
@@ -99,8 +104,8 @@ namespace UnitTests.Cryptography
         [Fact]
         public void LoadFromCertificateFile_Should_LoadCertificate_When_FileIsNotPasswordProtected()
         {
-            // Arrage
-            var cert = Directory.GetCurrentDirectory() + @"\RsaEncrypt.cer";
+            // Arrange
+            var cert = $"{_assemblyPath}RsaEncrypt.cer";
 
             // Act
             var publicKey = RsaPublicKey.LoadFromCertificateFile(cert);
@@ -112,8 +117,8 @@ namespace UnitTests.Cryptography
         [Fact]
         public void LoadFromCertificateFile_Should_LoadCertificate_When_FileIsPasswordProtected()
         {
-            // Arrage
-            var cert = Directory.GetCurrentDirectory() + @"\RsaEncrypt.pfx";
+            // Arrange
+            var cert = $"{_assemblyPath}RsaEncrypt.pfx";
 
             // Act
             var publicKey = RsaPublicKey.LoadFromCertificateFile(cert, "password");
@@ -126,22 +131,21 @@ namespace UnitTests.Cryptography
         public void LoadFromCertificateFile_Should_ThrowException_When_PublicKeyFileDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() => _ = RsaPublicKey.LoadFromCertificateFile("nonexist.cer"));
+            Assert.Throws<ArgumentException>(()
+                => RsaPublicKey.LoadFromCertificateFile($"{_assemblyPath}nonexist.cer"));
         }
 
         [Fact]
         public void LoadFromCertificateFile_Should_ThrowException_When_PublicKeyFileWithPasswordDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() => _ = RsaPublicKey.LoadFromCertificateFile("nonexist.cer", "password"));
+            Assert.Throws<ArgumentException>(()
+                => RsaPublicKey.LoadFromCertificateFile($"{_assemblyPath}nonexist.cer", "password"));
         }
 
         [Fact]
-        public void LoadFromConfig_Should_ThrowExceptionWhenConfigAppSettingsEmpty()
-        {
-            // Arrange & Act & Assert
-            Assert.Throws<ArgumentException>(() => _ = RsaPublicKey.LoadFromEnvironment());
-        }
+        public void LoadFromConfig_Should_ThrowExceptionWhenConfigAppSettingsEmpty() =>
+            Assert.Throws<ArgumentException>(() => RsaPublicKey.LoadFromEnvironment());
 
         [Fact]
         public void LoadFromString_Should_ThrowException_When_XmlDoesntContainElements()
@@ -155,7 +159,7 @@ namespace UnitTests.Cryptography
                       "</RSAKeyValue>";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => _ = new RsaPublicKey(xml));
+            Assert.Throws<ArgumentException>(() => new RsaPublicKey(xml));
         }
 
         [Fact]
@@ -180,7 +184,7 @@ namespace UnitTests.Cryptography
         public void LoadFromXmlFile_Should_LoadThePublicKeyFromFile()
         {
             // Arrange
-            var file = Directory.GetCurrentDirectory() + @"\publicKey.xml";
+            var file = $"{_assemblyPath}publicKey.xml";
 
             // Act
             var key = RsaPublicKey.LoadFromXmlFile(file);
@@ -193,7 +197,8 @@ namespace UnitTests.Cryptography
         public void LoadFromXmlFile_Should_ThrowException_When_FileDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() => _ = RsaPublicKey.LoadFromXmlFile("nonexist.xml"));
+            Assert.Throws<ArgumentException>(()
+                => RsaPublicKey.LoadFromXmlFile($"{_assemblyPath}nonexist.xml"));
         }
 
         [Fact]

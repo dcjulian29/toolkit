@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using ToolKit.Cryptography;
 using Xunit;
 
@@ -11,7 +12,12 @@ namespace UnitTests.Cryptography
         Justification = "Test Suites do not need XML Documentation.")]
     public class SymmetricEncryptionTests
     {
+        private static readonly string _assemblyPath =
+            Path.GetDirectoryName(Assembly.GetAssembly(typeof(SymmetricEncryptionTests)).Location)
+            + Path.DirectorySeparatorChar;
+
         private readonly EncryptionData _targetData;
+
         private readonly string _targetString;
 
         public SymmetricEncryptionTests()
@@ -30,10 +36,7 @@ namespace UnitTests.Cryptography
             var provider = (SymmetricEncryption.Provider)8;
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var e1 = new SymmetricEncryption(provider);
-            });
+            Assert.Throws<ArgumentException>(() => new SymmetricEncryption(provider));
         }
 
         [Fact]
@@ -212,25 +215,25 @@ namespace UnitTests.Cryptography
 
             // Act
             // -- Encrypt to memory
-            using (var sr = new StreamReader("sample.doc"))
+            using (var sr = new StreamReader($"{_assemblyPath}sample.doc"))
             {
                 encrypted = e1.Encrypt(sr.BaseStream, key);
             }
 
             // -- Write encrypted date to new binary file.
-            using (var bw = new BinaryWriter(new StreamWriter("encrypted.dat").BaseStream))
+            using (var bw = new BinaryWriter(new StreamWriter($"{_assemblyPath}encrypted.dat").BaseStream))
             {
                 bw.Write(encrypted.Bytes);
                 bw.Close();
             }
 
             // -- Decrypt the binary file
-            using (var sr = new StreamReader("encrypted.dat"))
+            using (var sr = new StreamReader($"{_assemblyPath}encrypted.dat"))
             {
                 decrypted = e2.Decrypt(sr.BaseStream, key);
             }
 
-            File.Delete("encrypted.dat");
+            File.Delete($"{_assemblyPath}encrypted.dat");
 
             var h = new Hash(Hash.Provider.MD5);
             var actual = h.Calculate(decrypted).Hex;
@@ -255,25 +258,25 @@ namespace UnitTests.Cryptography
 
             // Act
             // -- Encrypt to memory
-            using (var sr = new StreamReader("sample.doc"))
+            using (var sr = new StreamReader($"{_assemblyPath}sample.doc"))
             {
                 encrypted = e1.Encrypt(sr.BaseStream, key, iv);
             }
 
             // -- Write encrypted date to new binary file.
-            using (var bw = new BinaryWriter(new StreamWriter("encrypted.dat").BaseStream))
+            using (var bw = new BinaryWriter(new StreamWriter($"{_assemblyPath}encrypted.dat").BaseStream))
             {
                 bw.Write(encrypted.Bytes);
                 bw.Close();
             }
 
             // -- Decrypt the binary file
-            using (var sr = new StreamReader("encrypted.dat"))
+            using (var sr = new StreamReader($"{_assemblyPath}encrypted.dat"))
             {
                 decrypted = e2.Decrypt(sr.BaseStream, key, iv);
             }
 
-            File.Delete("encrypted.dat");
+            File.Delete($"{_assemblyPath}encrypted.dat");
 
             var h = new Hash(Hash.Provider.MD5);
             var actual = h.Calculate(decrypted).Hex;
@@ -354,25 +357,25 @@ namespace UnitTests.Cryptography
 
             // Act
             // -- Encrypt to memory
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{_assemblyPath}gettysburg.txt"))
             {
                 encrypted = e1.Encrypt(sr.BaseStream);
             }
 
             // -- Write encrypted date to new binary file.
-            using (var bw = new BinaryWriter(new StreamWriter("encrypted.dat").BaseStream))
+            using (var bw = new BinaryWriter(new StreamWriter($"{_assemblyPath}encrypted.dat").BaseStream))
             {
                 bw.Write(encrypted.Bytes);
                 bw.Close();
             }
 
             // -- Decrypt the binary file
-            using (var sr = new StreamReader("encrypted.dat"))
+            using (var sr = new StreamReader($"{_assemblyPath}encrypted.dat"))
             {
                 decrypted = e2.Decrypt(sr.BaseStream);
             }
 
-            File.Delete("encrypted.dat");
+            File.Delete($"{_assemblyPath}encrypted.dat");
 
             var h = new Hash(Hash.Provider.MD5);
             var actual = h.Calculate(decrypted).Hex;
