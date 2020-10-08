@@ -79,6 +79,7 @@
     <Compile Include="Data\NHibernateSymmetricEncryptedStringTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\UnitTestDatabaseTests.cs" />
+    <Compile Include="Data\ValueObjectTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ActiveDirectoryCommonFiltersTest.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\AdDateTimeTests.cs" />
     <Compile Include="DirectoryServices\ActiveDirectory\ComputerTests.cs" />
@@ -165,6 +166,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="App.config" />
     <None Include="ASymmetricEncryption.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
