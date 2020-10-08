@@ -49,7 +49,7 @@ namespace ToolKit.OData
         /// <summary>
         /// Gets or sets the filter to be used.
         /// </summary>
-        public string Filter { get; set; }
+        public ODataFilter Filter { get; set; }
 
         /// <summary>
         /// Gets or sets the URL of the OData feed.
@@ -119,9 +119,9 @@ namespace ToolKit.OData
 
             var filter = string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(Filter))
+            if (Filter != null)
             {
-                filter = $"$filter={Uri.EscapeUriString(Filter)}&";
+                filter = $"$filter={Uri.EscapeUriString(Filter.ToString())}&";
             }
 
             var sortby = string.Join(",", _sortby);

@@ -45,7 +45,7 @@ namespace UnitTests.OData
 
             request.Entity = "WorkItems";
 
-            request.Filter = "startswith(Area/AreaPath,'Enterprise')";
+            request.Filter = new ODataFilter().StartsWith("Area/AreaPath", "Enterprise");
 
             var actual = request.ToString();
 
@@ -142,7 +142,7 @@ namespace UnitTests.OData
             expected = $"{expected}?$filter=startswith(Area/AreaPath,'Enterprise')";
 
             // Act
-            request.Filter = "startswith(Area/AreaPath,'Enterprise')";
+            request.Filter = new ODataFilter().StartsWith("Area/AreaPath", "Enterprise");
 
             var actual = request.ToString();
 

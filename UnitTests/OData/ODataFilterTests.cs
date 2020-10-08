@@ -34,7 +34,7 @@ namespace UnitTests.OData
         {
             // Arrange
 
-            const string expected = "(not ((startswith(Title, 'Contoso')) and ((Age gt 5) and (State eq 'Open')))) or (round(price) eq 42)";
+            const string expected = "(not ((startswith(Title,'Contoso')) and ((Age gt 5) and (State eq 'Open')))) or (round(price) eq 42)";
 
             var filter = new ODataFilter()
                 .StartsWith("Title", "Contoso")
@@ -70,7 +70,7 @@ namespace UnitTests.OData
         public void Contains_Should_ReturnExpectedString()
         {
             // Arrange
-            const string expected = "contains(Title, 'Contoso')";
+            const string expected = "contains(Title,'Contoso')";
             var filter = new ODataFilter()
                 .Contains("Title", "Contoso");
 
@@ -85,7 +85,7 @@ namespace UnitTests.OData
         public void EndsWith_Should_ReturnExpectedString()
         {
             // Arrange
-            const string expected = "endswith(Title, 'Contoso')";
+            const string expected = "endswith(Title,'Contoso')";
             var filter = new ODataFilter()
                 .EndsWith("Title", "Contoso");
 
@@ -191,7 +191,7 @@ namespace UnitTests.OData
         public void IndexOf_Should_ReturnExpectedString()
         {
             // Arrange
-            const string expected = "indexof(Title, 'Contoso') eq 5";
+            const string expected = "indexof(Title,'Contoso') eq 5";
             var filter = new ODataFilter()
                 .IndexOf("Title", "Contoso", 5);
 
@@ -299,7 +299,7 @@ namespace UnitTests.OData
         public void StartsWith_Should_ReturnExpectedString()
         {
             // Arrange
-            const string expected = "startswith(Title, 'Contoso')";
+            const string expected = "startswith(Title,'Contoso')";
             var filter = new ODataFilter()
                 .StartsWith("Title", "Contoso");
 

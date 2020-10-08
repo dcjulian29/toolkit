@@ -57,7 +57,7 @@ namespace ToolKit.OData
         /// <param name="value">The value.</param>
         /// <returns>This OData filter.</returns>
         public ODataFilter Contains(string field, string value)
-            => AppendFilter($"contains({field}, '{value}')");
+            => AppendFilter($"contains({field},'{value}')");
 
         /// <summary>
         /// Add to this filter an expression where the value ends the field's content.
@@ -66,7 +66,7 @@ namespace ToolKit.OData
         /// <param name="value">The value.</param>
         /// <returns>This OData filter.</returns>
         public ODataFilter EndsWith(string field, string value)
-            => AppendFilter($"endswith({field}, '{value}')");
+            => AppendFilter($"endswith({field},'{value}')");
 
         /// <summary>
         /// Add to this filter an expression where the field is equal to the value.
@@ -112,7 +112,7 @@ namespace ToolKit.OData
         /// <param name="index">The index of the value in the contents of the field.</param>
         /// <returns>This OData filter.</returns>
         public ODataFilter IndexOf(string field, string value, int index)
-            => AppendFilter($"indexof({field}, '{value}') eq {index}");
+            => AppendFilter($"indexof({field},'{value}') eq {index}");
 
         /// <summary>
         /// Add to this filter an expression where the field is less than the value.
@@ -182,7 +182,7 @@ namespace ToolKit.OData
         /// <param name="value">The value.</param>
         /// <returns>This OData filter.</returns>
         public ODataFilter StartsWith(string field, string value)
-            => AppendFilter($"startswith({field}, '{value}')");
+            => AppendFilter($"startswith({field},'{value}')");
 
         /// <summary>
         /// Add to this filter an expression where the value is a substring in the field's content.
