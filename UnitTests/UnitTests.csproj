@@ -105,6 +105,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\SidTests.cs" />
     <Compile Include="SuspendableObjectTests.cs" />
+    <Compile Include="Syslog\FacilityTests.cs" />
+    <Compile Include="Syslog\LevelTests.cs" />
     <Compile Include="Validation\CheckTests.cs" />
     <Compile Include="Xml\XmlEncoderTests.cs" />
   </ItemGroup>
