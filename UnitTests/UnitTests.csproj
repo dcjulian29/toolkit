@@ -107,6 +107,7 @@
     <Compile Include="SuspendableObjectTests.cs" />
     <Compile Include="Syslog\FacilityTests.cs" />
     <Compile Include="Syslog\LevelTests.cs" />
+    <Compile Include="Syslog\MessageTests.cs" />
     <Compile Include="Validation\CheckTests.cs" />
     <Compile Include="Xml\XmlEncoderTests.cs" />
   </ItemGroup>
