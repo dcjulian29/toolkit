@@ -1057,6 +1057,21 @@ namespace UnitTests.Syslog
         }
 
         [Fact]
+        public void FileCreateTime_Should_ReturnExpectedPropertyValue()
+        {
+            // Arrange
+            var expected = new DateTime(1970, 1, 1, 3, 14, 15, DateTimeKind.Utc);
+            var msg = GenerateCefMessage();
+
+            // Act
+            msg.FileCreateTime = expected;
+            var actual = msg.FileCreateTime;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void FileCreateTime_Should_ReturnExpectedResult()
         {
             // Arrange
