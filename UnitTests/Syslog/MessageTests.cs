@@ -54,7 +54,7 @@ namespace UnitTests.Syslog
         }
 
         [Fact]
-        public void Facility_Should_BeUser_When_LevelIsChanged()
+        public void Facility_Should_BeUser_When_FacilityIsChanged()
         {
             // Arrange
             const Facility expected = Facility.Cron;
