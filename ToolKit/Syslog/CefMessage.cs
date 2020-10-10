@@ -431,7 +431,7 @@ namespace ToolKit.Syslog
         /// </summary>
         public int FileSize
         {
-            get => ToInteger("fsize"); set => AddExtension("fsize", value, 0);
+            get => ToInteger("fsize"); set => AddExtension("fsize", Check.NotNegative(value, nameof(value)), 0);
         }
 
         /// <summary>
@@ -808,11 +808,6 @@ namespace ToolKit.Syslog
             Check.NotNull(textToEncode, nameof(textToEncode));
 
             textToEncode = textToEncode.Trim();
-
-            if (textToEncode.Length == 0)
-            {
-                return textToEncode;
-            }
 
             if (textToEncode.Contains("\\"))
             {
