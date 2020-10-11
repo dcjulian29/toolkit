@@ -305,7 +305,7 @@ Task("UnitTest")
     {
         XUnit2(outputDirectory + "/UnitTests.dll",
             new XUnit2Settings {
-                Parallelism = ParallelismOption.None,
+                Parallelism = ParallelismOption.All,
                 ShadowCopy = false
             });
     });
@@ -319,7 +319,8 @@ Task("Coverage")
         OpenCover(tool => {
             tool.XUnit2(outputDirectory + "/UnitTests.dll",
                 new XUnit2Settings {
-                    Parallelism = ParallelismOption.None,
+                    Parallelism = ParallelismOption.All,
+
                     ShadowCopy = false });
             },
             new FilePath(buildDirectory + "/coverage/coverage.xml"),
