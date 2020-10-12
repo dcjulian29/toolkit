@@ -341,6 +341,24 @@ Task("Coverage.Report")
         ReportGenerator(buildDirectory + "/coverage/coverage.xml", buildDirectory + "/coverage");
     });
 
+Task("Package")
+    .IsDependentOn("Test")
+    .Does(() =>
+    {
+        CreateDirectory(buildDirectory + "\\packages");
+
+        var nuGetPackSettings = new NuGetPackSettings {
+            Version = version.Replace('/', '.'),
+            OutputDirectory = buildDirectory + "\\packages"
+        };
+
+        var nuspecFiles = GetFiles(baseDirectory + "\\*.nuspec");
+
+        NuGetPack(nuspecFiles, nuGetPackSettings);
+    });
+
+///////////////////////////////////////////////////////////////////////////////
+
 Task("TeamCity")
     .Does(() =>
     {
@@ -399,22 +417,6 @@ Task("TeamCity")
         } else {
             RunTarget("default");
         }
-    });
-
-Task("Package")
-    .IsDependentOn("Test")
-    .Does(() =>
-    {
-        CreateDirectory(buildDirectory + "\\packages");
-
-        var nuGetPackSettings = new NuGetPackSettings {
-            Version = version.Replace('/', '.'),
-            OutputDirectory = buildDirectory + "\\packages"
-        };
-
-        var nuspecFiles = GetFiles(baseDirectory + "\\*.nuspec");
-
-        NuGetPack(nuspecFiles, nuGetPackSettings);
     });
 
 Task("AppVeyor")
