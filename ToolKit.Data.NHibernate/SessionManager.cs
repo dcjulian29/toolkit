@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using NHibernate;
-using NHibernate.Proxy.DynamicProxy;
 using ToolKit.Data.NHibernate.SessionFactories;
+using ToolKit.Validation;
 using IInterceptor = NHibernate.IInterceptor;
 
 namespace ToolKit.Data.NHibernate
@@ -29,6 +29,7 @@ namespace ToolKit.Data.NHibernate
         /// <param name="factory">One of the ToolBox NHibernate Factory classes.</param>
         public SessionManager(SessionFactoryBase factory)
         {
+            factory = Check.NotNull(factory, nameof(factory));
             _sessionFactory = factory.Factory;
         }
 
@@ -39,8 +40,8 @@ namespace ToolKit.Data.NHibernate
         {
         }
 
-        /// <summary>
-        /// Finalizes an instance of the SessionManager class.
+        /// <summary
+        /// >Finalizes an instance of the <see cref="SessionManager"/> class.
         /// </summary>
         ~SessionManager()
         {
@@ -51,7 +52,7 @@ namespace ToolKit.Data.NHibernate
         /// Gets or sets the interceptor to be used for new sessions.
         /// </summary>
         /// <value>The interceptor to be used for new sessions.</value>
-        public IInterceptor Interceptor { private get; set; }
+        public IInterceptor Interceptor { get; set; }
 
         /// <summary>
         /// Gets a session with or without an interceptor.
@@ -72,7 +73,7 @@ namespace ToolKit.Data.NHibernate
         }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
+        /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
         /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only

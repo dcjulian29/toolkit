@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 
 namespace ToolKit.DirectoryServices
 {
     /// <summary>
-    /// This class represents an Computer Interface
+    /// This class represents an Computer Interface.
     /// </summary>
     public interface IComputer
     {

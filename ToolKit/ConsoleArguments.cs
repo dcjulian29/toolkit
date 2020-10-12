@@ -1,23 +1,27 @@
-﻿using System;
+using System;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text.RegularExpressions;
-using Common.Logging;
 
 namespace ToolKit
 {
     /// <summary>
-    /// This Class will parse the command line arguments and provide a dictionary that can be used to
-    /// determine the arguments that were passed to the program.
+    /// This Class will parse the command line arguments and provide a dictionary that can be used
+    /// to determine the arguments that were passed to the program.
     /// </summary>
+    [SuppressMessage(
+        "Design",
+        "CA1010:Generic interface should also be implemented",
+        Justification = "The StringDictionary implements enumerator but doesn't allow generic implementation.")]
     public class ConsoleArguments : StringDictionary
     {
-        private static ILog _log = LogManager.GetLogger<ConsoleArguments>();
-
         private Regex _removeQuotes;
+
         private Regex _spliter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConsoleArguments"/> class.
+        /// Initializes a new instance of the <see cref="ConsoleArguments" /> class.
         /// </summary>
         /// <param name="args">The arguments to parse.</param>
         public ConsoleArguments(string[] args)
@@ -27,31 +31,30 @@ namespace ToolKit
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConsoleArguments"/> class.
+        /// Initializes a new instance of the <see cref="ConsoleArguments" /> class.
         /// </summary>
-        public ConsoleArguments()
-        {
-            Initialize();
-        }
+        public ConsoleArguments() => Initialize();
 
         /// <summary>
         /// Checks if the parameter exist.
         /// </summary>
         /// <param name="parameterName">Name of the parameter.</param>
-        /// <returns><c>true</c> is the parameter exist; otherwise, <c>false</c></returns>
-        public bool IsPresent(string parameterName)
-        {
-            return ContainsKey(parameterName);
-        }
+        /// <returns><c>true</c> is the parameter exist; otherwise, <c>false</c>.</returns>
+        public bool IsPresent(string parameterName) => ContainsKey(parameterName);
 
         /// <summary>
         /// Parses the specified arguments.
         /// </summary>
         /// <param name="args">The arguments.</param>
-        /// <example>Valid parameters forms: {-,/,--}parameter{ ,=,:}((",')value(",'))</example>
+        /// <example>Valid parameters forms: {-,/,--}parameter{ ,=,:}((",')value(",')).</example>
         public void Parse(string[] args)
         {
-            var parameterName = String.Empty;
+            if ((args == null) || (args.Length == 0))
+            {
+                return;
+            }
+
+            var parameterName = string.Empty;
 
             foreach (var argument in args)
             {
@@ -61,7 +64,7 @@ namespace ToolKit
                 switch (parameterParts.Length)
                 {
                     case 1: // Found a value (for the last parameter found (space separator))
-                        if (!String.IsNullOrEmpty(parameterName))
+                        if (!string.IsNullOrEmpty(parameterName))
                         {
                             if (!ContainsKey(parameterName))
                             {
@@ -69,7 +72,7 @@ namespace ToolKit
                                 Add(parameterName, parameterParts[0]);
                             }
 
-                            parameterName = String.Empty;
+                            parameterName = string.Empty;
                         }
 
                         break;
@@ -80,7 +83,8 @@ namespace ToolKit
                         break;
 
                     case 3: // Parameter with enclosed value. If the last parameter is still waiting, set it to true.
-                        if (argument.StartsWith("\"") || argument.StartsWith("'"))
+                        if (argument.StartsWith("\"", StringComparison.CurrentCulture)
+                            || argument.StartsWith("'", StringComparison.CurrentCulture))
                         {
                             // This is an enclosed value for the previous parameter that contains a
                             // parameter character. Example: /Description '--=nice=--'
@@ -102,7 +106,7 @@ namespace ToolKit
                             }
                         }
 
-                        parameterName = String.Empty;
+                        parameterName = string.Empty;
                         break;
                 }
             }
@@ -116,12 +120,11 @@ namespace ToolKit
         /// </summary>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns>
-        /// <c>true</c> is the parameter exist and its string representation is true; otherwise, <c>false</c>
+        /// <c>true</c> is the parameter exist and its string representation is true; otherwise, <c>false</c>.
         /// </returns>
         public bool ToBoolean(string parameterName)
-        {
-            return ContainsKey(parameterName) && Convert.ToBoolean(this[parameterName]);
-        }
+            => ContainsKey(parameterName)
+                && Convert.ToBoolean(this[parameterName], CultureInfo.InvariantCulture);
 
         private void Initialize()
         {
@@ -136,7 +139,7 @@ namespace ToolKit
 
         private void SetParameterTrueIfNeeded(string parameterName)
         {
-            if ((!String.IsNullOrEmpty(parameterName)) && (!ContainsKey(parameterName)))
+            if ((!string.IsNullOrEmpty(parameterName)) && (!ContainsKey(parameterName)))
             {
                 Add(parameterName, "True");
             }

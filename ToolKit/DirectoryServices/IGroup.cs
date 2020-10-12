@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices
 {
     /// <summary>
-    /// This interface represents a generic group
+    /// This interface represents a generic group.
     /// </summary>
     public interface IGroup
     {
@@ -23,7 +24,7 @@ namespace ToolKit.DirectoryServices
         /// <summary>
         /// Gets the CN of the group.
         /// </summary>
-        /// <value>The common name of the group</value>
+        /// <value>The common name of the group.</value>
         string CommonName { get; }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace ToolKit.DirectoryServices
         string Description { get; }
 
         /// <summary>
-        /// Gets the the distinguished name of the group.
+        /// Gets the distinguished name of the group.
         /// </summary>
         /// <value>The distinguished name of the group.</value>
         string DistinguishedName { get; }
@@ -54,6 +55,10 @@ namespace ToolKit.DirectoryServices
         /// Gets the GUID of the group object.
         /// </summary>
         /// <value>The GUID of the group object.</value>
+        [SuppressMessage(
+            "Naming",
+            "CA1720:Identifier contains type name",
+            Justification = "Too Bad. It is what it is.")]
         Guid Guid { get; }
 
         /// <summary>
@@ -87,7 +92,7 @@ namespace ToolKit.DirectoryServices
         string Notes { get; }
 
         /// <summary>
-        /// Gets the name of the sam account name of the group
+        /// Gets the name of the sam account name of the group.
         /// </summary>
         /// <value>The sam account name of the group.</value>
         string SamAccountName { get; }

@@ -1,4 +1,3 @@
-﻿using Common.Logging;
 using NHibernate;
 
 namespace ToolKit.Data.NHibernate
@@ -6,17 +5,16 @@ namespace ToolKit.Data.NHibernate
     /// <summary>
     /// Provides Testing Constraints to NHibernate session object.
     /// </summary>
-    public class SessionConstraint
+    public class SessionConstraints
     {
-        private static ILog _log = LogManager.GetLogger<SessionConstraint>();
         private readonly ISession _session;
         private bool _nextBooleanValue = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SessionConstraint"/> class.
+        /// Initializes a new instance of the <see cref="SessionConstraints"/> class.
         /// </summary>
         /// <param name="session">The NHibernate Session.</param>
-        public SessionConstraint(ISession session)
+        public SessionConstraints(ISession session)
         {
             _session = session;
         }
@@ -24,7 +22,7 @@ namespace ToolKit.Data.NHibernate
         /// <summary>
         /// Gets the next boolean value and inverts it.
         /// </summary>
-        public SessionConstraint Not
+        public SessionConstraints Not
         {
             get
             {
@@ -51,7 +49,7 @@ namespace ToolKit.Data.NHibernate
         /// <returns><c>true</c> if the session is in an active transaction; otherwise, <c>false</c>.</returns>
         public bool InTransaction()
         {
-            var sessionInTransaction = _session.Transaction != null && _session.Transaction.IsActive;
+            var sessionInTransaction = _session.GetCurrentTransaction()?.IsActive == true;
 
             return _nextBooleanValue ? sessionInTransaction : !sessionInTransaction;
         }

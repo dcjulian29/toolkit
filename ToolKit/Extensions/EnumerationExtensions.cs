@@ -1,4 +1,6 @@
-﻿namespace System
+using ToolKit.Validation;
+
+namespace System
 {
     /// <summary>
     /// This class provides extensions to enumerations.
@@ -6,7 +8,7 @@
     public static class EnumerationExtensions
     {
         /// <summary>
-        /// Clears a flag within a flag based enumeration.s
+        /// Clears a flag within a flag based enumeration.
         /// </summary>
         /// <typeparam name="T">The type of enumeration.</typeparam>
         /// <param name="target">The target enumeration.</param>
@@ -14,6 +16,8 @@
         /// <returns>an enumeration where the flag is cleared.</returns>
         public static T ClearFlag<T>(this Enum target, T value)
         {
+            Check.NotNull(target, nameof(target));
+
             if (target.GetType() != value.GetType())
             {
                 throw new InvalidOperationException("Enumeration Type Mismatch!");
@@ -25,9 +29,7 @@
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(
-                  string.Format("Could not remove value from enumerated type '{0}'.", typeof(T).Name),
-                  ex);
+                throw new ArgumentException($"Could not remove value from enumerated type '{typeof(T).Name}'.", ex);
             }
         }
 
@@ -43,6 +45,8 @@
         /// </returns>
         public static bool Contains<T>(this Enum target, T value)
         {
+            Check.NotNull(target, nameof(target));
+
             if (!typeof(T).IsEnum)
             {
                 throw new ArgumentException("Argument is not an Enumeration!");
@@ -57,7 +61,7 @@
             {
                 return ((int)(object)target & (int)(object)value) == (int)(object)value;
             }
-            catch
+            catch (InvalidCastException)
             {
                 return false;
             }
@@ -74,6 +78,8 @@
         /// </returns>
         public static bool Is<T>(this Enum target, T value)
         {
+            Check.NotNull(target, nameof(target));
+
             if (!typeof(T).IsEnum)
             {
                 throw new ArgumentException("Argument is not an Enumeration!");
@@ -88,14 +94,14 @@
             {
                 return (int)(object)target == (int)(object)value;
             }
-            catch
+            catch (InvalidCastException)
             {
                 return false;
             }
         }
 
         /// <summary>
-        /// Sets a flag within a flag based enumeration
+        /// Sets a flag within a flag based enumeration.
         /// </summary>
         /// <typeparam name="T">The type of enumeration.</typeparam>
         /// <param name="target">The target enumeration.</param>
@@ -103,6 +109,8 @@
         /// <returns>an enumeration where the flag is set.</returns>
         public static T SetFlag<T>(this Enum target, T value)
         {
+            Check.NotNull(target, nameof(target));
+
             if (target.GetType() != value.GetType())
             {
                 throw new InvalidOperationException("Enumeration Type Mismatch!");
@@ -114,9 +122,7 @@
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(
-                  string.Format("Could not append value from enumerated type '{0}'.", typeof(T).Name),
-                  ex);
+                throw new ArgumentException($"Could not append value from enumerated type '{typeof(T).Name}'.", ex);
             }
         }
     }

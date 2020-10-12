@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Common.Logging;
 
@@ -8,9 +8,9 @@ namespace ToolKit
     /// This class provides a hook and handle for unhandled exception. Call the Hook method when the
     /// application starts and then any unhandled exceptions will be logged.
     /// </summary>
-    public class UnhandledException
+    public sealed class UnhandledException
     {
-        private static ILog _log = LogManager.GetLogger<UnhandledException>();
+        private static readonly ILog _log = LogManager.GetLogger<UnhandledException>();
 
         /// <summary>
         /// Prevents a default instance of the <see cref="UnhandledException"/> class from being created.
@@ -38,7 +38,7 @@ namespace ToolKit
             builder.Append(Environment.NewLine);
             builder.Append("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             builder.Append(Environment.NewLine);
-            builder.Append(e.ExceptionObject.ToString());
+            builder.Append(e?.ExceptionObject.ToString());
             builder.Append(Environment.NewLine);
             builder.Append("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             builder.Append(Environment.NewLine);

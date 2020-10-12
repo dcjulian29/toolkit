@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using ToolKit;
 using Xunit;
 
@@ -125,7 +125,7 @@ namespace UnitTests
             // Arrange
             string[] args =
             {
-                "-Load",
+                "--Load",
                 "FileName.ext"
             };
 
@@ -134,6 +134,28 @@ namespace UnitTests
 
             // Assert
             Assert.Equal("FileName.ext", param["Load"]);
+        }
+
+        [Fact]
+        public void GetEnumerator_Should_EnumerateArguments()
+        {
+            // Arrange
+            string[] args =
+            {
+                "/Load",
+                "file1.ext",
+                "/Save",
+                "file2.ext"
+            };
+
+            // Act
+            var param = new ConsoleArguments(args);
+
+            // Assert
+            foreach (var item in param)
+            {
+                Assert.NotNull(item);
+            }
         }
 
         [Fact]
@@ -183,6 +205,16 @@ namespace UnitTests
 
             // Assert
             Assert.Null(param["NotExist"]);
+        }
+
+        [Fact]
+        public void NullArguments_Should_ParseCorrectly()
+        {
+            // Arrange & Act
+            var param = new ConsoleArguments(null);
+
+            // Assert
+            Assert.Empty(param);
         }
 
         [Fact]

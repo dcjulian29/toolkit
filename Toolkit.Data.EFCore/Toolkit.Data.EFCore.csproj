@@ -3,6 +3,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <Features>IOperation</Features>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <DocumentationFile>bin\Release\Toolkit.Data.EFCore.xml</DocumentationFile>
@@ -12,15 +13,25 @@
       <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
-        <Reference Include="EntityFramework">
-            <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-        </Reference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-        <Compile Include="../.build/commonassemblyinfo.cs" />
+        <Compile Include="../.build/CommonAssemblyInfo.cs" Condition="Exists('../.build/CommonAssemblyInfo.cs')" />
+    </ItemGroup>
+    <ItemGroup>
+      <AdditionalFiles Include="../stylecop.json" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj" />
     </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>

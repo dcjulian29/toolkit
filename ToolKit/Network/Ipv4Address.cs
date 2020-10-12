@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+using System.Globalization;
+using ToolKit.Validation;
 
 namespace ToolKit.Network
 {
     /// <summary>
-    /// A representation of an IP version 4 address
+    /// A representation of an IP version 4 address.
     /// </summary>
-    public class IpV4Address : IEquatable<IpV4Address>
+    public sealed class IpV4Address : IEquatable<IpV4Address>
     {
         private readonly int _firstOctet;
         private readonly int _secondOctet;
@@ -34,7 +31,7 @@ namespace ToolKit.Network
         /// </param>
         public IpV4Address(int octet1, int octet2, int octet3, int octet4)
         {
-            if ((octet1 > 255 || octet1 < 0) || (octet2 > 255 || octet2 < 0) ||
+            if (octet1 > 255 || octet1 < 0 || (octet2 > 255 || octet2 < 0) ||
                 (octet3 > 255 || octet3 < 0) || (octet4 > 255 || octet4 < 0))
             {
                 throw new ArgumentException("Octet should be equal or between 0 and 255");
@@ -50,10 +47,12 @@ namespace ToolKit.Network
         /// Initializes a new instance of the <see cref="IpV4Address"/> class.
         /// </summary>
         /// <param name="address">
-        /// The IPV4 address in 4 octet form
+        /// The IPV4 address in 4 octet form.
         /// </param>
         public IpV4Address(string address)
         {
+            Check.NotEmpty(address, nameof(address));
+
             var octets = address.Split('.');
 
             if (octets.Length != 4)
@@ -61,12 +60,12 @@ namespace ToolKit.Network
                 throw new ArgumentException("Address should contain 4 octets");
             }
 
-            var octet1 = Convert.ToInt32(octets[0]);
-            var octet2 = Convert.ToInt32(octets[1]);
-            var octet3 = Convert.ToInt32(octets[2]);
-            var octet4 = Convert.ToInt32(octets[3]);
+            var octet1 = Convert.ToInt32(octets[0], CultureInfo.InvariantCulture);
+            var octet2 = Convert.ToInt32(octets[1], CultureInfo.InvariantCulture);
+            var octet3 = Convert.ToInt32(octets[2], CultureInfo.InvariantCulture);
+            var octet4 = Convert.ToInt32(octets[3], CultureInfo.InvariantCulture);
 
-            if ((octet1 > 255 || octet1 < 0) || (octet2 > 255 || octet2 < 0) ||
+            if (octet1 > 255 || octet1 < 0 || (octet2 > 255 || octet2 < 0) ||
                 (octet3 > 255 || octet3 < 0) || (octet4 > 255 || octet4 < 0))
             {
                 throw new ArgumentException("Octet should be equal or between 0 and 255");
@@ -79,7 +78,7 @@ namespace ToolKit.Network
         }
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="IpV4Address"/> class from being created. 
+        /// Prevents a default instance of the <see cref="IpV4Address"/> class from being created.
         /// </summary>
         private IpV4Address()
         {
@@ -96,18 +95,13 @@ namespace ToolKit.Network
         /// </returns>
         public static bool operator ==(IpV4Address a, IpV4Address b)
         {
-            if (Object.ReferenceEquals(a, b))
+            if (object.ReferenceEquals(a, b))
             {
                 return true;
             }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
-            {
-                return false;
-            }
-
-            return a.Equals(b);
+            return !(a is null) && !(b is null) && a.Equals(b);
         }
 
         /// <summary>
@@ -150,7 +144,7 @@ namespace ToolKit.Network
         /// </item>
         /// </list>
         /// </returns>
-        public virtual int CompareTo(IpV4Address other)
+        public int CompareTo(IpV4Address other)
         {
             // If other is not a valid object reference, this instance is greater.
             if (other == null)
@@ -163,30 +157,32 @@ namespace ToolKit.Network
                 return 0;
             }
 
-            var combined1 = String.Format(
-                "{0:D3}{1:D3}{2:D3}{3:D3}", 
+            var combined1 = string.Format(
+                CultureInfo.InvariantCulture,
+                "{0:D3}{1:D3}{2:D3}{3:D3}",
                 _firstOctet,
                 _secondOctet,
                 _thirdOctet,
                 _fourthOctet);
-            var combined2 = String.Format(
-                "{0:D3}{1:D3}{2:D3}{3:D3}", 
-                other._firstOctet, 
-                other._secondOctet, 
-                other._thirdOctet, 
+            var combined2 = string.Format(
+                CultureInfo.InvariantCulture,
+                "{0:D3}{1:D3}{2:D3}{3:D3}",
+                other._firstOctet,
+                other._secondOctet,
+                other._thirdOctet,
                 other._fourthOctet);
 
-            return String.Compare(combined1, combined2, StringComparison.Ordinal);
+            return string.CompareOrdinal(combined1, combined2);
         }
 
         /// <summary>
         /// Determines whether the specified
-        /// <see cref="System.Object"/> is equal to this instance.
+        /// <see cref="object"/> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/>
+        /// <param name="obj">The <see cref="object"/>
         /// to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object"/>
+        ///   <c>true</c> if the specified <see cref="object"/>
         ///   is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)
@@ -211,14 +207,14 @@ namespace ToolKit.Network
                 return true;
             }
 
-            if (other == null || !(GetType() == other.GetType()))
+            if (other == null || GetType() != other.GetType())
             {
                 return false;
             }
 
-            return (_firstOctet == other._firstOctet) && 
-                (_secondOctet == other._secondOctet) && 
-                (_thirdOctet == other._thirdOctet) && 
+            return (_firstOctet == other._firstOctet) &&
+                (_secondOctet == other._secondOctet) &&
+                (_thirdOctet == other._thirdOctet) &&
                 (_fourthOctet == other._fourthOctet);
         }
 
@@ -231,13 +227,13 @@ namespace ToolKit.Network
         /// </returns>
         public override int GetHashCode()
         {
-            var prime = 31;
+            const int Prime = 31;
             var result = 1;
 
-            result = (prime * result) + _firstOctet;
-            result = (prime * result) + _secondOctet;
-            result = (prime * result) + _thirdOctet;
-            result = (prime * result) + _fourthOctet;
+            result = (Prime * result) + _firstOctet;
+            result = (Prime * result) + _secondOctet;
+            result = (Prime * result) + _thirdOctet;
+            result = (Prime * result) + _fourthOctet;
 
             return result;
         }
@@ -253,13 +249,14 @@ namespace ToolKit.Network
         /// </returns>
         public string ToBinary(bool includePeriod = false)
         {
-            var separator = String.Empty;
+            var separator = string.Empty;
             if (includePeriod)
             {
                 separator = ".";
             }
 
-            return String.Format(
+            return string.Format(
+                CultureInfo.InvariantCulture,
                 "{0}{4}{1}{4}{2}{4}{3}",
                 Convert.ToString(_firstOctet, 2).PadLeft(8, '0'),
                 Convert.ToString(_secondOctet, 2).PadLeft(8, '0'),
@@ -276,7 +273,13 @@ namespace ToolKit.Network
         /// </returns>
         public override string ToString()
         {
-            return String.Format("{0}.{1}.{2}.{3}", _firstOctet, _secondOctet, _thirdOctet, _fourthOctet);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "{0}.{1}.{2}.{3}",
+                _firstOctet,
+                _secondOctet,
+                _thirdOctet,
+                _fourthOctet);
         }
     }
 }

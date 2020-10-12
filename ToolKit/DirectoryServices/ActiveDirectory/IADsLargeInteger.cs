@@ -1,4 +1,4 @@
-﻿namespace ToolKit.DirectoryServices.ActiveDirectory
+namespace ToolKit.DirectoryServices.ActiveDirectory
 {
     /// <summary>
     /// The IADsLargeInteger interface is used to manipulate 64-bit integers of the LargeInteger type.

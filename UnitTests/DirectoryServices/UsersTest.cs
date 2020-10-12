@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Moq;
 using ToolKit;
 using ToolKit.DirectoryServices;
+using ToolKit.DirectoryServices.UserSort;
 using Xunit;
 
 namespace UnitTests.DirectoryServices
@@ -61,7 +62,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByChanged(true));
+            userList.Sort(new SortByChanged(true));
 
             // Assert
             Assert.Equal("User2", userList[0].DisplayName);
@@ -76,7 +77,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByChanged(false));
+            userList.Sort(new SortByChanged(false));
 
             // Assert
             Assert.Equal("User3", userList[0].DisplayName);
@@ -91,7 +92,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByCreated(true));
+            userList.Sort(new SortByCreated(true));
 
             // Assert
             Assert.Equal("User2", userList[0].DisplayName);
@@ -106,7 +107,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByCreated(false));
+            userList.Sort(new SortByCreated(false));
 
             // Assert
             Assert.Equal("User3", userList[0].DisplayName);
@@ -121,7 +122,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByDisplayName(true));
+            userList.Sort(new SortByDisplayName(true));
 
             // Assert
             Assert.Equal("User1", userList[0].DisplayName);
@@ -136,7 +137,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByDisplayName(false));
+            userList.Sort(new SortByDisplayName(false));
 
             // Assert
             Assert.Equal("User3", userList[0].DisplayName);
@@ -151,7 +152,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByEmailAddress(true));
+            userList.Sort(new SortByEmailAddress(true));
 
             // Assert
             Assert.Equal("User1", userList[0].DisplayName);
@@ -166,7 +167,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByEmailAddress(false));
+            userList.Sort(new SortByEmailAddress(false));
 
             // Assert
             Assert.Equal("User3", userList[0].DisplayName);
@@ -181,7 +182,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByLastLogonTimestamp(true));
+            userList.Sort(new SortByLastLogonTimestamp(true));
 
             // Assert
             Assert.Equal("User2", userList[0].DisplayName);
@@ -196,7 +197,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByLastLogonTimestamp(false));
+            userList.Sort(new SortByLastLogonTimestamp(false));
 
             // Assert
             Assert.Equal("User3", userList[0].DisplayName);
@@ -211,7 +212,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByPasswordLastSet(true));
+            userList.Sort(new SortByPasswordLastSet(true));
 
             // Assert
             Assert.Equal("User2", userList[0].DisplayName);
@@ -226,7 +227,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByPasswordLastSet(false));
+            userList.Sort(new SortByPasswordLastSet(false));
 
             // Assert
             Assert.Equal("User3", userList[0].DisplayName);
@@ -241,7 +242,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortBySamAccountName(true));
+            userList.Sort(new SortBySamAccountName(true));
 
             // Assert
             Assert.Equal("User1", userList[0].DisplayName);
@@ -256,7 +257,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortBySamAccountName(false));
+            userList.Sort(new SortBySamAccountName(false));
 
             // Assert
             Assert.Equal("User1", userList[0].DisplayName);
@@ -271,7 +272,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByUserPrincipalName(true));
+            userList.Sort(new SortByUserPrincipalName(true));
 
             // Assert
             Assert.Equal("User1", userList[0].DisplayName);
@@ -286,7 +287,7 @@ namespace UnitTests.DirectoryServices
             var userList = InitializeData();
 
             // Act
-            userList.Sort(new Users.SortByUserPrincipalName(false));
+            userList.Sort(new SortByUserPrincipalName(false));
 
             // Assert
             Assert.Equal("User3", userList[0].DisplayName);

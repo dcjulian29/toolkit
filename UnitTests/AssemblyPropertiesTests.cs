@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ToolKit;
 using Xunit;
 
@@ -10,7 +10,7 @@ namespace UnitTests
         Justification = "Test Suites do not need XML Documentation.")]
     public class AssemblyPropertiesTests
     {
-        private string _toolkitLibraryPath = AppDomain.CurrentDomain.BaseDirectory + "\\ToolKit-Windows.dll";
+        private readonly string _toolkitLibraryPath = AppDomain.CurrentDomain.BaseDirectory + "\\ToolKit-Windows.dll";
 
         [Fact]
         public void BuildVersion_Should_ReturnTheVersionOfTheSpecifiedAssembly_When_AnAssemblyIsProvided()
@@ -45,7 +45,7 @@ namespace UnitTests
             var actual = AssemblyProperties.Configuration(_toolkitLibraryPath);
 
             // Assert
-            Assert.NotEqual(String.Empty, actual);
+            Assert.NotEqual(string.Empty, actual);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace UnitTests
             var actual = AssemblyProperties.Configuration(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
-            Assert.NotEqual(String.Empty, actual);
+            Assert.NotEqual(string.Empty, actual);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace UnitTests
             var actual = AssemblyProperties.Guid(_toolkitLibraryPath);
 
             // Assert
-            Assert.NotEqual(String.Empty, actual);
+            Assert.NotEqual(string.Empty, actual);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace UnitTests
             var actual = AssemblyProperties.Guid(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
-            Assert.NotEqual(String.Empty, actual);
+            Assert.NotEqual(string.Empty, actual);
         }
 
         [Fact]
@@ -212,10 +212,10 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var actual = AssemblyProperties.Configuration(_toolkitLibraryPath);
+            var actual = AssemblyProperties.Version(_toolkitLibraryPath);
 
             // Assert
-            Assert.NotEqual(String.Empty, actual);
+            Assert.NotEqual(string.Empty, actual);
         }
 
         [Fact]
@@ -227,7 +227,7 @@ namespace UnitTests
             var actual = AssemblyProperties.Version(typeof(AssemblyPropertiesTests).Assembly.Location);
 
             // Assert
-            Assert.NotEqual(String.Empty, actual);
+            Assert.NotEqual(string.Empty, actual);
         }
     }
 }

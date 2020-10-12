@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using ToolKit.Cryptography;
 using Xunit;
@@ -13,19 +14,23 @@ namespace UnitTests.Cryptography
          Justification = "Test Suites do not need XML Documentation.")]
     public class RsaEncryptionTests
     {
-        private static string _targetString =
+        private const string _targetString =
             "The instinct of nearly all societies is to lock up anybody who is truly free. "
             + "First, society begins by trying to beat you up. If this fails, they try to poison you. "
             + "If this fails too, they finish by loading honors on your head."
             + " - Jean Cocteau (1889-1963)";
 
-        private static string secret = SHA256Hash.Create().Compute(_targetString);
+        private static readonly string _assemblyPath =
+                    Path.GetDirectoryName(Assembly.GetAssembly(typeof(RsaEncryptionTests)).Location)
+            + Path.DirectorySeparatorChar;
+
+        public static string Secret { get; } = SHA256Hash.Create().Compute(_targetString);
 
         [Fact]
         public void Decrypt_Should_ReturnExpectedResult_When_KeyIsStoredInCertificate()
         {
             // Arrange
-            var cert = Directory.GetCurrentDirectory() + @"\RsaEncrypt";
+            var cert = $"{_assemblyPath}RsaEncrypt";
 
             var publicKey = RsaPublicKey.LoadFromCertificateFile(cert + ".cer");
             var privateKey = RsaPrivateKey.LoadFromCertificateFile(cert + ".pfx", "password");
@@ -34,11 +39,11 @@ namespace UnitTests.Cryptography
             var e2 = new RsaEncryption();
 
             // Act
-            var encryptedData = e1.Encrypt(new EncryptionData(secret), publicKey);
+            var encryptedData = e1.Encrypt(new EncryptionData(Secret), publicKey);
             var decryptedData = e2.Decrypt(encryptedData, privateKey);
 
             // Assert
-            Assert.Equal(decryptedData.Text, secret);
+            Assert.Equal(decryptedData.Text, Secret);
         }
 
         [Fact]
@@ -54,11 +59,11 @@ namespace UnitTests.Cryptography
             var e2 = new RsaEncryption();
 
             // Act
-            var encryptedData = e1.Encrypt(new EncryptionData(secret), publicKey);
+            var encryptedData = e1.Encrypt(new EncryptionData(Secret), publicKey);
             var decryptedData = e2.Decrypt(encryptedData, privateKey);
 
             // Assert
-            Assert.Equal(decryptedData.Text, secret);
+            Assert.Equal(decryptedData.Text, Secret);
 
             RemoveKeysToEnvironment();
         }
@@ -67,14 +72,14 @@ namespace UnitTests.Cryptography
         public void Decrypt_Should_ReturnExpectedResult_When_KeyIsStoredInXml()
         {
             // Arrange
-            var publicKeyXml = "<RSAKeyValue>" +
+            const string publicKeyXml = "<RSAKeyValue>" +
                                "<Modulus>0D59Km2Eo9oopcm7Y2wOXx0TRRXQFybl9HHe/ve47Qcf2EoKbs9nkuMmhCJlJ" +
                                "zrq6ZJzgQSEbpVyaWn8OHq0I50rQ13dJsALEquhlfwVWw6Hit7qRvveKlOAGfj8xdkaXJ" +
                                "LYS1tA06tKHfYxgt6ysMBZd0DIedYoE1fe3VlLZyE=</Modulus>" +
                                "<Exponent>AQAB</Exponent>" +
                                "</RSAKeyValue>";
 
-            var privateKeyXml = "<RSAKeyValue>" +
+            const string privateKeyXml = "<RSAKeyValue>" +
                                 "<Modulus>0D59Km2Eo9oopcm7Y2wOXx0TRRXQFybl9HHe/ve47Qcf2EoKbs9nkuMmhCJlJ" +
                                 "zrq6ZJzgQSEbpVyaWn8OHq0I50rQ13dJsALEquhlfwVWw6Hit7qRvveKlOAGfj8xdkaXJ" +
                                 "LYS1tA06tKHfYxgt6ysMBZd0DIedYoE1fe3VlLZyE=</Modulus>" +
@@ -101,11 +106,11 @@ namespace UnitTests.Cryptography
             var e2 = new RsaEncryption();
 
             // Act
-            var encryptedData = e1.Encrypt(new EncryptionData(secret), publicKey);
+            var encryptedData = e1.Encrypt(new EncryptionData(Secret), publicKey);
             var decryptedData = e2.Decrypt(encryptedData, privateKey);
 
             // Assert
-            Assert.Equal(decryptedData.Text, secret);
+            Assert.Equal(decryptedData.Text, Secret);
         }
 
         [Fact]
@@ -117,11 +122,11 @@ namespace UnitTests.Cryptography
             var e2 = new RsaEncryption();
 
             // Act
-            var encryptedData = e1.Encrypt(new EncryptionData(secret));
+            var encryptedData = e1.Encrypt(new EncryptionData(Secret));
             var decryptedData = e2.Decrypt(encryptedData);
 
             // Assert
-            Assert.Equal(decryptedData.Text, secret);
+            Assert.Equal(decryptedData.Text, Secret);
 
             RemoveKeysToEnvironment();
         }
@@ -138,11 +143,11 @@ namespace UnitTests.Cryptography
             e1.GenerateNewKeyset(ref publicKey, ref privateKey);
 
             // Act
-            var encryptedData = e1.Encrypt(new EncryptionData(secret), publicKey);
+            var encryptedData = e1.Encrypt(new EncryptionData(Secret), publicKey);
             var decryptedData = e2.Decrypt(encryptedData, privateKey);
 
             // Assert
-            Assert.Equal(decryptedData.Text, secret);
+            Assert.Equal(decryptedData.Text, Secret);
         }
 
         [Fact]
@@ -157,11 +162,11 @@ namespace UnitTests.Cryptography
             e1.GenerateNewKeyset(ref publicKey, ref privateKey);
 
             // Act
-            var encryptedData = e1.Encrypt(new EncryptionData(secret), publicKey);
+            var encryptedData = e1.Encrypt(new EncryptionData(Secret), publicKey);
             var decryptedData = e2.Decrypt(encryptedData, privateKey);
 
             // Assert
-            Assert.Equal(decryptedData.Text, secret);
+            Assert.Equal(decryptedData.Text, Secret);
         }
 
         [Fact]
@@ -169,13 +174,13 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             AddKeysToEnvironment();
-            var expected = "AQAB";
+            const string expected = "AQAB";
 
             // Act
-            var key = new RsaEncryption();
+            var actual = RsaEncryption.DefaultPublicKey.Exponent;
 
             // Assert
-            Assert.Equal(expected, key.DefaultPublicKey.Exponent);
+            Assert.Equal(expected, actual);
 
             RemoveKeysToEnvironment();
         }
@@ -185,16 +190,30 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             AddKeysToEnvironment();
-            var expected = "ksvo/EqBn9XRzvH826npSQdCYv1G5gyEnzQeC4qPidEm"
+            const string expected = "ksvo/EqBn9XRzvH826npSQdCYv1G5gyEnzQeC4qPidEm"
                          + "Ub6Yan12cWYlt4CsK5umYGwWmRSL20Ufc+gnZQo6Pw==";
 
             // Act
-            var key = new RsaEncryption();
+            var actual = RsaEncryption.DefaultPrivateKey.PrimeExponentP;
 
             // Assert
-            Assert.Equal(expected, key.DefaultPrivateKey.PrimeExponentP);
+            Assert.Equal(expected, actual);
 
             RemoveKeysToEnvironment();
+        }
+
+        [Fact]
+        public void Encrypt_Should_ThrowException_When_DataIsNull()
+        {
+            // Arrange
+            var publicKey = new RsaPublicKey();
+            var privateKey = new RsaPrivateKey();
+            var e1 = new RsaEncryption();
+            e1.GenerateNewKeyset(ref publicKey, ref privateKey);
+            EncryptionData data = null;
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => e1.Encrypt(data, publicKey));
         }
 
         [Fact]
@@ -209,27 +228,7 @@ namespace UnitTests.Cryptography
             e1.GenerateNewKeyset(ref publicKey, ref privateKey);
 
             // Assert
-            Assert.Throws<CryptographicException>(() =>
-            {
-                e1.Encrypt(new EncryptionData(_targetString), publicKey);
-            });
-        }
-
-        [Fact]
-        public void Encrypt_Should_ThrowException_When_KeyIsNull()
-        {
-            // Arrange
-            var publicKey = new RsaPublicKey(); ;
-            var privateKey = new RsaPrivateKey();
-            var e1 = new RsaEncryption();
-            e1.GenerateNewKeyset(ref publicKey, ref privateKey);
-            EncryptionData data = null;
-
-            // Act & Assert
-            Assert.Throws<NullReferenceException>(() =>
-            {
-                e1.Encrypt(data, publicKey);
-            });
+            Assert.Throws<CryptographicException>(() => e1.Encrypt(new EncryptionData(_targetString), publicKey));
         }
 
         [Fact]
@@ -241,10 +240,7 @@ namespace UnitTests.Cryptography
             RsaPrivateKey privateKey = null;
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                key.GenerateNewKeyset(ref publicKey, ref privateKey);
-            });
+            Assert.Throws<ArgumentNullException>(() => key.GenerateNewKeyset(ref publicKey, ref privateKey));
         }
 
         [Fact]
@@ -256,17 +252,14 @@ namespace UnitTests.Cryptography
             RsaPublicKey publicKey = null;
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                key.GenerateNewKeyset(ref publicKey, ref privateKey);
-            });
+            Assert.Throws<ArgumentNullException>(() => key.GenerateNewKeyset(ref publicKey, ref privateKey));
         }
 
         [Fact]
         public void KeySizeMaxBits_Should_ExpectedResult()
         {
             // Arrange
-            var expected = 16384;
+            const int expected = 16384;
 
             // Act
             var rsa = new RsaEncryption();
@@ -279,7 +272,7 @@ namespace UnitTests.Cryptography
         public void KeySizeMinBits_Should_ExpectedResult()
         {
             // Arrange
-            var expected = 384;
+            const int expected = 384;
 
             // Act
             var rsa = new RsaEncryption();
@@ -292,7 +285,7 @@ namespace UnitTests.Cryptography
         public void KeySizeStepBits_Should_ExpectedResult()
         {
             // Arrange
-            var expected = 8;
+            const int expected = 8;
 
             // Act
             var rsa = new RsaEncryption();
@@ -305,14 +298,14 @@ namespace UnitTests.Cryptography
         public void Sign_Should_CorrectlyCreateProperSignature()
         {
             // Arrange
-            var secretData = new EncryptionData(secret);
+            var secretData = new EncryptionData(Secret);
 
-            var xml = File.ReadAllText("privateKey.xml");
+            var xml = File.ReadAllText($"{_assemblyPath}privateKey.xml");
             var privateKey = RsaPrivateKey.LoadFromXml(xml);
 
-            var expected = "kZmV1cUO91lpOQkgz5HLbWsfeXabJOPfcWjH72EytH95AAJEVq+nonJm9A" +
-                           "UjHy53VAIagJFJYiORcgsHC1klkppM71hRD1xUs70ggPiMIcTv/CDij3" +
-                           "6FYxGd7n9GAh5LikojbWJxJHc3A5LqnAwSBBfOfY2K4gY5lZ3rSmhNHDM=";
+            const string expected = "kZmV1cUO91lpOQkgz5HLbWsfeXabJOPfcWjH72EytH95AAJEVq+nonJm9A"
+                + "UjHy53VAIagJFJYiORcgsHC1klkppM71hRD1xUs70ggPiMIcTv/CDij3"
+                + "6FYxGd7n9GAh5LikojbWJxJHc3A5LqnAwSBBfOfY2K4gY5lZ3rSmhNHDM=";
 
             var e1 = new RsaEncryption();
 
@@ -328,7 +321,7 @@ namespace UnitTests.Cryptography
         public void Verify_Should_ReturnFalse_When_ValidatingChangedSignedData()
         {
             // Arrange
-            var secretData = new EncryptionData(secret);
+            var secretData = new EncryptionData(Secret);
 
             var publicKey = new RsaPublicKey();
             var privateKey = new RsaPrivateKey();
@@ -338,7 +331,7 @@ namespace UnitTests.Cryptography
 
             // Act
             var signature = e1.Sign(secretData, privateKey);
-            secretData.Text = secretData.Text + "3";
+            secretData.Text += "3";
             var actual = e1.Verify(secretData, signature, publicKey);
 
             // Assert
@@ -349,18 +342,16 @@ namespace UnitTests.Cryptography
         public void Verify_Should_ReturnTrue_When_ValidatingUnChangedSignedData()
         {
             // Arrange
-            var secretData = new EncryptionData(secret);
+            var secretData = new EncryptionData(Secret);
 
             var publicKey = new RsaPublicKey();
             var privateKey = new RsaPrivateKey();
-
-            var signature = default(EncryptionData);
-
             var e1 = new RsaEncryption();
+
             e1.GenerateNewKeyset(ref publicKey, ref privateKey);
 
             // Act
-            signature = e1.Sign(secretData, privateKey);
+            var signature = e1.Sign(secretData, privateKey);
             var actual = e1.Verify(secretData, signature, publicKey);
 
             // Assert

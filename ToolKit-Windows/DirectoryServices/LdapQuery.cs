@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.DirectoryServices;
 using Common.Logging;
 
@@ -9,8 +9,6 @@ namespace ToolKit.DirectoryServices
     /// </summary>
     public class LdapQuery : DisposableObject
     {
-        private static ILog _log = LogManager.GetLogger<LdapQuery>();
-
         private DirectoryEntry _directoryEntry;
         private DirectorySearcher _directorySearcher;
         private string _ldapFilter;
@@ -21,7 +19,7 @@ namespace ToolKit.DirectoryServices
         /// </summary>
         /// <param name="path">The LDAP path of the root of the query.</param>
         public LdapQuery(string path)
-            : this(path, String.Empty)
+            : this(path, string.Empty)
         {
         }
 
@@ -43,7 +41,7 @@ namespace ToolKit.DirectoryServices
         /// The node in the LDAP Services hierarchy where the query search will start.
         /// </param>
         public LdapQuery(DirectoryEntry searchRoot)
-            : this(searchRoot, String.Empty)
+            : this(searchRoot, string.Empty)
         {
         }
 
@@ -67,7 +65,7 @@ namespace ToolKit.DirectoryServices
         /// <param name="dn">The DistinguishedName of the root.</param>
         /// <param name="globalCatalog">if set to <c>true</c>, use the global catalog.</param>
         public LdapQuery(DistinguishedName dn, bool globalCatalog)
-            : this(dn, String.Empty, globalCatalog)
+            : this(dn, string.Empty, globalCatalog)
         {
         }
 
@@ -78,7 +76,7 @@ namespace ToolKit.DirectoryServices
         /// <param name="filter">The search filter string in LDAP format.</param>
         /// <param name="globalCatalog">if set to <c>true</c>, use the global catalog.</param>
         public LdapQuery(DistinguishedName dn, string filter, bool globalCatalog)
-            : this(globalCatalog ? dn.GcPath : dn.LdapPath, filter)
+            : this(globalCatalog ? dn?.GcPath : dn?.LdapPath, filter)
         {
         }
 
@@ -89,7 +87,7 @@ namespace ToolKit.DirectoryServices
         /// <param name="filter">The search filter string in LDAP format.</param>
         /// <param name="globalCatalog">if set to <c>true</c>, use the global catalog.</param>
         public LdapQuery(DistinguishedName dn, LdapFilter filter, bool globalCatalog)
-            : this(dn, filter.ToString(), globalCatalog)
+            : this(dn, filter?.ToString(), globalCatalog)
         {
         }
 
@@ -105,7 +103,7 @@ namespace ToolKit.DirectoryServices
         {
             get
             {
-                return String.IsNullOrEmpty(_ldapFilter) ? "(objectClass=*)" : _ldapFilter;
+                return string.IsNullOrEmpty(_ldapFilter) ? "(objectClass=*)" : _ldapFilter;
             }
 
             set
@@ -204,7 +202,7 @@ namespace ToolKit.DirectoryServices
 
         private void PrepareInternalObjects()
         {
-            if (String.IsNullOrEmpty(Path))
+            if (string.IsNullOrEmpty(Path))
             {
                 throw new InvalidOperationException("You must specify a LDAP path!");
             }

@@ -1,9 +1,9 @@
-﻿using FluentNHibernate.Cfg.Db;
+using FluentNHibernate.Cfg.Db;
 
 namespace ToolKit.Data.NHibernate.SessionFactories
 {
     /// <summary>
-    /// NHibernate Session Factory using Microsoft SQL Compact
+    /// NHibernate Session Factory using Microsoft SQL Compact.
     /// </summary>
     public class MsSqlCeSessionFactory : SessionFactoryBase
     {

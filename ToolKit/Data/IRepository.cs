@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace ToolKit.Data
 {
     /// <summary>
-    /// Interface for a Repository supporting the specified entity type
+    /// Interface for a Repository supporting the specified entity type.
     /// </summary>
     /// <typeparam name="T">The entity type this repository supports.</typeparam>
     /// <typeparam name="TId">The type of the id.</typeparam>

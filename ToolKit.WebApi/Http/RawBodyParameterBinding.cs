@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -9,7 +9,7 @@ using System.Web.Http.Metadata;
 namespace ToolKit.WebApi.Http
 {
     /// <summary>
-    /// Reads the HTTP Request body and assign it to the the string or byte[] parameter.
+    /// Reads the HTTP Request body and assign it to the string or byte[] parameter.
     /// </summary>
     public class RawBodyParameterBinding : HttpParameterBinding
     {
@@ -48,15 +48,14 @@ namespace ToolKit.WebApi.Http
             HttpActionContext actionContext,
             CancellationToken cancellationToken)
         {
-            var binding = actionContext.ActionDescriptor.ActionBinding;
-
-            if (actionContext.Request.Method == HttpMethod.Get)
+            if (actionContext?.Request.Method == HttpMethod.Get)
             {
                 var taskSource = new TaskCompletionSource<object>();
                 taskSource.SetResult(null);
                 return taskSource.Task;
             }
 
+            var binding = actionContext.ActionDescriptor.ActionBinding;
             var parameter = binding.ParameterBindings
                 .First(x => x.GetType() == typeof(RawBodyParameterBinding));
 
@@ -65,23 +64,19 @@ namespace ToolKit.WebApi.Http
             if (type == typeof(string))
             {
                 return actionContext.Request.Content.ReadAsStringAsync().ContinueWith(
-                    (task) =>
-                    {
-                        var stringResult = task.Result;
-                        SetValue(actionContext, stringResult);
-                    },
-                    cancellationToken);
+                    (task) => SetValue(actionContext, task.Result),
+                    cancellationToken,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Current);
             }
 
             if (type == typeof(byte[]))
             {
                 return actionContext.Request.Content.ReadAsByteArrayAsync().ContinueWith(
-                    (task) =>
-                    {
-                        var result = task.Result;
-                        SetValue(actionContext, result);
-                    },
-                    cancellationToken);
+                    (task) => SetValue(actionContext, task.Result),
+                    cancellationToken,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Current);
             }
 
             throw new InvalidOperationException("Non-supported parameter type!");

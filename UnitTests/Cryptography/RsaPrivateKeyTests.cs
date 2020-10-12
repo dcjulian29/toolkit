@@ -1,7 +1,7 @@
-﻿using System;
-using System.Configuration;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using ToolKit.Cryptography;
 using Xunit;
 
@@ -13,14 +13,16 @@ namespace UnitTests.Cryptography
          Justification = "Test Suites do not need XML Documentation.")]
     public class RsaPrivateKeyTests
     {
+        private static readonly string _assemblyPath =
+            Path.GetDirectoryName(Assembly.GetAssembly(typeof(RsaPrivateKeyTests)).Location)
+            + Path.DirectorySeparatorChar;
+
         [Fact]
         public void ExportToXmlFile_Should_OverwriteThePrivateKey()
         {
             // Arrange
-            var guid = Guid.NewGuid();
-            var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
-            var keyFile = Directory.GetCurrentDirectory() + @"\privateKey.xml";
-            var key = RsaPrivateKey.LoadFromXmlFile(keyFile);
+            var file = $"{_assemblyPath}{Guid.NewGuid()}.xml";
+            var key = RsaPrivateKey.LoadFromXmlFile($"{_assemblyPath}privateKey.xml");
             key.ExportToXmlFile(file);
 
             // Act
@@ -34,10 +36,8 @@ namespace UnitTests.Cryptography
         public void ExportToXmlFile_Should_SaveThePrivateKey()
         {
             // Arrange
-            var guid = Guid.NewGuid();
-            var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
-            var keyFile = Directory.GetCurrentDirectory() + @"\privateKey.xml";
-            var key = RsaPrivateKey.LoadFromXmlFile(keyFile);
+            var file = $"{_assemblyPath}{Guid.NewGuid()}.xml";
+            var key = RsaPrivateKey.LoadFromXmlFile($"{_assemblyPath}privateKey.xml");
 
             // Act
             key.ExportToXmlFile(file);
@@ -50,24 +50,19 @@ namespace UnitTests.Cryptography
         public void ExportToXmlFile_Should_ThrowException_IfPrivateKeyFileExist()
         {
             // Arrange
-            var guid = Guid.NewGuid();
-            var file = $"{Directory.GetCurrentDirectory()}\\{guid}.xml";
-            var keyFile = Directory.GetCurrentDirectory() + @"\privateKey.xml";
-            var key = RsaPrivateKey.LoadFromXmlFile(keyFile);
+            var file = $"{_assemblyPath}{Guid.NewGuid()}.xml";
+            var key = RsaPrivateKey.LoadFromXmlFile($"{_assemblyPath}privateKey.xml");
             key.ExportToXmlFile(file);
 
             // Act & Assert
-            Assert.Throws<IOException>(() =>
-            {
-                key.ExportToXmlFile(file);
-            });
+            Assert.Throws<IOException>(() => key.ExportToXmlFile(file));
         }
 
         [Fact]
         public void LoadFromCertificateFile_Should_LoadCertificate_When_FileIsPasswordProtected()
         {
-            // Arrage
-            var cert = Directory.GetCurrentDirectory() + @"\RsaEncrypt.pfx";
+            // Arrange
+            var cert = $"{_assemblyPath}RsaEncrypt.pfx";
 
             // Act
             var privateKey = RsaPrivateKey.LoadFromCertificateFile(cert, "password");
@@ -80,55 +75,41 @@ namespace UnitTests.Cryptography
         public void LoadFromCertificateFile_Should_ThrowException_When_PrivateKeyFileDoesNotExists()
         {
             // Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var privateKey = RsaPrivateKey.LoadFromCertificateFile("nonexist.pfx", "password");
-            });
+            Assert.Throws<ArgumentException>(()
+                => RsaPrivateKey.LoadFromCertificateFile($"{_assemblyPath}nonexist.pfx", "password"));
         }
 
         [Fact]
         public void LoadFromCertificateFile_Should_ThrowException_When_PrivateKeyPasswordNotProvided()
         {
-            // Arrage
-            var cert = Directory.GetCurrentDirectory() + @"\RsaEncrypt.pfx";
+            // Arrange
+            var cert = $"{_assemblyPath}RsaEncrypt.pfx";
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var privateKey = RsaPrivateKey.LoadFromCertificateFile(cert, "");
-            });
+            Assert.Throws<ArgumentNullException>(() => RsaPrivateKey.LoadFromCertificateFile(cert, ""));
         }
 
         [Fact]
         public void LoadFromEnvironment_Should_ThrowExceptionWhenEnvironmentDoesNotContainValues()
-        {
-            // Arrange & Act & Assert
-            Assert.Throws<ApplicationException>(() =>
-            {
-                var key = RsaPrivateKey.LoadFromEnvironment();
-            });
-        }
+            => Assert.Throws<ArgumentException>(() => RsaPrivateKey.LoadFromEnvironment());
 
         [Fact]
         public void LoadFromString_Should_ThrowException_When_XmlDoesntContainElements()
         {
             // Arrange
-            var xml = "<RSAKeyValue><Exponent>AQAB</Exponent></RSAKeyValue>";
+            const string xml = "<RSAKeyValue><Exponent>AQAB</Exponent></RSAKeyValue>";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var key = new RsaPrivateKey(xml);
-            });
+            Assert.Throws<ArgumentException>(() => new RsaPrivateKey(xml));
         }
 
         [Fact]
         public void LoadFromXmlFile_Should_LoadThePrivateKeyFromFile()
         {
             // Arrange
-            var expected = "71bwZomEwGq5FFx+43FIFngA6uZEZqPTMcTfc250F8WH"
+            const string expected = "71bwZomEwGq5FFx+43FIFngA6uZEZqPTMcTfc250F8WH"
                          + "7AFE94ucRpQR6JOKt6POZj/2NtY499YIKlJIjWM4Qw==";
-            var file = Directory.GetCurrentDirectory() + @"\privateKey.xml";
+            var file = $"{_assemblyPath}privateKey.xml";
 
             // Act
             var key = RsaPrivateKey.LoadFromXmlFile(file);
@@ -138,21 +119,15 @@ namespace UnitTests.Cryptography
         }
 
         [Fact]
-        public void LoadFromXmlFile_Should_ThrowException_When_FileDoesNotExists()
-        {
-            // Assert
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var key = RsaPrivateKey.LoadFromXmlFile("nonexist.xml");
-            });
-        }
+        public void LoadFromXmlFile_Should_ThrowException_When_FileDoesNotExists() =>
+            Assert.Throws<ArgumentException>(()
+                => RsaPrivateKey.LoadFromXmlFile($"{_assemblyPath}nonexist.xml"));
 
         [Fact]
         public void ToPublicKey_Should_ReturnThePublicKeyPortionOfAPrivateKey()
         {
             // Arrange
-            var keyFile = Directory.GetCurrentDirectory() + @"\privateKey.xml";
-            var key = RsaPrivateKey.LoadFromXmlFile(keyFile);
+            var key = RsaPrivateKey.LoadFromXmlFile($"{_assemblyPath}privateKey.xml");
 
             // Act
             var publicKey = key.ToPublicKey();

@@ -1,4 +1,4 @@
-﻿using ToolKit.Cryptography;
+using ToolKit.Cryptography;
 using Xunit;
 
 namespace UnitTests

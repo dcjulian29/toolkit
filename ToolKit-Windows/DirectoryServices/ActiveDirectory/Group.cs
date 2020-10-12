@@ -1,20 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
-using ToolKit;
 using ToolKit.DirectoryServices.ServiceInterfaces;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
     /// <summary>
-    /// This class represents an ActiveDirectory Group
+    /// This class represents an ActiveDirectory Group.
     /// </summary>
     public class Group : DirectoryObject, IGroup
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Group"/> class.
+        /// Initializes a new instance of the <see cref="Group" /> class.
         /// </summary>
         /// <param name="distinguishedName">string representation of the distinguished name.</param>
         public Group(string distinguishedName)
@@ -24,7 +24,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Group"/> class.
+        /// Initializes a new instance of the <see cref="Group" /> class.
         /// </summary>
         /// <param name="distinguishedName">DistinguishedName object of the distinguished name.</param>
         public Group(DistinguishedName distinguishedName)
@@ -34,7 +34,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Group"/> class.
+        /// Initializes a new instance of the <see cref="Group" /> class.
         /// </summary>
         /// <param name="result">A SearchResult Object.</param>
         public Group(SearchResult result)
@@ -44,7 +44,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Group"/> class.
+        /// Initializes a new instance of the <see cref="Group" /> class.
         /// </summary>
         /// <param name="entry">A DirectoryEntry Object.</param>
         public Group(DirectoryEntry entry)
@@ -54,7 +54,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Group"/> class.
+        /// Initializes a new instance of the <see cref="Group" /> class.
         /// </summary>
         /// <param name="domain">The domain of the group.</param>
         /// <param name="groupName">SAM Account Name of the group.</param>
@@ -81,7 +81,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Group"/> class.
+        /// Initializes a new instance of the <see cref="Group" /> class.
         /// </summary>
         /// <param name="properties">A Dictionary of properties.</param>
         /// <remarks>This constructor is primarily used for unit tests.</remarks>
@@ -92,10 +92,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Group"></see> class. This constructor is
-        /// not public and should only be used when the derived class wants to add an additional
-        /// constructor. At some point though, the derived classes' constructor needs to call the
-        /// "Initialize" method to load up the internal data structures.
+        /// Initializes a new instance of the <see cref="Group" /> class.
         /// </summary>
         protected Group()
         {
@@ -177,7 +174,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the the distinguished name of the group.
+        /// Gets the distinguished name of the group.
         /// </summary>
         /// <value>The distinguished name of the group.</value>
         public string DistinguishedName
@@ -204,6 +201,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the group object.
         /// </summary>
         /// <value>The GUID of the group object.</value>
+        [SuppressMessage(
+            "Naming",
+            "CA1720:Identifier contains type name",
+            Justification = "Too Bad. It is what it is.")]
         public Guid Guid
         {
             get
@@ -276,7 +277,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the name of the sam account name of the group
+        /// Gets the name of the sam account name of the group.
         /// </summary>
         /// <value>The sam account name of the group.</value>
         public string SamAccountName
@@ -308,7 +309,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -320,7 +321,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -332,20 +333,18 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             return !IsFlagSet(
                 ADS_GROUP_TYPE.SECURITY_ENABLED,
-                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype")));
+                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype"), CultureInfo.InvariantCulture));
         }
 
         /// <summary>
         /// Determines whether this group instance is a domain local group.
         /// </summary>
-        /// <returns>
-        /// <c>true</c> if this group instance is a domain local group; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if this group instance is a domain local group; otherwise, <c>false</c>.</returns>
         public bool IsDomainLocal()
         {
             return IsFlagSet(
                 ADS_GROUP_TYPE.DOMAIN_LOCAL_GROUP,
-                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype")));
+                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype"), CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -356,7 +355,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             return IsFlagSet(
                 ADS_GROUP_TYPE.GLOBAL_GROUP,
-                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype")));
+                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype"), CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -367,7 +366,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             return IsFlagSet(
                 ADS_GROUP_TYPE.SECURITY_ENABLED,
-                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype")));
+                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype"), CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -378,7 +377,12 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             return IsFlagSet(
                 ADS_GROUP_TYPE.UNIVERSAL_GROUP,
-                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype")));
+                Convert.ToInt32(GetNodeValue("//DirectoryObject/grouptype"), CultureInfo.InvariantCulture));
+        }
+
+        private static bool IsFlagSet(ADS_GROUP_TYPE flag, int flagsToCheck)
+        {
+            return (flagsToCheck & (int)flag) == (int)flag;
         }
 
         private void CheckType()
@@ -388,11 +392,6 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
             {
                 throw new ArgumentException("The directory object does not represent a group!");
             }
-        }
-
-        private bool IsFlagSet(ADS_GROUP_TYPE flag, int flagsToCheck)
-        {
-            return (flagsToCheck & (int)flag) == (int)flag;
         }
     }
 }

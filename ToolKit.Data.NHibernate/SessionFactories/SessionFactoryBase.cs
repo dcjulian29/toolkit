@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +17,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
     /// </summary>
     public abstract class SessionFactoryBase : IDisposable
     {
-        private static ILog _log = LogManager.GetLogger<SessionFactoryBase>();
+        private static readonly ILog _log = LogManager.GetLogger<SessionFactoryBase>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionFactoryBase"/> class.
@@ -51,7 +51,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
                 .Where(ValidateAssembly)
                 .Aggregate(
                     cfg,
-                    (current, assembly) => 
+                    (current, assembly) =>
                         current.Mappings(m => m.FluentMappings.AddFromAssembly(assembly)));
 
             if (createDatabase)
@@ -82,7 +82,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
         /// Gets the connection string used for this session.
         /// </summary>
         /// <value>
-        /// The connection string used for this session
+        /// The connection string used for this session.
         /// </value>
         public string ConnectionString { get; private set; }
 
@@ -118,7 +118,7 @@ namespace ToolKit.Data.NHibernate.SessionFactories
         }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
+        /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
         /// <c>true</c> to release both managed and unmanaged resources;
@@ -158,10 +158,10 @@ namespace ToolKit.Data.NHibernate.SessionFactories
 
                 while (baseType != null)
                 {
-                    if (!String.IsNullOrEmpty(baseType.FullName)
+                    if (!string.IsNullOrEmpty(baseType.FullName)
                       && baseType.FullName.Contains("FluentNHibernate.Mapping.ClassMap"))
                     {
-                        _log.DebugFormat("{0} mapping found.", type);
+                        _log.Debug($"{type} mapping found.");
                         return true;
                     }
 
@@ -169,28 +169,28 @@ namespace ToolKit.Data.NHibernate.SessionFactories
                 }
             }
 
-            _log.DebugFormat("{0} does not contain any mappings.", assembly.FullName);
+            _log.Debug($"{assembly.FullName} does not contain any mappings.");
 
             return false;
         }
 
         private void CheckIfConnectionStringIsConnectionKey(string connectionString)
         {
-            if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings[connectionString]))
+            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[connectionString]))
             {
-                _log.DebugFormat("\"{0}\" was loaded from Application Settings...", connectionString);
+                _log.Debug($"\"{connectionString}\" was loaded from Application Settings...");
                 ConnectionString = ConfigurationManager.AppSettings[connectionString];
             }
 
             var setting = ConfigurationManager.ConnectionStrings[connectionString];
 
-            if (!String.IsNullOrEmpty(setting != null ? setting.ConnectionString : null))
+            if (!string.IsNullOrEmpty(setting?.ConnectionString))
             {
-                _log.DebugFormat("\"{0}\" was loaded from Connection Settings...", connectionString);
+                _log.Debug($"\"{connectionString}\" was loaded from Connection Settings...");
                 ConnectionString = setting.ConnectionString;
             }
 
-            if (!String.IsNullOrWhiteSpace(ConnectionString))
+            if (!string.IsNullOrWhiteSpace(ConnectionString))
             {
                 return;
             }

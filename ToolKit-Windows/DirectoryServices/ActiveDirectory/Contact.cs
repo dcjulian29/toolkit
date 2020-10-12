@@ -1,20 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
-using Common.Logging;
-using ToolKit;
 
 namespace ToolKit.DirectoryServices.ActiveDirectory
 {
     /// <summary>
-    /// This class represents an Active Directory Contact
+    /// This class represents an Active Directory Contact.
     /// </summary>
     public class Contact : DirectoryObject
     {
-        private static ILog _log = LogManager.GetLogger<Contact>();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Contact"/> class.
         /// </summary>
@@ -94,10 +91,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Contact"></see> class. This constructor is
-        /// not public and should only be used when the derived class wants to add an additional
-        /// constructor. At some point though, the derived classes' constructor needs to call the
-        /// "Initialize" method to load up the internal data structures.
+        /// Initializes a new instance of the <see cref="Contact"/> class.
         /// </summary>
         protected Contact()
         {
@@ -152,7 +146,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the company that the contact belongs to
+        /// Gets the company that the contact belongs to.
         /// </summary>
         /// <value>The company that the contact belongs to.</value>
         public string Company
@@ -176,14 +170,14 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the country code for the contact
+        /// Gets the country code for the contact.
         /// </summary>
         /// <value>The country code for the contact.</value>
         public int CountryCode
         {
             get
             {
-                return Convert.ToInt32(GetNodeValue("//DirectoryObject/countrycode"));
+                return Convert.ToInt32(GetNodeValue("//DirectoryObject/countrycode"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -239,7 +233,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         }
 
         /// <summary>
-        /// Gets the the distinguished name of the contact.
+        /// Gets the distinguished name of the contact.
         /// </summary>
         /// <value>The distinguished name of the contact.</value>
         public string DistinguishedName
@@ -290,6 +284,10 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         /// Gets the GUID of the contact object.
         /// </summary>
         /// <value>The GUID of the contact object.</value>
+        [SuppressMessage(
+            "Naming",
+            "CA1720:Identifier contains type name",
+            Justification = "Too Bad. It is what it is.")]
         public Guid Guid
         {
             get
@@ -537,7 +535,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usncreated"), CultureInfo.CurrentCulture);
             }
         }
 
@@ -549,7 +547,7 @@ namespace ToolKit.DirectoryServices.ActiveDirectory
         {
             get
             {
-                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"));
+                return Convert.ToInt64(GetNodeValue("//DirectoryObject/usnchanged"), CultureInfo.CurrentCulture);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,7 +58,7 @@ namespace UnitTests.Network
             // Assert
             Assert.Equal(expected, actual);
         }
-        
+
         [Fact]
         public void Constructor_Should_ThrowArgumentException_When_ProvidedWithInvalidOctets()
         {

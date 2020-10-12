@@ -1,12 +1,15 @@
 using System;
-
-//// ReSharper disable InconsistentNaming
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
     /// <summary>
     /// Specifies the types of attributes represented by an attributeSchema object.
     /// </summary>
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     [Flags]
     public enum ADS_SYSTEM_FLAG : uint
     {

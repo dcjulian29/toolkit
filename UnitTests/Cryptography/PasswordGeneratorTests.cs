@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using ToolKit.Cryptography;
 using Xunit;
@@ -26,7 +26,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var expected = @"{;:;\\\?";
-            var options = PasswordComplexity.UseExtendedCharacters;
+            var options = PasswordComplexities.UseExtendedCharacters;
             var generator = new PasswordGenerator(123, options);
 
             // Act
@@ -41,7 +41,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var expected = @"ndybgcrv";
-            var options = PasswordComplexity.UseLowerCharacters;
+            var options = PasswordComplexities.UseLowerCharacters;
             var generator = new PasswordGenerator(123, options);
 
             // Act
@@ -56,7 +56,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var expected = @"33296417";
-            var options = PasswordComplexity.UseNumbers;
+            var options = PasswordComplexities.UseNumbers;
             var generator = new PasswordGenerator(123, options);
 
             // Act
@@ -71,7 +71,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var expected = @"+!=#^*!!";
-            var options = PasswordComplexity.UseSymbols;
+            var options = PasswordComplexities.UseSymbols;
             var generator = new PasswordGenerator(123, options);
 
             // Act
@@ -86,7 +86,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var expected = @"NDYBGCRV";
-            var options = PasswordComplexity.UseUpperCharacters;
+            var options = PasswordComplexities.UseUpperCharacters;
             var generator = new PasswordGenerator(123, options);
 
             // Act
@@ -116,7 +116,7 @@ namespace UnitTests.Cryptography
         {
             // Arrange
             var expected = @"XIlCiUthquYVnDMGuYuKWnYWJvByCzQneCRViMbEcIygKvAlOL";
-            var options = PasswordComplexity.UseUpperCharacters | PasswordComplexity.UseLowerCharacters;
+            var options = PasswordComplexities.UseUpperCharacters | PasswordComplexities.UseLowerCharacters;
 
             var generator = new PasswordGenerator(20161122, options);
 
@@ -144,7 +144,7 @@ namespace UnitTests.Cryptography
         public void Generate_Should_ThrowException_When_NotEnoughUniqueCharactersAvailable()
         {
             // Arrange
-            var options = PasswordComplexity.UseNumbers | PasswordComplexity.NoRepeatingCharacters;
+            var options = PasswordComplexities.UseNumbers | PasswordComplexities.NoRepeatingCharacters;
             var generator = new PasswordGenerator(123, options);
 
             // Act & Assert

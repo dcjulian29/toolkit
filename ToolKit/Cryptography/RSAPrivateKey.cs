@@ -1,5 +1,5 @@
-﻿using System;
-using System.Configuration;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -12,35 +12,59 @@ namespace ToolKit.Cryptography
     /// Represents a private encryption key. Not intended to be shared, as it contains all the
     /// elements that make up the key.
     /// </summary>
+    [SuppressMessage(
+        "Design",
+        "RCS1187:Use constant instead of field.",
+        Justification = "This time the analysis rule don't make sense for this class")]
+    [SuppressMessage(
+        "Performance",
+        "CA1802:Use literals where appropriate",
+        Justification = "This time the analysis rule don't make sense for this class")]
     public class RsaPrivateKey
     {
-        private const string ElementCoefficient = "InverseQ";
-        private const string ElementExponent = "Exponent";
-        private const string ElementModulus = "Modulus";
-        private const string ElementParent = "RSAKeyValue";
-        private const string ElementPrimeExponentP = "DP";
-        private const string ElementPrimeExponentQ = "DQ";
-        private const string ElementPrimeP = "P";
-        private const string ElementPrimeQ = "Q";
-        private const string ElementPrivateExponent = "D";
-        private const string KeyCoefficient = "PrivateKey.InverseQ";
-        private const string KeyExponent = "PublicKey.Exponent";
-        private const string KeyModulus = "PublicKey.Modulus";
-        private const string KeyPrimeExponentP = "PrivateKey.DP";
-        private const string KeyPrimeExponentQ = "PrivateKey.DQ";
-        private const string KeyPrimeP = "PrivateKey.P";
-        private const string KeyPrimeQ = "PrivateKey.Q";
-        private const string KeyPrivateExponent = "PrivateKey.D";
+        private static readonly string _elementCoefficient = "InverseQ";
+
+        private static readonly string _elementExponent = "Exponent";
+
+        private static readonly string _elementModulus = "Modulus";
+
+        private static readonly string _elementParent = "RSAKeyValue";
+
+        private static readonly string _elementPrimeExponentP = "DP";
+
+        private static readonly string _elementPrimeExponentQ = "DQ";
+
+        private static readonly string _elementPrimeP = "P";
+
+        private static readonly string _elementPrimeQ = "Q";
+
+        private static readonly string _elementPrivateExponent = "D";
+
+        private static readonly string _keyCoefficient = "PrivateKey.InverseQ";
+
+        private static readonly string _keyExponent = "PublicKey.Exponent";
+
+        private static readonly string _keyModulus = "PublicKey.Modulus";
+
+        private static readonly string _keyPrimeExponentP = "PrivateKey.DP";
+
+        private static readonly string _keyPrimeExponentQ = "PrivateKey.DQ";
+
+        private static readonly string _keyPrimeP = "PrivateKey.P";
+
+        private static readonly string _keyPrimeQ = "PrivateKey.Q";
+
+        private static readonly string _keyPrivateExponent = "PrivateKey.D";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RsaPrivateKey"/> class.
+        /// Initializes a new instance of the <see cref="RsaPrivateKey" /> class.
         /// </summary>
         /// <param name="keyXml">The private key represented as a XML string.</param>
         public RsaPrivateKey(string keyXml)
         {
             Coefficient = ReadXmlElement(keyXml, "InverseQ");
-            Exponent = ReadXmlElement(keyXml, ElementExponent);
-            Modulus = ReadXmlElement(keyXml, ElementModulus);
+            Exponent = ReadXmlElement(keyXml, _elementExponent);
+            Modulus = ReadXmlElement(keyXml, _elementModulus);
             PrimeExponentP = ReadXmlElement(keyXml, "DP");
             PrimeExponentQ = ReadXmlElement(keyXml, "DQ");
             PrimeP = ReadXmlElement(keyXml, "P");
@@ -49,7 +73,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RsaPrivateKey"/> class.
+        /// Initializes a new instance of the <see cref="RsaPrivateKey" /> class.
         /// </summary>
         public RsaPrivateKey()
         {
@@ -108,22 +132,23 @@ namespace ToolKit.Cryptography
                 throw new ArgumentException("Certificate File does not exist!", nameof(certificateFileName));
             }
 
-            if (String.IsNullOrEmpty(privateKeyPassword))
+            if (string.IsNullOrEmpty(privateKeyPassword))
             {
                 throw new ArgumentNullException(nameof(privateKeyPassword));
             }
 
             var rawCert = File.ReadAllBytes(certificateFileName);
 
-            var cert = new X509Certificate2();
+            using (var cert = new X509Certificate2())
+            {
+                cert.Import(rawCert, privateKeyPassword, X509KeyStorageFlags.Exportable);
 
-            cert.Import(rawCert, privateKeyPassword, X509KeyStorageFlags.Exportable);
-
-            return new RsaPrivateKey(cert.PrivateKey.ToXmlString(true));
+                return new RsaPrivateKey(cert.PrivateKey.ToXmlString(true));
+            }
         }
 
         /// <summary>
-        /// Load private key from app.config or web.config file
+        /// Load private key from app.config or web.config file.
         /// </summary>
         /// <returns>an AsymmetricPrivateKey instance containing the private key, or null.</returns>
         public static RsaPrivateKey LoadFromEnvironment()
@@ -131,16 +156,16 @@ namespace ToolKit.Cryptography
             var key = new RsaPrivateKey
             {
                 // Public Key parts
-                Modulus = ReadKeyFromEnvironment(KeyModulus),
-                Exponent = ReadKeyFromEnvironment(KeyExponent),
+                Modulus = ReadKeyFromEnvironment(_keyModulus),
+                Exponent = ReadKeyFromEnvironment(_keyExponent),
 
                 // Private Key parts
-                PrimeP = ReadKeyFromEnvironment(KeyPrimeP),
-                PrimeQ = ReadKeyFromEnvironment(KeyPrimeQ),
-                PrimeExponentP = ReadKeyFromEnvironment(KeyPrimeExponentP),
-                PrimeExponentQ = ReadKeyFromEnvironment(KeyPrimeExponentQ),
-                Coefficient = ReadKeyFromEnvironment(KeyCoefficient),
-                PrivateExponent = ReadKeyFromEnvironment(KeyPrivateExponent)
+                PrimeP = ReadKeyFromEnvironment(_keyPrimeP),
+                PrimeQ = ReadKeyFromEnvironment(_keyPrimeQ),
+                PrimeExponentP = ReadKeyFromEnvironment(_keyPrimeExponentP),
+                PrimeExponentQ = ReadKeyFromEnvironment(_keyPrimeExponentQ),
+                Coefficient = ReadKeyFromEnvironment(_keyCoefficient),
+                PrivateExponent = ReadKeyFromEnvironment(_keyPrivateExponent)
             };
 
             return key;
@@ -191,18 +216,27 @@ namespace ToolKit.Cryptography
                 mode = FileMode.Create;
             }
 
-            using (var stream = new FileStream(filePath, mode))
+            FileStream stream = null;
+
+            try
             {
-                using (var sw = new StreamWriter(stream))
+                stream = new FileStream(filePath, mode);
+                using (var writer = new StreamWriter(stream))
                 {
-                    sw.Write(ToXml());
-                    sw.Close();
+                    stream = null;
+
+                    writer.Write(ToXml());
+                    writer.Close();
                 }
+            }
+            finally
+            {
+                stream?.Dispose();
             }
         }
 
         /// <summary>
-        /// Converts this private key to an RSAParameters object
+        /// Converts this private key to an RSAParameters object.
         /// </summary>
         /// <returns>A RSAParameters instance containing the parameters from this key.</returns>
         public RSAParameters ToParameters()
@@ -245,16 +279,16 @@ namespace ToolKit.Cryptography
         {
             var sb = new StringBuilder();
 
-            sb.Append(WriteXmlNode(ElementParent));
-            sb.Append(WriteXmlElement(ElementCoefficient, Coefficient));
-            sb.Append(WriteXmlElement(ElementExponent, Exponent));
-            sb.Append(WriteXmlElement(ElementModulus, Modulus));
-            sb.Append(WriteXmlElement(ElementPrimeExponentP, PrimeExponentP));
-            sb.Append(WriteXmlElement(ElementPrimeExponentQ, PrimeExponentQ));
-            sb.Append(WriteXmlElement(ElementPrimeP, PrimeP));
-            sb.Append(WriteXmlElement(ElementPrimeQ, PrimeQ));
-            sb.Append(WriteXmlElement(ElementPrivateExponent, PrivateExponent));
-            sb.Append(WriteXmlNode(ElementParent, true));
+            sb.Append(WriteXmlNode(_elementParent));
+            sb.Append(WriteXmlElement(_elementCoefficient, Coefficient));
+            sb.Append(WriteXmlElement(_elementExponent, Exponent));
+            sb.Append(WriteXmlElement(_elementModulus, Modulus));
+            sb.Append(WriteXmlElement(_elementPrimeExponentP, PrimeExponentP));
+            sb.Append(WriteXmlElement(_elementPrimeExponentQ, PrimeExponentQ));
+            sb.Append(WriteXmlElement(_elementPrimeP, PrimeP));
+            sb.Append(WriteXmlElement(_elementPrimeQ, PrimeQ));
+            sb.Append(WriteXmlElement(_elementPrivateExponent, PrivateExponent));
+            sb.Append(WriteXmlNode(_elementParent, true));
 
             return sb.ToString();
         }
@@ -263,12 +297,12 @@ namespace ToolKit.Cryptography
         {
             var s = Environment.GetEnvironmentVariable(key);
 
-            if (!String.IsNullOrEmpty(s))
+            if (string.IsNullOrEmpty(s) && required)
             {
-                return s;
+                throw new ArgumentException($"key <{key}> is missing from Missing from the Environment.");
             }
 
-            throw new ApplicationException($"key <{key}> is missing from Missing from the Environment.");
+            return s;
         }
 
         private static string ReadXmlElement(string xml, string element)

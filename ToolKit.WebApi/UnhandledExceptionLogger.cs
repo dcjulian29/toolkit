@@ -1,4 +1,4 @@
-﻿using System.Web.Http;
+using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using Common.Logging;
 
@@ -9,7 +9,7 @@ namespace ToolKit.WebApi
     /// </summary>
     public class UnhandledExceptionLogger : ExceptionLogger
     {
-        private static ILog _log = LogManager.GetLogger<UnhandledExceptionLogger>();
+        private static readonly ILog _log = LogManager.GetLogger<UnhandledExceptionLogger>();
 
         /// <summary>
         /// Adds an logger to the <see cref="HttpConfiguration"/> instance to log unhandled exceptions.
@@ -29,9 +29,16 @@ namespace ToolKit.WebApi
         /// <param name="context">The exception logger context.</param>
         public override void Log(ExceptionLoggerContext context)
         {
-            var exception = context.Exception;
+            if (context != null)
+            {
+                var exception = context.Exception;
 
-            _log.Fatal(m => m(exception.Message), exception);
+                _log.Fatal(exception.Message, exception);
+            }
+            else
+            {
+                _log.Fatal("A non-handled exception occurred and no Exception Logger was configured!");
+            }
         }
     }
 }

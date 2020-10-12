@@ -1,6 +1,6 @@
-#tool "nuget:?package=xunit.runner.console"
-#tool "nuget:?package=OpenCover"
-#tool "nuget:?package=ReportGenerator"
+#tool "nuget:?package=xunit.runner.console&version=2.4.1"
+#tool "nuget:?package=OpenCover&version=4.7.922"
+#tool "nuget:?package=ReportGenerator&version=4.5.0"
 
 var target = Argument("target", "Default");
 
@@ -20,11 +20,9 @@ var projectName = "toolkit";
 
 var baseDirectory = MakeAbsolute(Directory("."));
 
-var buildDirectory = baseDirectory + "\\.build";
-var outputDirectory = buildDirectory + "\\output";
-var packageDirectory = baseDirectory + "\\packages";
-
-var solutionFile = String.Format("{0}\\{1}.sln", baseDirectory, projectName);
+var buildDirectory = baseDirectory + "/.build";
+var outputDirectory = buildDirectory + "/output";
+var packageDirectory = baseDirectory + "/packages";
 
 IEnumerable<string> stdout;
 StartProcess ("git", new ProcessSettings {
@@ -64,11 +62,26 @@ if (branch != "master") {
 }
 
 var msbuildSettings = new MSBuildSettings {
+    ArgumentCustomization = args => args.Append("/consoleloggerparameters:ErrorsOnly"),
     Configuration = configuration,
     ToolVersion = MSBuildToolVersion.VS2019,
     NodeReuse = false,
-    WarningsAsError = false
+    WarningsAsError = true
 }.WithProperty("OutDir", outputDirectory);
+
+var dotNetCoreBuildSettings = new DotNetCoreBuildSettings {
+    Configuration = configuration,
+    OutputDirectory = outputDirectory,
+    MSBuildSettings = new DotNetCoreMSBuildSettings {
+        TreatAllWarningsAs = MSBuildTreatAllWarningsAs.Error,
+        Verbosity = DotNetCoreVerbosity.Normal
+    },
+    NoDependencies = true,
+    NoIncremental = true,
+    NoRestore = true
+};
+
+var restoreSettings = new DotNetCoreRestoreSettings { NoDependencies = true };
 
 Setup(setupContext =>
 {
@@ -106,7 +119,9 @@ Task("Clean")
     .Does(() =>
     {
         CleanDirectories(buildDirectory);
-        MSBuild(solutionFile, msbuildSettings.WithTarget("Clean"));
+        CleanDirectories(baseDirectory + "/**/bin");
+        CleanDirectories(baseDirectory + "/**/obj");
+        CleanDirectories(packageDirectory);
     });
 
 Task("Init")
@@ -129,7 +144,7 @@ Task("Version")
             assemblyVersion = version;
         }
 
-        CreateAssemblyInfo(buildDirectory + @"\CommonAssemblyInfo.cs", new AssemblyInfoSettings {
+        CreateAssemblyInfo(buildDirectory + "/CommonAssemblyInfo.cs", new AssemblyInfoSettings {
             Version = assemblyVersion,
             FileVersion = assemblyVersion,
             InformationalVersion = version,
@@ -139,39 +154,156 @@ Task("Version")
         });
     });
 
-Task("PackageClean")
-    .Does(() =>
-    {
-        CleanDirectories(packageDirectory);
-    });
-
-Task("PackageRestore")
-    .IsDependentOn("Init")
-    .Does(() =>
-    {
-        NuGetRestore(solutionFile);
-
-        // In a CI environment, there really isn't any value to the packages' PDB files and it confuses the code coverage task
-        var files = GetFiles(packageDirectory + "/**/*.pdb");
-        DeleteFiles(files);
-    });
-
 Task("Compile")
-    .IsDependentOn("PackageRestore")
+    .IsDependentOn("Compile.ToolKit")
+    .IsDependentOn("Compile.ToolKit-Windows")
+    .IsDependentOn("Compile.ToolKit.Data.EFCore")
+    .IsDependentOn("Compile.ToolKit.Data.EntityFramework")
+    .IsDependentOn("Compile.ToolKit.Data.MongoDb")
+    .IsDependentOn("Compile.ToolKit.Data.Nhibernate")
+    .IsDependentOn("Compile.ToolKit.Data.Nhibernate.UnitTests")
+    .IsDependentOn("Compile.ToolKit.WebApi")
+    .IsDependentOn("Compile.ToolKit.Wpf");
+
+Task("Compile.ToolKit")
+    .IsDependentOn("Init")
     .IsDependentOn("Version")
     .Does(() =>
     {
-        MSBuild(solutionFile, msbuildSettings.WithTarget("ReBuild"));
+        var settings = dotNetCoreBuildSettings;
+        settings.MSBuildSettings.AddFileLogger(
+            new MSBuildFileLoggerSettings {
+                LogFile = buildDirectory + "/msbuild-ToolKit.log" });
+
+        DotNetCoreRestore("ToolKit/ToolKit.csproj", restoreSettings);
+        DotNetCoreBuild("ToolKit/ToolKit.csproj", settings);
+    });
+
+Task("Compile.ToolKit-Windows")
+    .IsDependentOn("Compile.ToolKit")
+    .Does(() =>
+    {
+        var buildSettings = msbuildSettings.WithTarget("ReBuild");
+        buildSettings.AddFileLogger(
+                new MSBuildFileLogger {
+                    LogFile = buildDirectory + "/msbuild-ToolKit-Windows.log" });
+
+        NuGetRestore("ToolKit-Windows/ToolKit-Windows.csproj");
+        MSBuild("ToolKit-Windows/ToolKit-Windows.csproj", buildSettings);
+    });
+
+Task("Compile.ToolKit.WebApi")
+    .IsDependentOn("Version")
+    .Does(() =>
+    {
+        var settings = dotNetCoreBuildSettings;
+        settings.MSBuildSettings.AddFileLogger(
+            new MSBuildFileLoggerSettings {
+                LogFile = buildDirectory + "/msbuild-ToolKit.WebApi.log" });
+
+        DotNetCoreRestore("ToolKit.WebApi/ToolKit.WebApi.csproj", restoreSettings);
+        DotNetCoreBuild("ToolKit.WebApi/ToolKit.WebApi.csproj", settings);
+    });
+
+Task("Compile.ToolKit.Wpf")
+    .IsDependentOn("Version")
+    .Does(() =>
+    {
+        var buildSettings = msbuildSettings.WithTarget("ReBuild");
+        buildSettings.AddFileLogger(
+                new MSBuildFileLogger {
+                    LogFile = buildDirectory + "/msbuild-ToolKit.Wpf.log" });
+
+        NuGetRestore("ToolKit.Wpf/ToolKit.Wpf.csproj");
+        MSBuild("ToolKit.Wpf/ToolKit.Wpf.csproj", buildSettings);
+    });
+
+Task("Compile.ToolKit.Data.EFCore")
+    .IsDependentOn("Compile.ToolKit")
+    .Does(() =>
+    {
+        var settings = dotNetCoreBuildSettings;
+        settings.MSBuildSettings.AddFileLogger(
+            new MSBuildFileLoggerSettings {
+                LogFile = buildDirectory + "/msbuild-ToolKit.Data.EFCore.log" });
+
+        DotNetCoreRestore("ToolKit.Data.EFCore/ToolKit.Data.EFCore.csproj", restoreSettings);
+        DotNetCoreBuild("ToolKit.Data.EFCore/ToolKit.Data.EFCore.csproj", settings);
+    });
+
+Task("Compile.ToolKit.Data.EntityFramework")
+    .IsDependentOn("Compile.ToolKit")
+    .Does(() =>
+    {
+        var buildSettings = msbuildSettings.WithTarget("ReBuild");
+        buildSettings.AddFileLogger(
+                new MSBuildFileLogger {
+                    LogFile = buildDirectory + "/msbuild-ToolKit.Data.EntityFramework.log" });
+
+        NuGetRestore("ToolKit.Data.EntityFramework/ToolKit.Data.EntityFramework.csproj");
+        MSBuild("ToolKit.Data.EntityFramework/ToolKit.Data.EntityFramework.csproj", buildSettings);
+    });
+
+Task("Compile.ToolKit.Data.MongoDb")
+    .IsDependentOn("Compile.ToolKit")
+    .Does(() =>
+    {
+        var settings = dotNetCoreBuildSettings;
+        settings.MSBuildSettings.AddFileLogger(
+            new MSBuildFileLoggerSettings {
+                LogFile = buildDirectory + "/msbuild-ToolKit.Data.MongoDb.log" });
+
+        DotNetCoreRestore("ToolKit.Data.MongoDb/ToolKit.Data.MongoDb.csproj", restoreSettings);
+        DotNetCoreBuild("ToolKit.Data.MongoDb/ToolKit.Data.MongoDb.csproj", settings);
+    });
+
+Task("Compile.ToolKit.Data.NHibernate")
+    .IsDependentOn("Compile.ToolKit")
+    .Does(() =>
+    {
+        var settings = dotNetCoreBuildSettings;
+        settings.MSBuildSettings.AddFileLogger(
+            new MSBuildFileLoggerSettings {
+                LogFile = buildDirectory + "/msbuild-ToolKit.Data.NHibernate.log" });
+
+        DotNetCoreRestore("ToolKit.Data.NHibernate/ToolKit.Data.NHibernate.csproj", restoreSettings);
+        DotNetCoreBuild("ToolKit.Data.NHibernate/ToolKit.Data.NHibernate.csproj", settings);
+    });
+
+Task("Compile.ToolKit.Data.NHibernate.UnitTests")
+    .IsDependentOn("Compile.ToolKit.Data.NHibernate")
+    .Does(() =>
+    {
+        var settings = dotNetCoreBuildSettings;
+        settings.MSBuildSettings.AddFileLogger(
+            new MSBuildFileLoggerSettings {
+                LogFile = buildDirectory + "/msbuild-ToolKit.Data.NHibernate.UnitTests.log" });
+
+        DotNetCoreRestore("ToolKit.Data.NHibernate.UnitTests/ToolKit.Data.NHibernate.UnitTests.csproj", restoreSettings);
+        DotNetCoreBuild("ToolKit.Data.NHibernate.UnitTests/ToolKit.Data.NHibernate.UnitTests.csproj", settings);
+    });
+
+Task("Compile.UnitTests")
+    .IsDependentOn("Compile")
+    .Does(() =>
+    {
+        var buildSettings = msbuildSettings.WithTarget("ReBuild");
+        buildSettings.AddFileLogger(
+                new MSBuildFileLogger {
+                    LogFile = buildDirectory + "/msbuild-UnitTests.log" });
+
+        NuGetRestore("UnitTests/UnitTests.csproj");
+        MSBuild("UnitTests/UnitTests.csproj", buildSettings);
     });
 
 Task("Test")
     .IsDependentOn("UnitTest");
 
 Task("UnitTest")
-    .IsDependentOn("Compile")
+    .IsDependentOn("Compile.UnitTests")
     .Does(() =>
     {
-        XUnit2(outputDirectory + "\\UnitTests.dll",
+        XUnit2(outputDirectory + "/UnitTests.dll",
             new XUnit2Settings {
                 Parallelism = ParallelismOption.All,
                 ShadowCopy = false
@@ -179,26 +311,33 @@ Task("UnitTest")
     });
 
 Task("Coverage")
-    .IsDependentOn("Compile")
+    .IsDependentOn("Compile.UnitTests")
     .Does(() =>
     {
-        CreateDirectory(buildDirectory + "\\coverage");
+        CreateDirectory(buildDirectory + "/coverage");
 
         OpenCover(tool => {
-            tool.XUnit2(outputDirectory + "\\UnitTests.dll",
+            tool.XUnit2(outputDirectory + "/UnitTests.dll",
                 new XUnit2Settings {
                     Parallelism = ParallelismOption.All,
+
                     ShadowCopy = false });
             },
-            new FilePath(buildDirectory + "\\coverage\\coverage.xml"),
+            new FilePath(buildDirectory + "/coverage/coverage.xml"),
             new OpenCoverSettings() { Register = "user" }
                 .WithFilter(@"+[*]*")
                 .WithFilter(@"-[UnitTests]*")
                 .WithFilter(@"-[xunit.*]*")
+                .WithFilter(@"-[Common.*]*")
                 .ExcludeByAttribute("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")
-                .ExcludeByFile(@"*\\*Designer.cs;*\\*.g.cs;*.*.g.i.cs"));
+                .ExcludeByFile("*/*Designer.cs;*/*.g.cs;*.*.g.i.cs"));
+    });
 
-        ReportGenerator(buildDirectory + "\\coverage\\coverage.xml", buildDirectory + "\\coverage");
+Task("Coverage.Report")
+    .IsDependentOn("Coverage")
+    .Does(() =>
+    {
+        ReportGenerator(buildDirectory + "/coverage/coverage.xml", buildDirectory + "/coverage");
     });
 
 Task("TeamCity")
@@ -268,7 +407,7 @@ Task("Package")
         CreateDirectory(buildDirectory + "\\packages");
 
         var nuGetPackSettings = new NuGetPackSettings {
-            Version = version,
+            Version = version.Replace('/', '.'),
             OutputDirectory = buildDirectory + "\\packages"
         };
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ToolKit.DirectoryServices;
 using Xunit;
 
@@ -18,7 +18,7 @@ namespace UnitTests.DirectoryServices
             var baseDN = new DistinguishedName("DC=example,DC=com");
 
             // Act
-            DistinguishedName childDN = baseDN.Child("OU=Users,OU=HDQRK");
+            var childDN = baseDN.Child("OU=Users,OU=HDQRK");
 
             // Assert
             Assert.Equal(fullDN.ToString(), childDN.ToString());
@@ -136,9 +136,9 @@ namespace UnitTests.DirectoryServices
         public void Constructor_Should_ParseCorrectly_When_DistinguishedNameContainsOID()
         {
             // Arrange
-            var dn1 = new DistinguishedName(@"OID.3.43.128=Keith");
-            var dn2 = new DistinguishedName(@"3.43.128=Keith");
-            var dn3 = new DistinguishedName(@"oid.3.43.128=Keith");
+            var dn1 = new DistinguishedName("OID.3.43.128=Keith");
+            var dn2 = new DistinguishedName("3.43.128=Keith");
+            var dn3 = new DistinguishedName("oid.3.43.128=Keith");
 
             // Act
 
@@ -156,7 +156,7 @@ namespace UnitTests.DirectoryServices
             var dn3 = new DistinguishedName("oid.32.21.0   =  Jay     ");
 
             // Act
-            
+
             // Assert
             Assert.Equal(dn1, dn2);
             Assert.Equal(dn2, dn3);
@@ -250,12 +250,12 @@ namespace UnitTests.DirectoryServices
         public void Constructor_Should_ParseCorrectly_When_DistinguishedNameIsAnEmptyString()
         {
             // Arrange
-            var dn = new DistinguishedName(String.Empty);
+            var dn = new DistinguishedName(string.Empty);
 
             // Act
 
             // Assert
-            Assert.Equal(String.Empty, dn.ToString());
+            Assert.Equal(string.Empty, dn.ToString());
         }
 
         [Fact]
@@ -286,26 +286,26 @@ namespace UnitTests.DirectoryServices
         public void Constructor_Should_ParseCorrectly_When_VariousDNCausedParsingIssues()
         {
             // Arrange
-            var listOfDistinguishedNames = new string[] 
+            var listOfDistinguishedNames = new string[]
             {
                 "CN=gen-boslwdf&b,OU=Users,OU=BOSLW,DC=fs,DC=corp,DC=example,DC=com",
-                "CN=Exchange Administrators,OU=MVCI,OU=Exchange 5.5 Directory Objects,DC=mv,DC=corp,DC=example,DC=com", 
-                "CN=GPO-SUBJW-Restricted Local Drives,OU=Groups,OU=SUBJW,DC=int,DC=corp,DC=example,DC=com", 
+                "CN=Exchange Administrators,OU=MVCI,OU=Exchange 5.5 Directory Objects,DC=mv,DC=corp,DC=example,DC=com",
+                "CN=GPO-SUBJW-Restricted Local Drives,OU=Groups,OU=SUBJW,DC=int,DC=corp,DC=example,DC=com",
                 "CN=DF&B - International - RHRS - Managed?Franchise,OU=Exchange Distribution Groups,DC=hdq,DC=corp,DC=example,DC=com",
-                "CN=EBC\\, VA Northern,OU=Exchange Distribution Groups,DC=hdq,DC=corp,DC=example,DC=com", 
-                "CN=vquga140,OU=Users,OU=HDQRK,DC=hdq,DC=corp,DC=example,DC=com", 
-                "CN=jlmu1007,OU=Users,OU=SXFCZ,DC=int,DC=corp,DC=example,DC=com", 
+                "CN=EBC\\, VA Northern,OU=Exchange Distribution Groups,DC=hdq,DC=corp,DC=example,DC=com",
+                "CN=vquga140,OU=Users,OU=HDQRK,DC=hdq,DC=corp,DC=example,DC=com",
+                "CN=jlmu1007,OU=Users,OU=SXFCZ,DC=int,DC=corp,DC=example,DC=com",
                 "CN=AGRP-AD-West-RSM,OU=Administrative Global Groups,OU=Administrative Groups,DC=corp,DC=example,DC=com",
-                "CN=DL - BackUp Exec (CTDCA),OU=Exchange Distribution Groups,DC=hdq,DC=corp,DC=example,DC=com", 
-                "CN=dl-wst26,OU=Exchange Distribution Groups,DC=hdq,DC=corp,DC=example,DC=com", 
-                "CN=UAGRP-AD-Rit-RSM,OU=Administrative Universal Groups,OU=Administrative Groups,DC=corp,DC=example,DC=com", 
-                "OU=Administrative Universal Groups,OU=Administrative Groups,DC=corp,DC=example,DC=com", 
-                "OU=TSTOU,DC=corp,DC=example,DC=COM", 
+                "CN=DL - BackUp Exec (CTDCA),OU=Exchange Distribution Groups,DC=hdq,DC=corp,DC=example,DC=com",
+                "CN=dl-wst26,OU=Exchange Distribution Groups,DC=hdq,DC=corp,DC=example,DC=com",
+                "CN=UAGRP-AD-Rit-RSM,OU=Administrative Universal Groups,OU=Administrative Groups,DC=corp,DC=example,DC=com",
+                "OU=Administrative Universal Groups,OU=Administrative Groups,DC=corp,DC=example,DC=com",
+                "OU=TSTOU,DC=corp,DC=example,DC=COM",
                 "OU=ENTLOG,DC=MICROSOFT,DC=COM",
-                "DC=corp,DC=example,DC=COM", 
-                "DC=example,DC=COM", 
-                "DC=CORP,DC=LOCAL", 
-                "CN=Xerox Document Imaging (WERCC),OU=Users,OU=TSTOU,DC=hdq,DC=corp,DC=example,DC=com" 
+                "DC=corp,DC=example,DC=COM",
+                "DC=example,DC=COM",
+                "DC=CORP,DC=LOCAL",
+                "CN=Xerox Document Imaging (WERCC),OU=Users,OU=TSTOU,DC=hdq,DC=corp,DC=example,DC=com"
             };
 
             // Act
@@ -325,10 +325,7 @@ namespace UnitTests.DirectoryServices
             // Act
 
             // Assert
-            Assert.Throws<InvalidDistinguishedNameException>(() =>
-                {
-                    var dn = new DistinguishedName("3N=TestUser");
-                });
+            Assert.Throws<InvalidDistinguishedNameException>(() => _ = new DistinguishedName("3N=TestUser"));
         }
 
         [Fact]
@@ -339,10 +336,8 @@ namespace UnitTests.DirectoryServices
             // Act
 
             // Assert
-            Assert.Throws<InvalidDistinguishedNameException>(() =>
-                {
-                    var dn = new DistinguishedName("CN=TestUser,People,DC=example,DC=com");
-                });
+            Assert.Throws<InvalidDistinguishedNameException>(
+                () => _ = new DistinguishedName("CN=TestUser,People,DC=example,DC=com"));
         }
 
         [Fact]
@@ -353,10 +348,8 @@ namespace UnitTests.DirectoryServices
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() =>
-                {
-                    var dn = new DistinguishedName("CN=#34fer4,CN=Users,DC=example,DC=com");
-                });
+            Assert.Throws<ArgumentException>(
+                () => _ = new DistinguishedName("CN=#34fer4,CN=Users,DC=example,DC=com"));
         }
 
         [Fact]
@@ -367,10 +360,7 @@ namespace UnitTests.DirectoryServices
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() =>
-                {
-                    var dn = new DistinguishedName("CN=#35fe1,CN=Users,DC=example,DC=com");
-                });
+            Assert.Throws<ArgumentException>(() => _ = new DistinguishedName("CN=#35fe1,CN=Users,DC=example,DC=com"));
         }
 
         [Fact]
@@ -381,10 +371,7 @@ namespace UnitTests.DirectoryServices
             // Act
 
             // Assert
-            Assert.Throws<InvalidDistinguishedNameException>(() =>
-                {
-                    var dn = new DistinguishedName("34..32.15=Jay");
-                });
+            Assert.Throws<InvalidDistinguishedNameException>(() => _ = new DistinguishedName("34..32.15=Jay"));
         }
 
         [Fact]
@@ -394,11 +381,8 @@ namespace UnitTests.DirectoryServices
 
             // Act
 
-             // Assert
-            Assert.Throws<InvalidDistinguishedNameException>(() =>
-                {
-                    var dn1 = new DistinguishedName("03.23.1=Jay");
-                });
+            // Assert
+            Assert.Throws<InvalidDistinguishedNameException>(() => _ = new DistinguishedName("03.23.1=Jay"));
         }
 
         [Fact]
@@ -409,24 +393,18 @@ namespace UnitTests.DirectoryServices
             // Act
 
             // Assert
-            Assert.Throws<InvalidDistinguishedNameException>(() =>
-                {
-                    var dn = new DistinguishedName("OID.34.54.15.=Jay");
-                });
+            Assert.Throws<InvalidDistinguishedNameException>(() => _ = new DistinguishedName("OID.34.54.15.=Jay"));
         }
 
         [Fact]
         public void Constructor_Should_ThrowException_When_OIDIsMixedCase()
         {
             // Arrange
-            
+
             // Act
-            
+
             // Assert
-            Assert.Throws<InvalidDistinguishedNameException>(() =>
-                {
-                    var dn = new DistinguishedName("oId.3.23.1=Jay");
-                });
+            Assert.Throws<InvalidDistinguishedNameException>(() => _ = new DistinguishedName("oId.3.23.1=Jay"));
         }
 
         [Fact]
@@ -437,10 +415,8 @@ namespace UnitTests.DirectoryServices
             // Act
 
             // Assert
-            Assert.Throws<InvalidDistinguishedNameException>(() =>
-                {
-                    var dn = new DistinguishedName("CN=\"Julian\\ Easterling");
-                });
+            Assert.Throws<InvalidDistinguishedNameException>(
+                () => _ = new DistinguishedName("CN=\"Julian\\ Easterling"));
         }
 
         [Fact]
@@ -554,7 +530,7 @@ namespace UnitTests.DirectoryServices
             // Assert
             Assert.True(result);
         }
-        
+
         [Fact]
         public void GcPath_Should_ReturnCorrectlyParsedValue()
         {
@@ -562,7 +538,7 @@ namespace UnitTests.DirectoryServices
             var dn = new DistinguishedName("OU=TSTOU,DC=corp,DC=example,DC=COM");
 
             // Act
-            
+
             // Assert
             Assert.Equal("GC://corp.example.com/OU=TSTOU,DC=corp,DC=example,DC=COM", dn.GcPath);
         }
@@ -608,11 +584,11 @@ namespace UnitTests.DirectoryServices
         [Fact]
         public void LdapPath_Should_ReturnCorrectlyParsedValue_With_ExplicitLdapServer()
         {
-            // Arrange
-            var dn = new DistinguishedName("OU=TSTOU,DC=corp,DC=example,DC=COM");
-
-            // Act
-            dn.LdapServer = "hdqrkhdqdc2";
+            // Arrange & Act
+            var dn = new DistinguishedName("OU=TSTOU,DC=corp,DC=example,DC=COM")
+            {
+                LdapServer = "hdqrkhdqdc2"
+            };
 
             // Assert
             Assert.Equal("LDAP://hdqrkhdqdc2/OU=TSTOU,DC=corp,DC=example,DC=COM", dn.LdapPath);
@@ -621,11 +597,11 @@ namespace UnitTests.DirectoryServices
         [Fact]
         public void LdapPath_Should_ReturnCorrectlyParsedValue_With_ExplicitServerPort()
         {
-            // Arrange
-            var dn = new DistinguishedName("DC=corp,DC=example,DC=COM");
-
-            // Act
-            dn.ServerPort = 5555;
+            // Arrange & Act
+            var dn = new DistinguishedName("DC=corp,DC=example,DC=COM")
+            {
+                ServerPort = 5555
+            };
 
             // Assert
             Assert.Equal("LDAP://corp.example.com:5555/DC=corp,DC=example,DC=COM", dn.LdapPath);
@@ -685,10 +661,7 @@ namespace UnitTests.DirectoryServices
             }
 
             // Assert
-            Assert.Throws<NullReferenceException>(() =>
-                {
-                    dn = dn.Parent;
-                });
+            Assert.Throws<NullReferenceException>(() => _ = dn.Parent);
         }
 
         [Fact]
@@ -698,7 +671,7 @@ namespace UnitTests.DirectoryServices
             var dn = new DistinguishedName("CN=TestUser,OU=People,DC=example,DC=com");
 
             // Act
-            for (int i = 0; i <= 3; i++)
+            for (var i = 0; i <= 3; i++)
             {
                 dn = dn.Parent;
             }

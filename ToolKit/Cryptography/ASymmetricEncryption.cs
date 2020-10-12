@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using ToolKit.Validation;
 
 namespace ToolKit.Cryptography
 {
@@ -18,7 +18,6 @@ namespace ToolKit.Cryptography
         Justification = "Encryption tend to have names not in standard dictionaries...")]
     public class ASymmetricEncryption
     {
-        private readonly int _keySize = 256;
         private readonly RsaPrivateKey _privateKey;
         private readonly RsaPublicKey _publicKey;
         private EncryptionData _password;
@@ -29,7 +28,7 @@ namespace ToolKit.Cryptography
         /// <param name="key">
         /// The private key that will be used to decrypt the password used to decrypt the password.
         /// </param>
-        /// <exception cref="ArgumentNullException">An RSA public key must be provided!</exception>
+        /// <exception cref="ArgumentNullException">An RSA public key must be provided.</exception>
         public ASymmetricEncryption(RsaPublicKey key)
         {
             _publicKey = key ?? throw
@@ -57,10 +56,12 @@ namespace ToolKit.Cryptography
         /// </param>
         /// <param name="password">The password to use during the symmetric part of the encryption.</param>
         /// <exception cref="ArgumentNullException">
-        /// password - A password must be provided! or key - An RSA public key must be provided!
+        /// password - A password must be provided! or key - An RSA public key must be provided.
         /// </exception>
         public ASymmetricEncryption(RsaPublicKey key, EncryptionData password)
         {
+            password = Check.NotNull(password, nameof(password));
+
             if (password.IsEmpty)
             {
                 throw new ArgumentNullException(nameof(password), "A password must be provided!");
@@ -91,7 +92,7 @@ namespace ToolKit.Cryptography
         /// <param name="key">
         /// The private key that will be used to decrypt the password used to decrypt the payload.
         /// </param>
-        /// <exception cref="ArgumentNullException">An RSA private key must be provided!</exception>
+        /// <exception cref="ArgumentNullException">An RSA private key must be provided.</exception>
         public ASymmetricEncryption(RsaPrivateKey key)
         {
             _privateKey = key ?? throw
@@ -111,7 +112,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Decrypts the specified data using preset key and preset initialization vector
+        /// Decrypts the specified data using preset key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedData">The encrypted data.</param>
         /// <exception cref="ArgumentOutOfRangeException">
@@ -120,6 +121,8 @@ namespace ToolKit.Cryptography
         /// <returns>the decrypted data.</returns>
         public EncryptionData Decrypt(EncryptionData encryptedData)
         {
+            encryptedData = Check.NotNull(encryptedData, nameof(encryptedData));
+
             if (_privateKey == null)
             {
                 throw new InvalidOperationException(
@@ -140,76 +143,51 @@ namespace ToolKit.Cryptography
 
             var password = _password.Bytes;
 
-            if (password.Length < 32)
-            {
-                password = password.Concat(new byte[32 - password.Length]).ToArray();
-            }
-
             Buffer.BlockCopy(password, 0, iv, 0, 16);
 
-            var decrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
+            using (var decrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
             {
                 Key = new EncryptionData(password),
                 InitializationVector = new EncryptionData(iv)
-            };
+            })
+            {
+                var decryptedData = decrypt.Decrypt(payload);
 
-            var decryptedData = decrypt.Decrypt(payload);
-
-            return decryptedData;
+                return decryptedData;
+            }
         }
 
         /// <summary>
-        /// Decrypts the specified stream using preset key and preset initialization vector
+        /// Decrypts the specified stream using preset key and preset initialization vector.
         /// </summary>
         /// <param name="encryptedStream">The encrypted stream.</param>
         /// <returns>the decrypted data.</returns>
         public EncryptionData Decrypt(Stream encryptedStream)
         {
+            encryptedStream = Check.NotNull(encryptedStream, nameof(encryptedStream));
+
             if (_privateKey == null)
             {
                 throw new InvalidOperationException(
                     "In order to decrypt, you must provide the private key.");
             }
 
-            var b = new byte[_keySize];
+            var b = new byte[encryptedStream.Length];
 
-            var i = encryptedStream.Read(b, 0, _keySize);
+            _ = encryptedStream.Read(b, 0, (int)encryptedStream.Length);
 
-            if (i < _keySize + 1)
-            {
-                throw new InvalidOperationException("Invalid Formatted Password!");
-            }
-
-            _password = new EncryptionData(b);
-            var iv = new EncryptionData();
-
-            Array.Copy(_password.Bytes, iv.Bytes, 16);
-
-            var decrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
-            {
-                Key = _password,
-                InitializationVector = iv
-            };
-
-            var encryptedBytes = new byte[encryptedStream.Length - _keySize];
-
-            i = encryptedStream.Read(encryptedBytes, _keySize, (int)encryptedStream.Length - _keySize);
-
-            if (i == 0)
-            {
-                throw new InvalidOperationException("Invalid Formatted Payload");
-            }
-
-            return decrypt.Decrypt(encryptedStream);
+            return Decrypt(new EncryptionData(b));
         }
 
         /// <summary>
-        /// Encrypts the specified Data using preset key and preset initialization vector
+        /// Encrypts the specified Data using preset key and preset initialization vector.
         /// </summary>
         /// <param name="plainData">The data to encrypt.</param>
         /// <returns>the encrypted data.</returns>
         public EncryptionData Encrypt(EncryptionData plainData)
         {
+            plainData = Check.NotNull(plainData, nameof(plainData));
+
             if (plainData.IsEmpty)
             {
                 throw new ArgumentException("Invalid Encrypted Data!");
@@ -232,27 +210,30 @@ namespace ToolKit.Cryptography
 
             Buffer.BlockCopy(password, 0, iv, 0, 16);
 
-            var encrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
+            using (var encrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
             {
                 Key = new EncryptionData(password),
                 InitializationVector = new EncryptionData(iv)
-            };
+            })
+            {
+                var encryptedData = encrypt.Encrypt(plainData);
 
-            var encryptedData = encrypt.Encrypt(plainData);
-
-            return CombineEncrypted(encryptedData);
+                return CombineEncrypted(encryptedData);
+            }
         }
 
         /// <summary>
-        /// Encrypts the stream to memory using provided key and provided initialization vector
+        /// Encrypts the stream to memory using provided key and provided initialization vector.
         /// </summary>
         /// <param name="plainStream">The stream to preform the cryptographic function on.</param>
         /// <returns>the encrypted data.</returns>
         public EncryptionData Encrypt(Stream plainStream)
         {
+            plainStream = Check.NotNull(plainStream, nameof(plainStream));
+
             if (!plainStream.CanRead)
             {
-                throw new ArgumentException("Invalid Encrypted Data!");
+                throw new ArgumentException("Can not read from the stream!");
             }
 
             if (_publicKey == null)
@@ -265,22 +246,18 @@ namespace ToolKit.Cryptography
 
             var password = _password.Bytes;
 
-            if (password.Length < 32)
-            {
-                password = password.Concat(new byte[32 - password.Length]).ToArray();
-            }
-
             Buffer.BlockCopy(password, 0, iv, 0, 16);
 
-            var encrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
+            using (var encrypt = new SymmetricEncryption(SymmetricEncryption.Provider.Rijndael)
             {
                 Key = new EncryptionData(password),
                 InitializationVector = new EncryptionData(iv)
-            };
+            })
+            {
+                var encryptedData = encrypt.Encrypt(plainStream);
 
-            var encryptedData = encrypt.Encrypt(plainStream);
-
-            return CombineEncrypted(encryptedData);
+                return CombineEncrypted(encryptedData);
+            }
         }
 
         private EncryptionData CombineEncrypted(EncryptionData payload)
@@ -299,7 +276,7 @@ namespace ToolKit.Cryptography
         {
             if (encryptedData.IsEmpty)
             {
-                throw new ArgumentException("Invalid Encrypted Data!");
+                throw new ArgumentException("Encrypted data is empty!");
             }
 
             if (encryptedData.Bytes.Length < 257)
@@ -307,7 +284,7 @@ namespace ToolKit.Cryptography
                 throw new ArgumentException("Improper Encryption Data!");
             }
 
-            var password = new Byte[256];
+            var password = new byte[256];
 
             Buffer.BlockCopy(encryptedData.Bytes, 0, password, 0, 256);
 

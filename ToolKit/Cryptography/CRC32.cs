@@ -1,11 +1,12 @@
-﻿using System.IO;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace ToolKit.Cryptography
 {
     /// <summary>
     /// Implements a cyclic redundancy check (CRC) hash algorithm. CRC is an error-detecting
-    /// algorithm designed to detect accidental changes to raw computer data, and is commonly used in
-    /// networks and storage devices.
+    /// algorithm designed to detect accidental changes to raw computer data, and is commonly used
+    /// in networks and storage devices.
     /// </summary>
     /// <remarks>
     /// Hash functions are fundamental to modern cryptography. These functions map binary strings of
@@ -15,12 +16,16 @@ namespace ToolKit.Cryptography
     /// digital signatures and for data integrity.
     /// </remarks>
     // ReSharper disable once InconsistentNaming
-    public class CRC32 : IHash
+    [SuppressMessage(
+        "Minor Code Smell",
+        "S101:Types should be named in PascalCase",
+        Justification = "This class name is an acronym.")]
+    public class CRC32 : DisposableObject, IHash
     {
         private Hash _algorithm = new Hash(Hash.Provider.CRC32);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CRC32"/> class.
+        /// Initializes a new instance of the <see cref="CRC32" /> class.
         /// </summary>
         public CRC32()
         {
@@ -29,7 +34,7 @@ namespace ToolKit.Cryptography
         /// <summary>
         /// Creates an instance of the Hash Algorithm.
         /// </summary>
-        /// <returns>an instance of the CRC32 Hash object</returns>
+        /// <returns>an instance of the CRC32 Hash object.</returns>
         public static CRC32 Create()
         {
             return new CRC32();
@@ -66,7 +71,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Calculates hash for data contained within an <see cref="EncryptionData"/>.
+        /// Calculates hash for data contained within an <see cref="EncryptionData" />.
         /// </summary>
         /// <param name="data">The data to be used to hash.</param>
         /// <returns>a string containing the hash of the data provided.</returns>
@@ -76,9 +81,9 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Calculates hash for data contained within an <see cref="EncryptionData"/> with a prefixed
-        /// salt value contained within an <see cref="EncryptionData"/>. A "salt" is random data
-        /// prefixed to every hashed value to prevent common dictionary attacks.
+        /// Calculates hash for data contained within an <see cref="EncryptionData" /> with a
+        /// prefixed salt value contained within an <see cref="EncryptionData" />. A "salt" is
+        /// random data prefixed to every hashed value to prevent common dictionary attacks.
         /// </summary>
         /// <param name="data">The data to be used to hash.</param>
         /// <param name="salt">The salt to use during the hash.</param>
@@ -119,7 +124,7 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Calculates hash for data contained within an <see cref="EncryptionData"/>.
+        /// Calculates hash for data contained within an <see cref="EncryptionData" />.
         /// </summary>
         /// <param name="data">The data to be used to hash.</param>
         /// <returns>a byte array containing the hash of the data provided.</returns>
@@ -129,9 +134,9 @@ namespace ToolKit.Cryptography
         }
 
         /// <summary>
-        /// Calculates hash for data contained within an <see cref="EncryptionData"/> with a prefixed
-        /// salt value contained within an <see cref="EncryptionData"/>. A "salt" is random data
-        /// prefixed to every hashed value to prevent common dictionary attacks.
+        /// Calculates hash for data contained within an <see cref="EncryptionData" /> with a
+        /// prefixed salt value contained within an <see cref="EncryptionData" />. A "salt" is
+        /// random data prefixed to every hashed value to prevent common dictionary attacks.
         /// </summary>
         /// <param name="data">The data to be used to hash.</param>
         /// <param name="salt">The salt to use during the hash.</param>
@@ -139,6 +144,19 @@ namespace ToolKit.Cryptography
         public byte[] ComputeToBytes(EncryptionData data, EncryptionData salt)
         {
             return _algorithm.Calculate(data, salt).Bytes;
+        }
+
+        /// <summary>Disposes the resources used by the inherited class.</summary>
+        /// <param name="disposing">
+        ///   <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
+        /// unmanaged resources.</param>
+        protected override void DisposeResources(bool disposing)
+        {
+            if (_algorithm != null)
+            {
+                _algorithm.Dispose();
+                _algorithm = null;
+            }
         }
     }
 }

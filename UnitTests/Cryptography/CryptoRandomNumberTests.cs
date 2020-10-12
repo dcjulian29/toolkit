@@ -1,9 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToolKit.Cryptography;
 using Xunit;
 
@@ -111,8 +107,8 @@ namespace UnitTests.Cryptography
         public void Next_Sould_ReturnNonNegativeNumberLessThanOrEqualToMaxValueAndGreaterThanMinValue()
         {
             // Arrange
-            var maxValue = 1000;
-            var minValue = 900;
+            var maxValue = 99999;
+            var minValue = 10000;
 
             // Act
             var number = CryptoRandomNumber.Next(minValue, maxValue);

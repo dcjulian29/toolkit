@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -217,7 +217,7 @@ namespace UnitTests.DirectoryServices.ActiveDirectory
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
             {
-                var user = new User(obj);
+                _ = new User(obj);
             });
         }
 

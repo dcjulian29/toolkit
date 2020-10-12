@@ -1,9 +1,9 @@
-﻿using FluentNHibernate.Cfg.Db;
+using FluentNHibernate.Cfg.Db;
 
 namespace ToolKit.Data.NHibernate.SessionFactories
 {
     /// <summary>
-    /// NHibernate Session Factory using Oracle Server
+    /// NHibernate Session Factory using Oracle Server.
     /// </summary>
     public class OracleSessionFactory : SessionFactoryBase
     {

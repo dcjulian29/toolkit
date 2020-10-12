@@ -41,6 +41,12 @@ dotnet_style_qualification_for_method = false : error
 dotnet_style_qualification_for_property = false : error
 dotnet_style_require_accessibility_modifiers = always : suggestion
 
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1413.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1636.severity = none
+
 [*.{xml,config,*proj,nuspec,props,resx,targets,yml,yaml,tasks,json}]
 indent_size = 2
 indent_style = space

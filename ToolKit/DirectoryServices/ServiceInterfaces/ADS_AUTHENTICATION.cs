@@ -1,13 +1,24 @@
 using System;
-
-//// ReSharper disable InconsistentNaming
+using System.Diagnostics.CodeAnalysis;
 
 namespace ToolKit.DirectoryServices.ServiceInterfaces
 {
     /// <summary>
     /// Specifies the security level used in authenticating a client.
     /// </summary>
+    [SuppressMessage(
+        "Microsoft.Naming",
+        "CA1707:IdentifiersShouldNotContainUnderscores",
+        Justification = "This enumeration represents Win32API which include underscores.")]
     [Flags]
+    [SuppressMessage(
+        "Design",
+        "RCS1135:Declare enum member with zero value (when enum has FlagsAttribute).",
+        Justification = "Win32Apis dont follow the rules.")]
+    [SuppressMessage(
+        "Readability",
+        "RCS1234:Duplicate enum value.",
+        Justification = "Win32Apis dont follow the rules.")]
     public enum ADS_AUTHENTICATION : uint
     {
         /// <summary>
@@ -111,6 +122,10 @@ namespace ToolKit.DirectoryServices.ServiceInterfaces
         /// <summary>
         /// The enumeration value is Reserved.
         /// </summary>
+        [SuppressMessage(
+            "Major Code Smell",
+            "S4016:Enumeration members should not be named \"Reserved\"",
+            Justification = "Win32API don't always follow C# naming conventions.")]
         AUTH_RESERVED = 0x80000000
     }
 }

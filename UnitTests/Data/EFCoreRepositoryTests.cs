@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data.Common;
-using System.Data.SqlClient;
+using System;
 using System.Data.SQLite;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -311,7 +309,7 @@ namespace UnitTests.Data
             }
         }
 
-        public class Patient : EntityWithTypedId<Int64>
+        public class Patient : EntityWithTypedId<long>
         {
             public virtual DateTime AdmitDate { get; set; }
 

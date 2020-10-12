@@ -1,7 +1,7 @@
-﻿namespace ToolKit.Cryptography
+namespace ToolKit.Cryptography
 {
     /// <summary>
-    /// Abstraction of Data Protection API Protection Scopes
+    /// Abstraction of Data Protection API Protection Scopes.
     /// </summary>
     public enum DataProtectionKeyType
     {

@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("UnitTests")]
@@ -8,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: Guid("253b2eee-7ee1-4850-806a-97d48bbe1eaa")]
+[assembly: Guid("56b49795-bcd8-4f6a-a04c-a26b3756a48d")]

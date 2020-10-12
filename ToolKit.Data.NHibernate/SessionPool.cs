@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NHibernate;
+using ToolKit.Validation;
 
 namespace ToolKit.Data.NHibernate
 {
@@ -12,7 +10,7 @@ namespace ToolKit.Data.NHibernate
     /// </summary>
     public static class SessionPool
     {
-        private static Dictionary<string, SessionManager> pool 
+        private static readonly Dictionary<string, SessionManager> _pool
             = new Dictionary<string, SessionManager>();
 
         /// <summary>
@@ -22,7 +20,7 @@ namespace ToolKit.Data.NHibernate
         {
             get
             {
-                return pool.Count;
+                return _pool.Count;
             }
         }
 
@@ -33,17 +31,14 @@ namespace ToolKit.Data.NHibernate
         /// <param name="sessionManager">The session manager object.</param>
         public static void Add(string sessionManagerName, SessionManager sessionManager)
         {
-            if (String.IsNullOrEmpty(sessionManagerName))
-            {
-                throw new ArgumentNullException("sessionManager");
-            }
+            sessionManager = Check.NotNull(sessionManager, nameof(sessionManager));
 
-            if (pool.ContainsKey(sessionManagerName))
+            if (_pool.ContainsKey(sessionManagerName))
             {
                 throw new ArgumentException("Session Name is already Used");
             }
 
-            pool.Add(sessionManagerName, sessionManager);
+            _pool.Add(sessionManagerName, sessionManager);
         }
 
         /// <summary>
@@ -51,12 +46,9 @@ namespace ToolKit.Data.NHibernate
         /// </summary>
         public static void Clear()
         {
-            pool.Each(s =>
-            {
-                s.Value.Dispose();
-            });
+            _pool.Each(s => s.Value.Dispose());
 
-            pool.Clear();
+            _pool.Clear();
         }
 
         /// <summary>
@@ -68,7 +60,7 @@ namespace ToolKit.Data.NHibernate
         /// </returns>
         public static bool Contains(string sessionManagerName)
         {
-            return pool.ContainsKey(sessionManagerName);
+            return _pool.ContainsKey(sessionManagerName);
         }
 
         /// <summary>
@@ -78,12 +70,12 @@ namespace ToolKit.Data.NHibernate
         /// <returns>The specified session manager.</returns>
         public static SessionManager Manager(string sessionManagerName)
         {
-            if (!pool.ContainsKey(sessionManagerName))
+            if (!_pool.ContainsKey(sessionManagerName))
             {
                 throw new ArgumentException("Session Manager does not exist in the pool!");
             }
 
-            return pool[sessionManagerName];
+            return _pool[sessionManagerName];
         }
 
         /// <summary>
@@ -92,15 +84,12 @@ namespace ToolKit.Data.NHibernate
         /// <param name="sessionManagerName">Name of the session manager.</param>
         public static void Remove(string sessionManagerName)
         {
-            if (String.IsNullOrEmpty(sessionManagerName))
-            {
-                throw new ArgumentNullException("sessionManagerName");
-            }
+            sessionManagerName = Check.NotEmpty(sessionManagerName, nameof(sessionManagerName));
 
-            if (pool.ContainsKey(sessionManagerName))
+            if (_pool.ContainsKey(sessionManagerName))
             {
-                pool[sessionManagerName].Dispose();
-                pool.Remove(sessionManagerName);
+                _pool[sessionManagerName].Dispose();
+                _pool.Remove(sessionManagerName);
             }
         }
 
@@ -111,12 +100,12 @@ namespace ToolKit.Data.NHibernate
         /// <returns>The session of the specified session manager.</returns>
         public static ISession Session(string sessionManagerName)
         {
-            if (!pool.ContainsKey(sessionManagerName))
+            if (!_pool.ContainsKey(sessionManagerName))
             {
                 throw new ArgumentException("Session Manager does not exist in the pool!");
             }
 
-            return pool[sessionManagerName].Session;
+            return _pool[sessionManagerName].Session;
         }
     }
 }

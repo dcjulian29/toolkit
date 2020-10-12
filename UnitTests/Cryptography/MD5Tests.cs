@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Reflection;
 using ToolKit.Cryptography;
 using Xunit;
-
-#pragma warning disable 618
 
 namespace UnitTests.Cryptography
 {
@@ -13,6 +12,10 @@ namespace UnitTests.Cryptography
         Justification = "Test Suites do not need XML Documentation.")]
     public class MD5Tests
     {
+        private static readonly string _assemblyPath =
+            Path.GetDirectoryName(Assembly.GetAssembly(typeof(MD5Tests)).Location)
+            + Path.DirectorySeparatorChar;
+
         [Fact]
         public void MD5_Should_CalculateCorrectHash()
         {
@@ -48,7 +51,7 @@ namespace UnitTests.Cryptography
             var actual = String.Empty;
 
             // Act
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{_assemblyPath}gettysburg.txt"))
             {
                 actual = MD5Hash.Create().Compute(sr.BaseStream);
             }
@@ -134,7 +137,7 @@ namespace UnitTests.Cryptography
             byte[] actual;
 
             // Act
-            using (var sr = new StreamReader("gettysburg.txt"))
+            using (var sr = new StreamReader($"{_assemblyPath}gettysburg.txt"))
             {
                 actual = MD5Hash.Create().ComputeToBytes(sr.BaseStream);
             }
@@ -183,5 +186,3 @@ namespace UnitTests.Cryptography
         }
     }
 }
-
-#pragma warning restore 618
