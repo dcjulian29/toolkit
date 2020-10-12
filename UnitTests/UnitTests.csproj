@@ -106,6 +106,7 @@
     <Compile Include="Security\SidTests.cs" />
     <Compile Include="SuspendableObjectTests.cs" />
     <Compile Include="Syslog\CefMessageTests.cs" />
+    <Compile Include="Syslog\SyslogClientTests.cs" />
     <Compile Include="Syslog\FacilityTests.cs" />
     <Compile Include="Syslog\LevelTests.cs" />
     <Compile Include="Syslog\MessageTests.cs" />

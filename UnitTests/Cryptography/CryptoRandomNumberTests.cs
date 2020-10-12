@@ -107,8 +107,8 @@ namespace UnitTests.Cryptography
         public void Next_Sould_ReturnNonNegativeNumberLessThanOrEqualToMaxValueAndGreaterThanMinValue()
         {
             // Arrange
-            var maxValue = 1000;
-            var minValue = 900;
+            var maxValue = 99999;
+            var minValue = 10000;
 
             // Act
             var number = CryptoRandomNumber.Next(minValue, maxValue);
