@@ -3,7 +3,6 @@
 #tool "nuget:?package=ReportGenerator&version=4.5.0"
 
 var target = Argument("target", "Default");
-
 var configuration = Argument("configuration", "Debug");
 
 if ((target == "Default") && (TeamCity.IsRunningOnTeamCity)) {
@@ -16,55 +15,17 @@ if ((target == "Default") && (AppVeyor.IsRunningOnAppVeyor)) {
     configuration = "Release";
 }
 
-var projectName = "toolkit";
+///////////////////////////////////////////////////////////////////////////////
 
 var baseDirectory = MakeAbsolute(Directory("."));
-
 var buildDirectory = baseDirectory + "/.build";
 var outputDirectory = buildDirectory + "/output";
-var packageDirectory = baseDirectory + "/packages";
-
-IEnumerable<string> stdout;
-StartProcess ("git", new ProcessSettings {
-    Arguments = "describe --tags --abbrev=0",
-    RedirectStandardOutput = true,
-}, out stdout);
-List<String> result = new List<string>(stdout);
-var version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
-
-StartProcess ("git", new ProcessSettings {
-    Arguments = "rev-parse --short=8 HEAD",
-    RedirectStandardOutput = true,
-}, out stdout);
-result = new List<string>(stdout);
-var packageId = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
-
-var branch = "unknown";
-if (AppVeyor.IsRunningOnAppVeyor) {
-    branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
-
-    if (branch != "master") {
-        AppVeyor.UpdateBuildVersion($"{version}-{branch}.{packageId}");
-    } else {
-        AppVeyor.UpdateBuildVersion(version);
-    }
-} else {
-    StartProcess ("git", new ProcessSettings {
-        Arguments = "symbolic-ref --short HEAD",
-        RedirectStandardOutput = true,
-    }, out stdout);
-    result = new List<string>(stdout);
-    branch = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
-}
-
-if (branch != "master") {
-    version = $"{version}-{branch}.{packageId}";
-}
+var version = "0.0.0";
 
 var msbuildSettings = new MSBuildSettings {
     ArgumentCustomization = args => args.Append("/consoleloggerparameters:ErrorsOnly"),
     Configuration = configuration,
-    ToolVersion = MSBuildToolVersion.VS2019,
+    ToolVersion = MSBuildToolVersion.Default,
     NodeReuse = false,
     WarningsAsError = true
 }.WithProperty("OutDir", outputDirectory);
@@ -83,6 +44,8 @@ var dotNetCoreBuildSettings = new DotNetCoreBuildSettings {
 
 var restoreSettings = new DotNetCoreRestoreSettings { NoDependencies = true };
 
+///////////////////////////////////////////////////////////////////////////////
+
 Setup(setupContext =>
 {
     if (setupContext.TargetTask.Name == "Package")
@@ -91,7 +54,50 @@ Setup(setupContext =>
         configuration = "Release";
 
         msbuildSettings.Configuration = "Release";
+        dotNetCoreBuildSettings.Configuration = "Release";
     }
+
+    IEnumerable<string> stdout;
+    StartProcess ("git", new ProcessSettings {
+        Arguments = "describe --tags --abbrev=0",
+        RedirectStandardOutput = true,
+    }, out stdout);
+    List<String> result = new List<string>(stdout);
+    version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
+
+    StartProcess ("git", new ProcessSettings {
+        Arguments = "rev-parse --short=8 HEAD",
+        RedirectStandardOutput = true,
+    }, out stdout);
+    result = new List<string>(stdout);
+    var packageId = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
+
+    var branch = "unknown";
+    if (AppVeyor.IsRunningOnAppVeyor) {
+        branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
+    } else {
+        StartProcess ("git", new ProcessSettings {
+            Arguments = "symbolic-ref --short HEAD",
+            RedirectStandardOutput = true,
+        }, out stdout);
+        result = new List<string>(stdout);
+        branch = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
+    }
+
+    if (branch != "master") {
+        version = $"{version}-{branch}.{packageId}";
+    }
+
+    if (AppVeyor.IsRunningOnAppVeyor) {
+        AppVeyor.UpdateBuildVersion(version);
+    }
+
+    if (TeamCity.IsRunningOnTeamCity) {
+        TeamCity.SetBuildNumber(version);
+    }
+
+    Information($"Package ID is '{packageId}' on branch '{branch}'");
+
 });
 
 TaskSetup(setupContext =>
@@ -121,7 +127,6 @@ Task("Clean")
         CleanDirectories(buildDirectory);
         CleanDirectories(baseDirectory + "/**/bin");
         CleanDirectories(baseDirectory + "/**/obj");
-        CleanDirectories(packageDirectory);
     });
 
 Task("Init")
@@ -138,11 +143,7 @@ Task("Version")
     {
         Information("Marking this build as version: " + version);
 
-        var assemblyVersion = "0.0.0";;
-
-        if (branch == "master") {
-            assemblyVersion = version;
-        }
+        var assemblyVersion = version.Contains('-') ? "0.0.0" : version;
 
         CreateAssemblyInfo(buildDirectory + "/CommonAssemblyInfo.cs", new AssemblyInfoSettings {
             Version = assemblyVersion,
@@ -427,5 +428,7 @@ Task("AppVeyor")
             .ToList()
             .ForEach(f => AppVeyor.UploadArtifact(f, new AppVeyorUploadArtifactsSettings { DeploymentName = "packages" }));
     });
+
+///////////////////////////////////////////////////////////////////////////////
 
 RunTarget(target);
