@@ -18,21 +18,16 @@ namespace UnitTests.Data
         private string _sessionName;
 
         [Fact]
-        public void InitializeDatabase_Should_DeleteDBFileIfExistsDuringIntialRun()
+        public void InitializeDatabase_Should_NotErrorIfCalledSecondTime()
         {
             // Arrange
-            var db = new UnitTestDatabase(InitializeDatabase, ref _sessionName);
+            var db = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
 
             // Act
-            UnitTestDatabase.ResetInstanceCache();
-
-            db.ResetDatabaseCreated();
-            _ = new UnitTestDatabase(InitializeDatabase, ref _sessionName);
-
-            var session = NHibernateDatabaseBase.Instance.SessionFactory(_sessionName).OpenSession();
+            db.InitializeDatabase(InitializeDatabase);
 
             // Assert
-            Assert.NotNull(session);
+            Assert.Equal(1, db.DefinedSessions);
         }
 
         [Fact]
@@ -49,7 +44,71 @@ namespace UnitTests.Data
             Assert.NotNull(session);
         }
 
+        [Fact]
+        public void RemoveInstance_Should_NotRemoveSessionThatDoesNotExist()
+        {
+            // Arrange
+            var db = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
+
+            // Act
+            UnitTestDatabase.RemoveInstance("NONEXIST");
+
+            // Assert
+            Assert.Equal(1, db.DefinedSessions);
+        }
+
+        [Fact]
+        public void RemoveInstance_Should_RemoveOnlySessionSpecified()
+        {
+            // Arrange
+            var db1 = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
+            var session = _sessionName;
+            var db2 = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
+
+            // Act
+            UnitTestDatabase.RemoveInstance(session);
+
+            // Assert
+            Assert.Equal(1, db1.DefinedSessions);
+            Assert.Equal(1, db2.DefinedSessions);
+        }
+
+        [Fact]
+        public void ResetInstanceCache_Should_RemoveAllSession()
+        {
+            // Arrange
+            var db = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
+
+            // Act
+            UnitTestDatabase.ResetInstanceCache();
+
+            // Assert
+            Assert.Equal(0, db.DefinedSessions);
+        }
+
+        [Fact]
+        public void ResetInstanceCache_Should_RemoveAllSessionEvenWhenNonExists()
+        {
+            // Arrange
+            var db = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
+
+            // Act
+            UnitTestDatabase.ResetInstanceCache();
+            UnitTestDatabase.ResetInstanceCache();
+
+            // Assert
+            Assert.Equal(0, db.DefinedSessions);
+        }
+
         private void InitializeDatabase()
             => NHibernateDatabaseBase.Instance.SessionFactory(_sessionName).OpenSession();
+
+        public class MockUnitTestDatabase : UnitTestDatabase
+        {
+            public MockUnitTestDatabase(Action initialization, ref string sessionName)
+                : base(initialization, ref sessionName) { }
+
+            public long DefinedSessions => Cache.GetCount();
+        }
     }
 }
