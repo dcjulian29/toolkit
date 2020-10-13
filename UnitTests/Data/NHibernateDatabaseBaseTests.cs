@@ -16,22 +16,23 @@ namespace UnitTests.Data
         Justification = "Test Suites do not need XML Documentation.")]
     public class NHibernateDatabaseBaseTests
     {
+        private string _sessionName = string.Empty;
+
         [Fact]
         public void NHibernateDatabaseBase_Should_ReturnDebbieForFirstRecord()
         {
             // Arrange
-            _ = new UnitTestDatabase(Assembly.GetExecutingAssembly(), InitializeDatabase);
+            var db = new UnitTestDatabase(Assembly.GetExecutingAssembly(), InitializeDatabase, ref _sessionName);
 
-            var session = NHibernateDatabaseBase.Instance.SessionFactory("NHibernateDatabaseBase").OpenSession();
+            var session = NHibernateDatabaseBase.Instance.SessionFactory(db.SessionName).OpenSession();
             var criteria = session.CreateCriteria<Employee>();
-            _ = criteria.Add(Expression.Eq("Name", "Debbie"));
+            criteria.Add(Expression.Eq("Name", "Debbie"));
 
             // Act
             var employees = criteria.List<Employee>();
             var results = employees[0];
 
             // Assert
-
             Assert.Equal("Debbie", results.Name);
         }
 
@@ -39,24 +40,22 @@ namespace UnitTests.Data
         public void NHibernateDatabaseBase_Should_ReturnFrankForSecondRecord()
         {
             // Arrange
-            _ = new UnitTestDatabase(Assembly.GetExecutingAssembly(), InitializeDatabase);
+            var session = new UnitTestDatabase(InitializeDatabase, ref _sessionName).Session;
 
-            var session = NHibernateDatabaseBase.Instance.SessionFactory("NHibernateDatabaseBase").OpenSession();
             var criteria = session.CreateCriteria<Employee>();
-            _ = criteria.Add(Expression.Eq("Name", "Frank"));
+            criteria.Add(Expression.Eq("Name", "Frank"));
 
             // Act
             var employees = criteria.List<Employee>();
             var results = employees[0];
 
             // Assert
-
             Assert.Equal("Frank", results.Name);
         }
 
         private void InitializeDatabase()
         {
-            var session = NHibernateDatabaseBase.Instance.SessionFactory("NHibernateDatabaseBase").OpenSession();
+            var session = NHibernateDatabaseBase.Instance.SessionFactory(_sessionName).OpenSession();
 
             _ = session.CreateSQLQuery("DELETE FROM Employee").ExecuteUpdate();
 
@@ -89,7 +88,9 @@ namespace UnitTests.Data
         public class Employee : Entity
         {
             public virtual DateTime DateAdded { get; set; }
+
             public virtual DateTime HireDate { get; set; }
+
             public virtual string Name { get; set; }
         }
 
