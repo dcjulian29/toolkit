@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using ToolKit.Data.NHibernate;
 using ToolKit.Data.NHibernate.UnitTests;
 using Xunit;
@@ -12,7 +7,7 @@ using Xunit;
 namespace UnitTests.Data
 {
     /// <summary>
-    ///     Primary Purpose for these test are to catch what NHibernateDatabaseBase doesn't.
+    /// Primary Purpose for these test are to catch what NHibernateDatabaseBase doesn't.
     /// </summary>
     [SuppressMessage(
         "StyleCop.CSharp.DocumentationRules",
@@ -20,18 +15,21 @@ namespace UnitTests.Data
         Justification = "Test Suites do not need XML Documentation.")]
     public class UnitTestDatabaseTests
     {
+        private string _sessionName;
+
         [Fact]
         public void InitializeDatabase_Should_DeleteDBFileIfExistsDuringIntialRun()
         {
             // Arrange
-            _ = new UnitTestDatabase(Assembly.GetExecutingAssembly(), InitializeDatabase);
+            var db = new UnitTestDatabase(InitializeDatabase, ref _sessionName);
 
             // Act
             UnitTestDatabase.ResetInstanceCache();
-            UnitTestDatabase.ResetDatabaseCreated();
-            _ = new UnitTestDatabase(Assembly.GetExecutingAssembly(), InitializeDatabase);
 
-            var session = NHibernateDatabaseBase.Instance.SessionFactory("UnitTestDatabase").OpenSession();
+            db.ResetDatabaseCreated();
+            _ = new UnitTestDatabase(InitializeDatabase, ref _sessionName);
+
+            var session = NHibernateDatabaseBase.Instance.SessionFactory(_sessionName).OpenSession();
 
             // Assert
             Assert.NotNull(session);
@@ -41,7 +39,7 @@ namespace UnitTests.Data
         public void Instance_Should_RecreateSession_When_SessionIsRemovedOrExpiredFromCache()
         {
             // Arrange
-            _ = new UnitTestDatabase(Assembly.GetExecutingAssembly(), InitializeDatabase);
+            _ = new UnitTestDatabase(InitializeDatabase, ref _sessionName);
 
             // Act
             UnitTestDatabase.ResetInstanceCache();
@@ -52,8 +50,6 @@ namespace UnitTests.Data
         }
 
         private void InitializeDatabase()
-        {
-            _ = NHibernateDatabaseBase.Instance.SessionFactory("UnitTestDatabase").OpenSession();
-        }
+            => NHibernateDatabaseBase.Instance.SessionFactory(_sessionName).OpenSession();
     }
 }
