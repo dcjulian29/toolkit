@@ -3,6 +3,7 @@ using System.Data.SQLite;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Toolkit.Data.EFCore;
 using ToolKit.Data;
@@ -19,20 +20,21 @@ namespace UnitTests.Data
 
         public EfCoreRepositoryTests()
         {
+            var databaseFile = $"EFCoreRepositoryTests.{Thread.CurrentThread.ManagedThreadId}.db";
             var connectionString = new SQLiteConnectionStringBuilder()
             {
-                DataSource = "EFCoreRepositoryTests.db",
+                DataSource = databaseFile,
                 ForeignKeys = true
             }.ConnectionString;
 
             if (!_databaseCreated)
             {
-                if (File.Exists("EFCoreRepositoryTests.db"))
+                if (File.Exists(databaseFile))
                 {
-                    File.Delete("EFCoreRepositoryTests.db");
+                    File.Delete(databaseFile);
                 }
 
-                SQLiteConnection.CreateFile("EFCoreRepositoryTests.db");
+                SQLiteConnection.CreateFile(databaseFile);
 
                 using (var c = new SQLiteConnection(connectionString))
                 {
@@ -65,14 +67,6 @@ namespace UnitTests.Data
                     c.Close();
                 }
             }
-        }
-
-        ~EfCoreRepositoryTests()
-        {
-            // SQLite doesn't always unlock DB file when test ends, Let's force it.
-#pragma warning disable S1215 // "GC.Collect" should not be called
-            GC.Collect();
-#pragma warning restore S1215 // "GC.Collect" should not be called
         }
 
         public enum Gender
@@ -270,7 +264,7 @@ namespace UnitTests.Data
         {
             var connectionString = new SQLiteConnectionStringBuilder()
             {
-                DataSource = "EFCoreRepositoryTests.db",
+                DataSource = $"EFCoreRepositoryTests.{Thread.CurrentThread.ManagedThreadId}.db"
             }.ConnectionString;
 
             var options = new DbContextOptionsBuilder<PatientContext>()?.UseSqlite(connectionString).Options;
@@ -336,7 +330,7 @@ namespace UnitTests.Data
             {
                 var connectionString = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = "EFCoreRepositoryTests.db",
+                    DataSource = $"EFCoreRepositoryTests.{Thread.CurrentThread.ManagedThreadId}.db",
                 }.ConnectionString;
 
                 var options = new DbContextOptionsBuilder<PatientContext>()?.UseSqlite(connectionString).Options;
