@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Mapping;
@@ -202,6 +203,10 @@ namespace UnitTests.Data
         public class PatientRepository : Repository<Patient, int>
         {
             private static bool _databaseCreated = false;
+
+            private readonly string _databaseFile
+                = $"NHibernateRepositoryTests.{Thread.CurrentThread.ManagedThreadId}.db";
+
             private readonly ISession _session;
 
             public PatientRepository(bool initializeDatabase = false)
@@ -211,7 +216,7 @@ namespace UnitTests.Data
                 if (_databaseCreated)
                 {
                     sessionFactory = Fluently.Configure()
-                        .Database(SQLiteConfiguration.Standard.UsingFile("NHibernateRepositoryTests.db"))
+                        .Database(SQLiteConfiguration.Standard.UsingFile(_databaseFile))
                         .Mappings(m => m.FluentMappings.AddFromAssemblyOf<NHibernateRepositoryTests>())
                         .ExposeConfiguration(cfg => new SchemaExport(cfg).Create(false, false))
                         .BuildSessionFactory();
@@ -231,13 +236,13 @@ namespace UnitTests.Data
                 }
                 else
                 {
-                    if (File.Exists("NHibernateRepositoryTests.db"))
+                    if (File.Exists(_databaseFile))
                     {
-                        File.Delete("NHibernateRepositoryTests.db");
+                        File.Delete(_databaseFile);
                     }
 
                     sessionFactory = Fluently.Configure()
-                        .Database(SQLiteConfiguration.Standard.UsingFile("NHibernateRepositoryTests.db"))
+                        .Database(SQLiteConfiguration.Standard.UsingFile(_databaseFile))
                         .Mappings(m => m.FluentMappings.AddFromAssemblyOf<NHibernateRepositoryTests>())
                         .ExposeConfiguration(cfg => new SchemaExport(cfg).Create(false, true))
                         .BuildSessionFactory();
@@ -253,18 +258,6 @@ namespace UnitTests.Data
                 }
 
                 Context = new NHibernateUnitOfWork(_session);
-            }
-
-            ~PatientRepository()
-            {
-                // SQLite doesn't always unlock DB file when test ends, Let's force it.
-                _session.Flush();
-                _session.Disconnect();
-                _session.Close();
-
-#pragma warning disable S1215 // "GC.Collect" should not be called
-                GC.Collect();
-#pragma warning restore S1215 // "GC.Collect" should not be called
             }
 
             private void InitializeDatabase(ISession session)
