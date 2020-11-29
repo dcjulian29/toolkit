@@ -23,11 +23,11 @@ namespace UnitTests.Data
             // Arrange
             var db = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
 
-            // Act
+            // Act & Assert
             db.InitializeDatabase(InitializeDatabase);
 
             // Assert
-            Assert.Equal(1, db.DefinedSessions);
+            Assert.NotNull(db);
         }
 
         [Fact]
@@ -47,14 +47,20 @@ namespace UnitTests.Data
         [Fact]
         public void RemoveInstance_Should_NotRemoveSessionThatDoesNotExist()
         {
-            // Arrange
-            var db = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
+            var obj = new Object();
 
-            // Act
-            UnitTestDatabase.RemoveInstance("NONEXIST");
+            lock (obj)
+            {
+                // Arrange
+                var db = new MockUnitTestDatabase(InitializeDatabase, ref _sessionName);
+                var sessions = db.DefinedSessions;
 
-            // Assert
-            Assert.Equal(1, db.DefinedSessions);
+                // Act
+                UnitTestDatabase.RemoveInstance("NONEXIST");
+
+                // Assert
+                Assert.Equal(sessions, db.DefinedSessions);
+            }
         }
 
         [Fact]
