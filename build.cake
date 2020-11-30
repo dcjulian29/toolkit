@@ -66,7 +66,6 @@ Setup(setupContext =>
     version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
 
     // HACK: Convert my Year.Month.Day.Revision strings to SymVer without breaking existing version numbers.
-    Information(version);
     if (version.Count(f => f == '.') == 3) {
         var parts = version.Split('.');
         if (parts[0].Length == 4) {
