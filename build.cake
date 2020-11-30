@@ -65,6 +65,20 @@ Setup(setupContext =>
     List<String> result = new List<string>(stdout);
     version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
 
+    // HACK: Convert my Year.Month.Day.Revision strings to SymVer without breaking existing version numbers.
+    Information(version);
+    if (version.Count(f => f == '.') == 3) {
+        var parts = version.Split('.');
+        if (parts[0].Length == 4) {
+            version = String.Format(
+            "{0}{1}.{2}.{3}",
+            parts[0].Substring(2),
+            Convert.ToInt32(parts[1]) + 12,
+            parts[2],
+            parts[3]);
+        }
+    }
+
     StartProcess ("git", new ProcessSettings {
         Arguments = "rev-parse --short=8 HEAD",
         RedirectStandardOutput = true,
@@ -84,8 +98,10 @@ Setup(setupContext =>
         branch = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
     }
 
+    branch = branch.Replace('/', '.');
+
     if (branch != "master") {
-        version = $"{version}-{branch}.{packageId}";
+        version = $"{version}-{branch}+{packageId}";
     }
 
     if (AppVeyor.IsRunningOnAppVeyor) {
