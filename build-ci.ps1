@@ -2,6 +2,7 @@
 
 $TOOLS_DIR = Join-Path $PSScriptRoot "tools"
 $NUGET_EXE = Join-Path $TOOLS_DIR "nuget.exe"
+$NUGET_URL = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
 if ((Test-Path $PSScriptRoot) -and (-not (Test-Path $TOOLS_DIR))) {
     Write-Output "Creating tools directory..."
