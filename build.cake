@@ -363,7 +363,7 @@ Task("Package")
         CreateDirectory(buildDirectory + "\\packages");
 
         var nuGetPackSettings = new NuGetPackSettings {
-            Version = version.Replace('/', '.'),
+            Version = version,
             OutputDirectory = buildDirectory + "\\packages"
         };
 
