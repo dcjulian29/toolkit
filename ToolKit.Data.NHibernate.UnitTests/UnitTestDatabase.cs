@@ -3,9 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using FluentNHibernate.Cfg.Db;
+using NHibernate;
 using ToolKit.Validation;
 
 namespace ToolKit.Data.NHibernate.UnitTests
@@ -15,35 +14,51 @@ namespace ToolKit.Data.NHibernate.UnitTests
     /// </summary>
     public class UnitTestDatabase : NHibernateDatabaseBase
     {
-        private static readonly object _lock = new object();
+        private string _callingClass;
 
-        private static bool _databaseCreated;
-
-        private readonly string _callingClass;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnitTestDatabase" /> class.
+        /// </summary>
+        /// <param name="initialization">The initialization function for database.</param>
+        /// <param name="sessionName">The name of the session used in this unit test.</param>
+        public UnitTestDatabase(Action initialization, ref string sessionName)
+            : base(Assembly.GetCallingAssembly()) => Initialize(initialization, ref sessionName);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitTestDatabase" /> class.
         /// </summary>
         /// <param name="assemblyContainingMappings">The assembly containing mappings.</param>
         /// <param name="initialization">The initialization function for database.</param>
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public UnitTestDatabase(Assembly assemblyContainingMappings, Action initialization)
-            : base(assemblyContainingMappings)
-        {
-            UnitTests = true;
-            _instance = this;
-
-            _callingClass = new StackTrace().GetFrame(1).GetMethod().ReflectedType.Name;
-
-            InitializeDatabase(initialization);
-        }
+        /// <param name="sessionName">The name of the session used in this unit test.</param>
+        public UnitTestDatabase(Assembly assemblyContainingMappings, Action initialization, ref string sessionName)
+            : base(assemblyContainingMappings) => Initialize(initialization, ref sessionName);
 
         /// <summary>
-        /// Resets the switch that tells the Initialization function that the database was created.
+        /// Gets the name of the database file.
         /// </summary>
-        public static void ResetDatabaseCreated()
+        /// <value>The name of the file.</value>
+        public string FileName { get; private set; }
+
+        /// <summary>
+        /// Gets the open session for this instance.
+        /// </summary>
+        public ISession Session => NHibernateDatabaseBase.Instance.SessionFactory(SessionName).OpenSession();
+
+        /// <summary>
+        /// Gets the name of the session for this instance.
+        /// </summary>
+        public string SessionName { get; private set; }
+
+        /// <summary>
+        /// Remove a session from the Session Factory cache.
+        /// </summary>
+        /// <param name="sessionName">The name of the session.</param>
+        public static void RemoveInstance(string sessionName)
         {
-            _databaseCreated = false;
+            if (Cache.Contains(sessionName))
+            {
+                _ = Cache.Remove(sessionName);
+            }
         }
 
         /// <summary>
@@ -65,22 +80,12 @@ namespace ToolKit.Data.NHibernate.UnitTests
         {
             initialization = Check.NotNull(initialization, nameof(initialization));
 
-            Monitor.Enter(_lock);
-
-            try
+            if (File.Exists(FileName))
             {
-                // SchemaExport doesn't recreate the file/schema on subsequent initializations.
-                if (!_databaseCreated && File.Exists($"{_callingClass}.db"))
-                {
-                    File.Delete($"{_callingClass}.db");
-                }
+                File.Delete(FileName);
+            }
 
-                initialization();
-            }
-            finally
-            {
-                Monitor.Exit(_lock);
-            }
+            initialization();
         }
 
         /// <summary>
@@ -88,9 +93,17 @@ namespace ToolKit.Data.NHibernate.UnitTests
         /// </summary>
         /// <returns>the NHibernate Configuration.</returns>
         protected override IPersistenceConfigurer DatabaseConfigurer()
+            => SQLiteConfiguration.Standard.UsingFile(FileName);
+
+        private void Initialize(Action initialization, ref string sessionName)
         {
-            _databaseCreated = true;
-            return SQLiteConfiguration.Standard.UsingFile($"{_callingClass}.db");
+            UnitTests = true;
+            _instance = this;
+            _callingClass = new StackTrace().GetFrame(2).GetMethod().ReflectedType.Name;
+            sessionName = SessionName = Guid.NewGuid().ToString();
+            FileName = $"{_callingClass}.{SessionName.Replace("-", string.Empty)}.db";
+
+            InitializeDatabase(initialization);
         }
     }
 }

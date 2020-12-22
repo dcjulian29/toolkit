@@ -3,7 +3,6 @@
 #tool "nuget:?package=ReportGenerator&version=4.5.0"
 
 var target = Argument("target", "Default");
-
 var configuration = Argument("configuration", "Debug");
 
 if ((target == "Default") && (TeamCity.IsRunningOnTeamCity)) {
@@ -16,55 +15,17 @@ if ((target == "Default") && (AppVeyor.IsRunningOnAppVeyor)) {
     configuration = "Release";
 }
 
-var projectName = "toolkit";
+///////////////////////////////////////////////////////////////////////////////
 
 var baseDirectory = MakeAbsolute(Directory("."));
-
 var buildDirectory = baseDirectory + "/.build";
 var outputDirectory = buildDirectory + "/output";
-var packageDirectory = baseDirectory + "/packages";
-
-IEnumerable<string> stdout;
-StartProcess ("git", new ProcessSettings {
-    Arguments = "describe --tags --abbrev=0",
-    RedirectStandardOutput = true,
-}, out stdout);
-List<String> result = new List<string>(stdout);
-var version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
-
-StartProcess ("git", new ProcessSettings {
-    Arguments = "rev-parse --short=8 HEAD",
-    RedirectStandardOutput = true,
-}, out stdout);
-result = new List<string>(stdout);
-var packageId = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
-
-var branch = "unknown";
-if (AppVeyor.IsRunningOnAppVeyor) {
-    branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
-
-    if (branch != "master") {
-        AppVeyor.UpdateBuildVersion($"{version}-{branch}.{packageId}");
-    } else {
-        AppVeyor.UpdateBuildVersion(version);
-    }
-} else {
-    StartProcess ("git", new ProcessSettings {
-        Arguments = "symbolic-ref --short HEAD",
-        RedirectStandardOutput = true,
-    }, out stdout);
-    result = new List<string>(stdout);
-    branch = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
-}
-
-if (branch != "master") {
-    version = $"{version}-{branch}.{packageId}";
-}
+var version = "0.0.0";
 
 var msbuildSettings = new MSBuildSettings {
     ArgumentCustomization = args => args.Append("/consoleloggerparameters:ErrorsOnly"),
     Configuration = configuration,
-    ToolVersion = MSBuildToolVersion.VS2019,
+    ToolVersion = MSBuildToolVersion.Default,
     NodeReuse = false,
     WarningsAsError = true
 }.WithProperty("OutDir", outputDirectory);
@@ -83,6 +44,8 @@ var dotNetCoreBuildSettings = new DotNetCoreBuildSettings {
 
 var restoreSettings = new DotNetCoreRestoreSettings { NoDependencies = true };
 
+///////////////////////////////////////////////////////////////////////////////
+
 Setup(setupContext =>
 {
     if (setupContext.TargetTask.Name == "Package")
@@ -91,7 +54,65 @@ Setup(setupContext =>
         configuration = "Release";
 
         msbuildSettings.Configuration = "Release";
+        dotNetCoreBuildSettings.Configuration = "Release";
     }
+
+    IEnumerable<string> stdout;
+    StartProcess ("git", new ProcessSettings {
+        Arguments = "describe --tags --abbrev=0",
+        RedirectStandardOutput = true,
+    }, out stdout);
+    List<String> result = new List<string>(stdout);
+    version = String.IsNullOrEmpty(result[0]) ? "0.0.0" : result[0];
+
+    // HACK: Convert my Year.Month.Day.Revision strings to SymVer without breaking existing version numbers.
+    if (version.Count(f => f == '.') == 3) {
+        var parts = version.Split('.');
+        if (parts[0].Length == 4) {
+            version = String.Format(
+            "{0}{1}.{2}.{3}",
+            parts[0].Substring(2),
+            Convert.ToInt32(parts[1]) + 12,
+            parts[2],
+            parts[3]);
+        }
+    }
+
+    StartProcess ("git", new ProcessSettings {
+        Arguments = "rev-parse --short=8 HEAD",
+        RedirectStandardOutput = true,
+    }, out stdout);
+    result = new List<string>(stdout);
+    var packageId = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
+
+    var branch = "unknown";
+    if (AppVeyor.IsRunningOnAppVeyor) {
+        branch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
+    } else {
+        StartProcess ("git", new ProcessSettings {
+            Arguments = "symbolic-ref --short HEAD",
+            RedirectStandardOutput = true,
+        }, out stdout);
+        result = new List<string>(stdout);
+        branch = String.IsNullOrEmpty(result[0]) ? "unknown" : result[0];
+    }
+
+    branch = branch.Replace('/', '.');
+
+    if (branch != "master") {
+        version = $"{version}-{branch}+{packageId}";
+    }
+
+    if (AppVeyor.IsRunningOnAppVeyor) {
+        AppVeyor.UpdateBuildVersion(version);
+    }
+
+    if (TeamCity.IsRunningOnTeamCity) {
+        TeamCity.SetBuildNumber(version);
+    }
+
+    Information($"Package ID is '{packageId}' on branch '{branch}'");
+
 });
 
 TaskSetup(setupContext =>
@@ -121,7 +142,6 @@ Task("Clean")
         CleanDirectories(buildDirectory);
         CleanDirectories(baseDirectory + "/**/bin");
         CleanDirectories(baseDirectory + "/**/obj");
-        CleanDirectories(packageDirectory);
     });
 
 Task("Init")
@@ -138,11 +158,7 @@ Task("Version")
     {
         Information("Marking this build as version: " + version);
 
-        var assemblyVersion = "0.0.0";;
-
-        if (branch == "master") {
-            assemblyVersion = version;
-        }
+        var assemblyVersion = version.Contains('-') ? "0.0.0" : version;
 
         CreateAssemblyInfo(buildDirectory + "/CommonAssemblyInfo.cs", new AssemblyInfoSettings {
             Version = assemblyVersion,
@@ -305,7 +321,7 @@ Task("UnitTest")
     {
         XUnit2(outputDirectory + "/UnitTests.dll",
             new XUnit2Settings {
-                Parallelism = ParallelismOption.All,
+                Parallelism = ParallelismOption.None,
                 ShadowCopy = false
             });
     });
@@ -319,7 +335,7 @@ Task("Coverage")
         OpenCover(tool => {
             tool.XUnit2(outputDirectory + "/UnitTests.dll",
                 new XUnit2Settings {
-                    Parallelism = ParallelismOption.All,
+                    Parallelism = ParallelismOption.None,
 
                     ShadowCopy = false });
             },
@@ -340,66 +356,6 @@ Task("Coverage.Report")
         ReportGenerator(buildDirectory + "/coverage/coverage.xml", buildDirectory + "/coverage");
     });
 
-Task("TeamCity")
-    .Does(() =>
-    {
-        if (DirectoryExists(baseDirectory + "\\UnitTests")) {
-            RunTarget("coverage");
-
-            // Write class coverage
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageAbsCCovered' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedClasses")));
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageAbsCTotal' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numClasses")));
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageC' value='{0:N2}']",
-                (
-                    Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedClasses")) /
-                    Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numClasses"))
-                ) * 100));
-
-            // Report method coverage
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageAbsMCovered' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedMethods")));
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageAbsMTotal' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numMethods")));
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageM' value='{0:N2}']",
-                (
-                    Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedMethods")) /
-                    Convert.ToDouble(XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numMethods"))
-                ) * 100));
-
-            // Report branch coverage
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageAbsBCovered' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedBranchPoints")));
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageAbsBTotal' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numBranchPoints")));
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageB' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@branchCoverage")));
-
-            // Report statement coverage
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageAbsSCovered' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@visitedSequencePoints")));
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageAbsSTotal' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@numSequencePoints")));
-            Information(String.Format(
-                "##teamcity[buildStatisticValue key='CodeCoverageS' value='{0}']",
-                XmlPeek(buildDirectory + "\\coverage\\coverage.xml", "/CoverageSession/Summary/@sequenceCoverage")));
-        } else {
-            RunTarget("default");
-        }
-    });
-
 Task("Package")
     .IsDependentOn("Test")
     .Does(() =>
@@ -407,7 +363,7 @@ Task("Package")
         CreateDirectory(buildDirectory + "\\packages");
 
         var nuGetPackSettings = new NuGetPackSettings {
-            Version = version.Replace('/', '.'),
+            Version = version,
             OutputDirectory = buildDirectory + "\\packages"
         };
 
@@ -416,16 +372,77 @@ Task("Package")
         NuGetPack(nuspecFiles, nuGetPackSettings);
     });
 
+///////////////////////////////////////////////////////////////////////////////
+
+Task("TeamCity")
+    .IsDependentOn("Package")
+    .IsDependentOn("Coverage")
+    .WithCriteria(() => TeamCity.IsRunningOnTeamCity)
+    .Does(() =>
+    {
+        var coverage = buildDirectory + "\\coverage\\coverage.xml";
+
+        // Write class coverage
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsCCovered' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@visitedClasses")));
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsCTotal' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@numClasses")));
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageC' value='{0:N2}']",
+            (
+                Convert.ToDouble(XmlPeek(coverage, "/CoverageSession/Summary/@visitedClasses")) /
+                Convert.ToDouble(XmlPeek(coverage, "/CoverageSession/Summary/@numClasses"))
+            ) * 100));
+
+        // Report method coverage
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsMCovered' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@visitedMethods")));
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsMTotal' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@numMethods")));
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageM' value='{0:N2}']",
+            (
+                Convert.ToDouble(XmlPeek(coverage, "/CoverageSession/Summary/@visitedMethods")) /
+                Convert.ToDouble(XmlPeek(coverage, "/CoverageSession/Summary/@numMethods"))
+            ) * 100));
+
+        // Report branch coverage
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsBCovered' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@visitedBranchPoints")));
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsBTotal' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@numBranchPoints")));
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageB' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@branchCoverage")));
+
+        // Report statement coverage
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsSCovered' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@visitedSequencePoints")));
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsSTotal' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@numSequencePoints")));
+        Information(String.Format(
+            "##teamcity[buildStatisticValue key='CodeCoverageS' value='{0}']",
+            XmlPeek(coverage, "/CoverageSession/Summary/@sequenceCoverage")));
+    });
+
 Task("AppVeyor")
     .IsDependentOn("Package")
     .WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
     .Does(() =>
     {
-        CopyFiles(buildDirectory + "\\packages\\*.nupkg", MakeAbsolute(Directory("./")), false);
-
-        GetFiles(baseDirectory + "\\*.nupkg")
+        GetFiles(buildDirectory + "\\packages\\*.nupkg")
             .ToList()
             .ForEach(f => AppVeyor.UploadArtifact(f, new AppVeyorUploadArtifactsSettings { DeploymentName = "packages" }));
     });
+
+///////////////////////////////////////////////////////////////////////////////
 
 RunTarget(target);
