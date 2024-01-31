@@ -12,7 +12,7 @@
     <tags>toolkit nhibernate</tags>
     <dependencies>
       <group targetFramework="netstandard2.0">
-        <dependency id="MongoDB.Driver" version="2.11.2" />
+        <dependency id="MongoDB.Driver" version="2.12.2" />
         <dependency id="ToolKit" version="2019.1.15.1" />
       </group>
     </dependencies>
